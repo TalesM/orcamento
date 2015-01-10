@@ -9,6 +9,7 @@
 
 #include "wx_pch.h"
 #include "orcamentoCbMain.h"
+#include "NewDatabaseDialog.h"
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(orcamentoCbFrame)
@@ -119,6 +120,10 @@ void orcamentoCbFrame::OnAbout(wxCommandEvent& event)
 
 void orcamentoCbFrame::OnNew(wxCommandEvent& event)
 {
-
-//    wx
+    NewDatabaseDialog dialog(this);
+    if ( dialog.ShowModal() == wxID_OK ){
+        wxMessageBox(_("Loaded"));
+    } else {
+        wxMessageBox(_("Failed"));
+    }
 }

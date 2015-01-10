@@ -2973,11 +2973,15 @@
 	<wx/frame.h>
 	<wx/statusbr.h>
 
-1420910672 source:e:\dev\projects\orcamentocb\orcamentocbmain.cpp
+1420926008 source:e:\dev\projects\orcamentocb\orcamentocbmain.cpp
 	"wx_pch.h"
 	"orcamentoCbMain.h"
+	"NewDatabaseDialog.h"
 	<wx/msgdlg.h>
+	<wx/artprov.h>
+	<wx/bitmap.h>
 	<wx/intl.h>
+	<wx/image.h>
 	<wx/string.h>
 
 1383690111 source:e:\dev\projects\orcamentocb\resource.rc
@@ -2999,4 +3003,144 @@
 	<aygshell.h>
 
 1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\rcdefs.h
+
+1420923833 source:e:\dev\projects\orcamentocb\newdatabasedialog.cpp
+	"wx_pch.h"
+	"NewDatabaseDialog.h"
+	<wx/intl.h>
+	<wx/string.h>
+	<wx/button.h>
+
+1420923312 e:\dev\projects\orcamentocb\newdatabasedialog.h
+	<wx/sizer.h>
+	<wx/stattext.h>
+	<wx/textctrl.h>
+	<wx/choice.h>
+	<wx/dialog.h>
+	<wx/datectrl.h>
+	<wx/filepicker.h>
+	<wx/spinctrl.h>
+	<wx/dateevt.h>
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\datectrl.h
+	"wx/defs.h"
+	"wx/datetimectrl.h"
+	"wx/msw/datectrl.h"
+	"wx/osx/datectrl.h"
+	"wx/generic/datectrl.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\datetimectrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/datetime.h"
+	"wx/msw/datetimectrl.h"
+	"wx/osx/datetimectrl.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\datetimectrl.h
+	"wx/intl.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\osx\datetimectrl.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\datectrl.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\osx\datectrl.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\datectrl.h
+	"wx/compositewin.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\compositewin.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\filepicker.h
+	"wx/defs.h"
+	"wx/pickerbase.h"
+	"wx/filename.h"
+	"wx/gtk/filepicker.h"
+	"wx/generic/filepickerg.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\pickerbase.h
+	"wx/control.h"
+	"wx/sizer.h"
+	"wx/containr.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\gtk\filepicker.h
+	"wx/generic/filepickerg.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\filepickerg.h
+	"wx/button.h"
+	"wx/filedlg.h"
+	"wx/dirdlg.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\spinctrl.h
+	"wx/defs.h"
+	"wx/spinbutt.h"
+	"wx/msw/spinctrl.h"
+	"wx/os2/spinctrl.h"
+	"wx/gtk/spinctrl.h"
+	"wx/gtk1/spinctrl.h"
+	"wx/generic/spinctlg.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\spinbutt.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/event.h"
+	"wx/range.h"
+	"wx/univ/spinbutt.h"
+	"wx/msw/spinbutt.h"
+	"wx/motif/spinbutt.h"
+	"wx/gtk/spinbutt.h"
+	"wx/gtk1/spinbutt.h"
+	"wx/osx/spinbutt.h"
+	"wx/cocoa/spinbutt.h"
+	"wx/os2/spinbutt.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\range.h
+	"wx/defs.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\univ\spinbutt.h
+	"wx/univ/scrarrow.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\motif\spinbutt.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\gtk\spinbutt.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\gtk1\spinbutt.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\osx\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\cocoa\spinbutt.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\os2\spinbutt.h
+	"wx/control.h"
+	"wx/event.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\spinctrl.h
+	"wx/spinbutt.h"
+	"wx/dynarray.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\os2\spinctrl.h
+	"wx/spinbutt.h"
+	"wx/dynarray.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\gtk\spinctrl.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\gtk1\spinctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\spinctlg.h
+	"wx/compositewin.h"
+	"wx/textctrl.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\dateevt.h
+	"wx/event.h"
+	"wx/datetime.h"
+	"wx/window.h"
 
