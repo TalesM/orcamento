@@ -10,6 +10,8 @@
 #ifndef ORCAMENTOCBMAIN_H
 #define ORCAMENTOCBMAIN_H
 
+#include <SQLiteCpp/SQLiteCpp.h>
+#include <memory>
 //(*Headers(orcamentoCbFrame)
 #include <wx/menu.h>
 #include <wx/frame.h>
@@ -24,6 +26,8 @@ class orcamentoCbFrame: public wxFrame
         virtual ~orcamentoCbFrame();
 
     private:
+        std::unique_ptr<SQLite::Database> m_database;
+
 
         //(*Handlers(orcamentoCbFrame)
         void OnQuit(wxCommandEvent& event);
