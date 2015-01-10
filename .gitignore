@@ -1,0 +1,7 @@
+Debug/
+Release/
+.codelite/
+.build-debug/
+.clang/
+compile_commands.json
+*.mk
