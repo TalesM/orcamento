@@ -2975,7 +2975,7 @@
 	<wx/frame.h>
 	<wx/statusbr.h>
 
-1420926694 source:e:\dev\projects\orcamentocb\orcamentocbmain.cpp
+1420985313 source:e:\dev\projects\orcamentocb\orcamentocbmain.cpp
 	"wx_pch.h"
 	"orcamentoCbMain.h"
 	"NewDatabaseDialog.h"
@@ -3006,14 +3006,16 @@
 
 1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\rcdefs.h
 
-1420923833 source:e:\dev\projects\orcamentocb\newdatabasedialog.cpp
+1420984827 source:e:\dev\projects\orcamentocb\newdatabasedialog.cpp
 	"wx_pch.h"
 	"NewDatabaseDialog.h"
 	<wx/intl.h>
 	<wx/string.h>
 	<wx/button.h>
 
-1420923312 e:\dev\projects\orcamentocb\newdatabasedialog.h
+1420984904 e:\dev\projects\orcamentocb\newdatabasedialog.h
+	<SQLiteCpp/SQLiteCpp.h>
+	<memory>
 	<wx/sizer.h>
 	<wx/stattext.h>
 	<wx/textctrl.h>

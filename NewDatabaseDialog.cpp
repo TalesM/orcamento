@@ -81,3 +81,7 @@ NewDatabaseDialog::~NewDatabaseDialog()
 	//*)
 }
 
+
+void NewDatabaseDialog::OnClose(wxCloseEvent& event)
+{
+}

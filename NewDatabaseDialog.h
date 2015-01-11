@@ -1,6 +1,8 @@
 #ifndef NEWDATABASEDIALOG_H
 #define NEWDATABASEDIALOG_H
 
+#include <SQLiteCpp/SQLiteCpp.h>
+#include <memory>
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(NewDatabaseDialog)
 	#include <wx/sizer.h>
@@ -43,8 +45,8 @@ class NewDatabaseDialog: public wxDialog
 		//*)
 
 	private:
-
 		//(*Handlers(NewDatabaseDialog)
+		void OnClose(wxCloseEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

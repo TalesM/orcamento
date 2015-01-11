@@ -31,6 +31,7 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxFilePickerCtrl" name="ID_FILEPICKERCTRL1" variable="filePicker" member="yes">
+							<message></message>
 							<wildcard>*.orca</wildcard>
 							<style>wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE|wxFLP_USE_TEXTCTRL</style>
 						</object>

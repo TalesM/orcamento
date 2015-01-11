@@ -22,6 +22,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add library="libwxmsw30ud.a" />
+					<Add library="SQLiteCppD" />
 					<Add directory="$(#wx)/lib/gcc_dll" />
 				</Linker>
 			</Target>
@@ -41,31 +42,37 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="libwxmsw30u.a" />
+					<Add library="SQLiteCpp" />
 					<Add directory="$(#wx)/lib/gcc_dll" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-Wall" />
 			<Add option="-pipe" />
 			<Add option="-mthreads" />
+			<Add option="-Winvalid-pch" />
+			<Add option="-include wx_pch.h" />
+			<Add option="-std=gnu++11" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-D__WXMSW__" />
 			<Add option="-DWXUSINGDLL" />
 			<Add option="-DwxUSE_UNICODE" />
-			<Add option="-Winvalid-pch" />
-			<Add option="-include wx_pch.h" />
 			<Add option="-DWX_PRECOMP" />
-			<Add option="-Wall" />
 			<Add directory="$(#wx)/include" />
+			<Add directory="$(#sqlitecpp.include)" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)/include" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-mthreads" />
+			<Add directory="$(#sqlitecpp.lib)" />
 		</Linker>
+		<Unit filename="LICENSE.txt" />
 		<Unit filename="NewDatabaseDialog.cpp" />
 		<Unit filename="NewDatabaseDialog.h" />
+		<Unit filename="README.md" />
 		<Unit filename="orcamentoCbApp.cpp" />
 		<Unit filename="orcamentoCbApp.h" />
 		<Unit filename="orcamentoCbMain.cpp" />
@@ -73,6 +80,7 @@
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="theModel.sql" />
 		<Unit filename="wx_pch.h">
 			<Option compile="1" />
 			<Option weight="0" />
