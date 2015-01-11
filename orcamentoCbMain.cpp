@@ -122,20 +122,25 @@ void orcamentoCbFrame::OnNew(wxCommandEvent& event)
 {
     NewDatabaseDialog dialog(this);
     if ( dialog.ShowModal() == wxID_OK ){
-        wxMessageBox(_("Loaded"));
-        m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database("Teste.orca", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-        m_database->exec("DROP TABLE IF EXISTS test");
-
         // Begin transaction
-        SQLite::Transaction transaction(*m_database);
+        wxString model;
+        wxFile modelFile(L"theModel.sql");
+        if(modelFile.ReadAll(&model)){
+            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database("Teste.orca", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+            SQLite::Transaction transaction(*m_database);
+            try{
+                m_database->exec(model);
 
-        m_database->exec("CREATE TABLE test (id INTEGER PRIMARY KEY, value TEXT)");
+    //            int nb = m_database->exec("INSERT INTO test VALUES (NULL, \"test\")");
+    //            std::cout << "INSERT INTO test VALUES (NULL, \"test\")\", returned " << nb << std::endl;
 
-        int nb = m_database->exec("INSERT INTO test VALUES (NULL, \"test\")");
-        std::cout << "INSERT INTO test VALUES (NULL, \"test\")\", returned " << nb << std::endl;
-
-        // Commit transaction
-        transaction.commit();
+                // Commit transaction
+                transaction.commit();
+                wxMessageBox(_("Loaded"));
+            } catch (const std::exception &e){
+                wxMessageBox(e.what());
+            }
+        }
     } else {
         wxMessageBox(_("Failed"));
     }
