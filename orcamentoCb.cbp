@@ -70,13 +70,13 @@
 			<Add directory="$(#sqlitecpp.lib)" />
 		</Linker>
 		<Unit filename="LICENSE.txt" />
-		<Unit filename="NewDatabaseDialog.cpp" />
-		<Unit filename="NewDatabaseDialog.h" />
+		<Unit filename="CreateDatabaseDialog.cpp" />
+		<Unit filename="CreateDatabaseDialog.h" />
 		<Unit filename="README.md" />
 		<Unit filename="orcamentoCbApp.cpp" />
 		<Unit filename="orcamentoCbApp.h" />
-		<Unit filename="orcamentoCbMain.cpp" />
-		<Unit filename="orcamentoCbMain.h" />
+		<Unit filename="OrcamentoMainFrame.cpp" />
+		<Unit filename="OrcamentoMainFrame.h" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -85,8 +85,8 @@
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>
-		<Unit filename="wxsmith/NewDatabaseDialog1.wxs" />
-		<Unit filename="wxsmith/orcamentoCbframe.wxs" />
+		<Unit filename="wxsmith/CreateDatabaseDialog.wxs" />
+		<Unit filename="wxsmith/OrcamentoMainFrame.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -95,8 +95,8 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="orcamentoCbApp.cpp" main="orcamentoCbFrame" init_handlers="necessary" language="CPP" />
 				<resources>
-					<wxFrame wxs="wxsmith/orcamentoCbframe.wxs" src="orcamentoCbMain.cpp" hdr="orcamentoCbMain.h" fwddecl="0" i18n="1" name="orcamentoCbFrame" language="CPP" />
-					<wxDialog wxs="wxsmith/NewDatabaseDialog1.wxs" src="NewDatabaseDialog.cpp" hdr="NewDatabaseDialog.h" fwddecl="0" i18n="1" name="NewDatabaseDialog" language="CPP" />
+					<wxFrame wxs="wxsmith/OrcamentoMainFrame.wxs" src="OrcamentoMainFrame.cpp" hdr="OrcamentoMainFrame.h" fwddecl="0" i18n="1" name="OrcamentoMainFrame" language="CPP" />
+					<wxDialog wxs="wxsmith/CreateDatabaseDialog.wxs" src="CreateDatabaseDialog.cpp" hdr="CreateDatabaseDialog.h" fwddecl="0" i18n="1" name="CreateDatabaseDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

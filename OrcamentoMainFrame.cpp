@@ -127,8 +127,8 @@ void orcamentoCbFrame::OnNew(wxCommandEvent& event)
         wxFile modelFile(L"theModel.sql");
         if(modelFile.ReadAll(&model)){
             m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database("Teste.orca", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-            SQLite::Transaction transaction(*m_database);
             try{
+                SQLite::Transaction transaction(*m_database);
                 m_database->exec(model);
 
     //            int nb = m_database->exec("INSERT INTO test VALUES (NULL, \"test\")");
