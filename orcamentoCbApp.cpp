@@ -11,7 +11,7 @@
 #include "orcamentoCbApp.h"
 
 //(*AppHeaders
-#include "orcamentoCbMain.h"
+#include "OrcamentoMainFrame.h"
 #include <wx/image.h>
 //*)
 
@@ -24,7 +24,7 @@ bool orcamentoCbApp::OnInit()
     wxInitAllImageHandlers();
     if ( wxsOK )
     {
-    	orcamentoCbFrame* Frame = new orcamentoCbFrame(0);
+    	OrcamentoMainFrame* Frame = new OrcamentoMainFrame(0);
     	Frame->Show();
     	SetTopWindow(Frame);
     }

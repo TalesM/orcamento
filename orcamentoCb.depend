@@ -2955,65 +2955,18 @@
 1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1420907600 source:e:\dev\projects\orcamentocb\orcamentocbapp.cpp
+1421026607 source:e:\dev\projects\orcamentocb\createdatabasedialog.cpp
 	"wx_pch.h"
-	"orcamentoCbApp.h"
-	"orcamentoCbMain.h"
-	<wx/image.h>
+	"CreateDatabaseDialog.h"
+	<wx/intl.h>
+	<wx/string.h>
+	<wx/button.h>
 
 1420907600 e:\dev\projects\orcamentocb\wx_pch.h
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1420907600 e:\dev\projects\orcamentocb\orcamentocbapp.h
-	<wx/app.h>
-
-1420926642 e:\dev\projects\orcamentocb\orcamentocbmain.h
-	<SQLiteCpp/SQLiteCpp.h>
-	<memory>
-	<wx/menu.h>
-	<wx/frame.h>
-	<wx/statusbr.h>
-
-1421000935 source:e:\dev\projects\orcamentocb\orcamentocbmain.cpp
-	"wx_pch.h"
-	"orcamentoCbMain.h"
-	"NewDatabaseDialog.h"
-	<wx/msgdlg.h>
-	<wx/artprov.h>
-	<wx/bitmap.h>
-	<wx/intl.h>
-	<wx/image.h>
-	<wx/string.h>
-
-1383690111 source:e:\dev\projects\orcamentocb\resource.rc
-	"wx/msw/wx.rc"
-
-1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wx.rc
-	<windows.h>
-	"wx/msw/wince/wince.rc"
-	"wx/msw/rcdefs.h"
-
-1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\wince.rc
-	<commctrl.h>
-	"wx/msw/wince/resources.h"
-	"wx/msw/wince/smartphone.rc"
-
-1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\resources.h
-
-1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\smartphone.rc
-	<aygshell.h>
-
-1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\rcdefs.h
-
-1420984827 source:e:\dev\projects\orcamentocb\newdatabasedialog.cpp
-	"wx_pch.h"
-	"NewDatabaseDialog.h"
-	<wx/intl.h>
-	<wx/string.h>
-	<wx/button.h>
-
-1420984904 e:\dev\projects\orcamentocb\newdatabasedialog.h
+1421026660 e:\dev\projects\orcamentocb\createdatabasedialog.h
 	<SQLiteCpp/SQLiteCpp.h>
 	<memory>
 	<wx/sizer.h>
@@ -3025,6 +2978,43 @@
 	<wx/filepicker.h>
 	<wx/spinctrl.h>
 	<wx/dateevt.h>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\sqlitecpp.h
+	<SQLiteCpp/Assertion.h>
+	<SQLiteCpp/Exception.h>
+	<SQLiteCpp/Database.h>
+	<SQLiteCpp/Statement.h>
+	<SQLiteCpp/Column.h>
+	<SQLiteCpp/Transaction.h>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\assertion.h
+	<cassert>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\exception.h
+	<stdexcept>
+	<string>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\database.h
+	<sqlite3.h>
+	<SQLiteCpp/Column.h>
+	<string>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlite3.h
+	<stdarg.h>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\column.h
+	<sqlite3.h>
+	<SQLiteCpp/Statement.h>
+	<SQLiteCpp/Exception.h>
+	<string>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\statement.h
+	<sqlite3.h>
+	<string>
+	<SQLiteCpp/Exception.h>
+
+1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\transaction.h
+	<SQLiteCpp/Exception.h>
 
 1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\datectrl.h
 	"wx/defs.h"
@@ -3148,40 +3138,212 @@
 	"wx/datetime.h"
 	"wx/window.h"
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\sqlitecpp.h
-	<SQLiteCpp/Assertion.h>
-	<SQLiteCpp/Exception.h>
-	<SQLiteCpp/Database.h>
-	<SQLiteCpp/Statement.h>
-	<SQLiteCpp/Column.h>
-	<SQLiteCpp/Transaction.h>
+1421025973 source:e:\dev\projects\orcamentocb\orcamentocbapp.cpp
+	"wx_pch.h"
+	"orcamentoCbApp.h"
+	"OrcamentoMainFrame.h"
+	<wx/image.h>
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\assertion.h
-	<cassert>
+1420907600 e:\dev\projects\orcamentocb\orcamentocbapp.h
+	<wx/app.h>
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\exception.h
-	<stdexcept>
-	<string>
+1421027025 e:\dev\projects\orcamentocb\orcamentomainframe.h
+	<SQLiteCpp/SQLiteCpp.h>
+	<memory>
+	<wx/menu.h>
+	<wx/htmllbox.h>
+	<wx/splitter.h>
+	<wx/grid.h>
+	<wx/frame.h>
+	<wx/statusbr.h>
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\database.h
-	<sqlite3.h>
-	<SQLiteCpp/Column.h>
-	<string>
+1421026897 source:e:\dev\projects\orcamentocb\orcamentomainframe.cpp
+	"wx_pch.h"
+	"OrcamentoMainFrame.h"
+	"CreateDatabaseDialog.h"
+	<wx/msgdlg.h>
+	<wx/artprov.h>
+	<wx/bitmap.h>
+	<wx/intl.h>
+	<wx/image.h>
+	<wx/string.h>
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\column.h
-	<sqlite3.h>
-	<SQLiteCpp/Statement.h>
-	<SQLiteCpp/Exception.h>
-	<string>
+1383690111 source:e:\dev\projects\orcamentocb\resource.rc
+	"wx/msw/wx.rc"
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\statement.h
-	<sqlite3.h>
-	<string>
-	<SQLiteCpp/Exception.h>
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wx.rc
+	<windows.h>
+	"wx/msw/wince/wince.rc"
+	"wx/msw/rcdefs.h"
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\transaction.h
-	<SQLiteCpp/Exception.h>
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\wince.rc
+	<commctrl.h>
+	"wx/msw/wince/resources.h"
+	"wx/msw/wince/smartphone.rc"
 
-1420859315 e:\dev\lib\sqlitecpp\include\sqlite3.h
-	<stdarg.h>
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\resources.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\wince\smartphone.rc
+	<aygshell.h>
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\rcdefs.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\htmllbox.h
+	"wx/vlbox.h"
+	"wx/html/htmlwin.h"
+	"wx/ctrlsub.h"
+	"wx/filesys.h"
+
+1402786559 e:\dev\lib\wxwidgets-3.0.1\include\wx\vlbox.h
+	"wx/vscroll.h"
+	"wx/bitmap.h"
+
+1402786559 e:\dev\lib\wxwidgets-3.0.1\include\wx\vscroll.h
+	"wx/panel.h"
+	"wx/position.h"
+	"wx/scrolwin.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\position.h
+	"wx/gdicmn.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmlwin.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/scrolwin.h"
+	"wx/config.h"
+	"wx/stopwatch.h"
+	"wx/html/winpars.h"
+	"wx/html/htmlcell.h"
+	"wx/filesys.h"
+	"wx/html/htmlfilt.h"
+	"wx/filename.h"
+	"wx/bitmap.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\config.h
+	"wx/confbase.h"
+	"wx/msw/regconf.h"
+	"wx/os2/iniconf.h"
+	"wx/fileconf.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\confbase.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/object.h"
+	"wx/base64.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\base64.h
+	"wx/string.h"
+	"wx/buffer.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\regconf.h
+	"wx/defs.h"
+	"wx/msw/registry.h"
+	"wx/object.h"
+	"wx/confbase.h"
+	"wx/buffer.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\msw\registry.h
+	"wx/defs.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\os2\iniconf.h
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\fileconf.h
+	"wx/defs.h"
+	"wx/textfile.h"
+	"wx/string.h"
+	"wx/confbase.h"
+	"wx/filename.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\textfile.h
+	"wx/defs.h"
+	"wx/textbuf.h"
+	"wx/file.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\textbuf.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/convauto.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\winpars.h
+	"wx/defs.h"
+	"wx/module.h"
+	"wx/font.h"
+	"wx/html/htmlpars.h"
+	"wx/html/htmlcell.h"
+	"wx/encconv.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmlpars.h
+	"wx/defs.h"
+	"wx/html/htmltag.h"
+	"wx/filesys.h"
+	"wx/hashmap.h"
+	"wx/hashset.h"
+	"wx/vector.h"
+	"wx/fontenc.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmltag.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/arrstr.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\filesys.h
+	"wx/defs.h"
+	"wx/stream.h"
+	"wx/datetime.h"
+	"wx/filename.h"
+	"wx/hashmap.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\hashset.h
+	"wx/hashmap.h"
+	<unordered_set>
+	<tr1/unordered_set>
+	<ext/hash_set>
+	<hash_set>
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmlcell.h
+	"wx/defs.h"
+	"wx/html/htmltag.h"
+	"wx/html/htmldefs.h"
+	"wx/window.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmldefs.h
+	"wx/defs.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\encconv.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/fontenc.h"
+	"wx/dynarray.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\html\htmlfilt.h
+	"wx/defs.h"
+	"wx/filesys.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\splitter.h
+	"wx/event.h"
+	"wx/generic/splitter.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\splitter.h
+	"wx/window.h"
+	"wx/containr.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\grid.h
+	"wx/generic/grid.h"
+	"wx/generic/grideditors.h"
+	"wx/generic/gridctrl.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\grid.h
+	"wx/defs.h"
+	"wx/hashmap.h"
+	"wx/scrolwin.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\grideditors.h
+	"wx/defs.h"
+	"wx/scopedptr.h"
+
+1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\generic\gridctrl.h
+	"wx/grid.h"
+	"wx/datetime.h"
 

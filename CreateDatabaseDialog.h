@@ -1,10 +1,10 @@
-#ifndef NEWDATABASEDIALOG_H
-#define NEWDATABASEDIALOG_H
+#ifndef CREATEDATABASEDIALOG_H
+#define CREATEDATABASEDIALOG_H
 
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <memory>
 #ifndef WX_PRECOMP
-	//(*HeadersPCH(NewDatabaseDialog)
+	//(*HeadersPCH(CreateDatabaseDialog)
 	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
@@ -12,21 +12,21 @@
 	#include <wx/dialog.h>
 	//*)
 #endif
-//(*Headers(NewDatabaseDialog)
+//(*Headers(CreateDatabaseDialog)
 #include <wx/datectrl.h>
 #include <wx/filepicker.h>
 #include <wx/spinctrl.h>
 #include <wx/dateevt.h>
 //*)
 
-class NewDatabaseDialog: public wxDialog
+class CreateDatabaseDialog: public wxDialog
 {
 	public:
 
-		NewDatabaseDialog(wxWindow* parent,wxWindowID id=wxID_ANY);
-		virtual ~NewDatabaseDialog();
+		CreateDatabaseDialog(wxWindow* parent,wxWindowID id=wxID_ANY);
+		virtual ~CreateDatabaseDialog();
 
-		//(*Declarations(NewDatabaseDialog)
+		//(*Declarations(CreateDatabaseDialog)
 		wxDatePickerCtrl* DatePickerCtrl1;
 		wxSpinCtrl* intervalSpin;
 		wxTextCtrl* nameTextCtrl;
@@ -34,9 +34,13 @@ class NewDatabaseDialog: public wxDialog
 		wxFilePickerCtrl* filePicker;
 		//*)
 
+		wxString getLocation(){
+		    return filePicker->GetPath();
+		}
+
 	protected:
 
-		//(*Identifiers(NewDatabaseDialog)
+		//(*Identifiers(CreateDatabaseDialog)
 		static const long ID_TEXTCTRL1;
 		static const long ID_FILEPICKERCTRL1;
 		static const long ID_DATEPICKERCTRL1;
@@ -45,7 +49,7 @@ class NewDatabaseDialog: public wxDialog
 		//*)
 
 	private:
-		//(*Handlers(NewDatabaseDialog)
+		//(*Handlers(CreateDatabaseDialog)
 		void OnClose(wxCloseEvent& event);
 		//*)
 

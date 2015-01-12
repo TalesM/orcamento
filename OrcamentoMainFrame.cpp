@@ -8,11 +8,11 @@
  **************************************************************/
 
 #include "wx_pch.h"
-#include "orcamentoCbMain.h"
-#include "NewDatabaseDialog.h"
+#include "OrcamentoMainFrame.h"
+#include "CreateDatabaseDialog.h"
 #include <wx/msgdlg.h>
 
-//(*InternalHeaders(orcamentoCbFrame)
+//(*InternalHeaders(OrcamentoMainFrame)
 #include <wx/artprov.h>
 #include <wx/bitmap.h>
 #include <wx/intl.h>
@@ -46,31 +46,42 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     return wxbuild;
 }
 
-//(*IdInit(orcamentoCbFrame)
-const long orcamentoCbFrame::idMenuNew = wxNewId();
-const long orcamentoCbFrame::idMenuQuit = wxNewId();
-const long orcamentoCbFrame::idMenuAbout = wxNewId();
-const long orcamentoCbFrame::ID_STATUSBAR1 = wxNewId();
+//(*IdInit(OrcamentoMainFrame)
+const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
+const long OrcamentoMainFrame::ID_GRID1 = wxNewId();
+const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
+const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
+const long OrcamentoMainFrame::idMenuQuit = wxNewId();
+const long OrcamentoMainFrame::idMenuAbout = wxNewId();
+const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 //*)
 
-BEGIN_EVENT_TABLE(orcamentoCbFrame,wxFrame)
-    //(*EventTable(orcamentoCbFrame)
+BEGIN_EVENT_TABLE(OrcamentoMainFrame,wxFrame)
+    //(*EventTable(OrcamentoMainFrame)
     //*)
 END_EVENT_TABLE()
 
-orcamentoCbFrame::orcamentoCbFrame(wxWindow* parent,wxWindowID id)
+OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 {
-    //(*Initialize(orcamentoCbFrame)
+    //(*Initialize(OrcamentoMainFrame)
     wxMenuItem* MenuItem2;
     wxMenuItem* MenuItem1;
     wxMenu* Menu1;
     wxMenuBar* MenuBar1;
+    wxSplitterWindow* SplitterWindow1;
     wxMenu* Menu2;
 
-    Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("id"));
+    Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    SetClientSize(wxSize(800,600));
+    SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
+    SplitterWindow1->SetMinimumPaneSize(10);
+    SplitterWindow1->SetSashGravity(0.25);
+    SimpleHtmlListBox1 = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
+    Grid1 = new wxGrid(SplitterWindow1, ID_GRID1, wxDefaultPosition, wxDefaultSize, 0, _T("ID_GRID1"));
+    SplitterWindow1->SplitVertically(SimpleHtmlListBox1, Grid1);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
-    MenuItem3 = new wxMenuItem(Menu1, idMenuNew, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
+    MenuItem3 = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
     MenuItem3->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_NEW_DIR")),wxART_MENU));
     Menu1->Append(MenuItem3);
     Menu1->AppendSeparator();
@@ -95,32 +106,32 @@ orcamentoCbFrame::orcamentoCbFrame(wxWindow* parent,wxWindowID id)
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
 
-    Connect(idMenuNew,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&orcamentoCbFrame::OnNew);
-    Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&orcamentoCbFrame::OnQuit);
-    Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&orcamentoCbFrame::OnAbout);
+    Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
+    Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
+    Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
     //*)
 }
 
-orcamentoCbFrame::~orcamentoCbFrame()
+OrcamentoMainFrame::~OrcamentoMainFrame()
 {
-    //(*Destroy(orcamentoCbFrame)
+    //(*Destroy(OrcamentoMainFrame)
     //*)
 }
 
-void orcamentoCbFrame::OnQuit(wxCommandEvent& event)
+void OrcamentoMainFrame::OnQuit(wxCommandEvent& event)
 {
     Close();
 }
 
-void orcamentoCbFrame::OnAbout(wxCommandEvent& event)
+void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
     wxMessageBox(msg, _("Welcome to..."));
 }
 
-void orcamentoCbFrame::OnNew(wxCommandEvent& event)
+void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
 {
-    NewDatabaseDialog dialog(this);
+    CreateDatabaseDialog dialog(this);
     if ( dialog.ShowModal() == wxID_OK ){
         // Begin transaction
         wxString model;

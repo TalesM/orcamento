@@ -9,20 +9,6 @@
 				<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
 					<cols>2</cols>
 					<object class="sizeritem">
-						<object class="wxStaticText" name="wxID_ANY" variable="StaticText1" member="no">
-							<label>Name</label>
-						</object>
-						<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
-						<border>5</border>
-						<option>1</option>
-					</object>
-					<object class="sizeritem">
-						<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="nameTextCtrl" member="yes" />
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-						<border>5</border>
-						<option>1</option>
-					</object>
-					<object class="sizeritem">
 						<object class="wxStaticText" name="wxID_ANY" variable="StaticText2" member="no">
 							<label>Location</label>
 						</object>
@@ -49,7 +35,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxDatePickerCtrl" name="ID_DATEPICKERCTRL1" variable="DatePickerCtrl1" member="yes" />
+						<object class="wxDatePickerCtrl" name="ID_DATEPICKERCTRL" variable="startDatePicker" member="yes" />
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 						<option>1</option>

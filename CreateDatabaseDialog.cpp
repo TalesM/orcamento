@@ -1,32 +1,32 @@
 #include "wx_pch.h"
-#include "NewDatabaseDialog.h"
+#include "CreateDatabaseDialog.h"
 
 #ifndef WX_PRECOMP
-	//(*InternalHeadersPCH(NewDatabaseDialog)
+	//(*InternalHeadersPCH(CreateDatabaseDialog)
 	#include <wx/intl.h>
 	#include <wx/string.h>
 	//*)
 #endif
-//(*InternalHeaders(NewDatabaseDialog)
+//(*InternalHeaders(CreateDatabaseDialog)
 #include <wx/button.h>
 //*)
 
-//(*IdInit(NewDatabaseDialog)
-const long NewDatabaseDialog::ID_TEXTCTRL1 = wxNewId();
-const long NewDatabaseDialog::ID_FILEPICKERCTRL1 = wxNewId();
-const long NewDatabaseDialog::ID_DATEPICKERCTRL1 = wxNewId();
-const long NewDatabaseDialog::ID_SPINCTRL1 = wxNewId();
-const long NewDatabaseDialog::ID_CHOICE1 = wxNewId();
+//(*IdInit(CreateDatabaseDialog)
+const long CreateDatabaseDialog::ID_TEXTCTRL1 = wxNewId();
+const long CreateDatabaseDialog::ID_FILEPICKERCTRL1 = wxNewId();
+const long CreateDatabaseDialog::ID_DATEPICKERCTRL1 = wxNewId();
+const long CreateDatabaseDialog::ID_SPINCTRL1 = wxNewId();
+const long CreateDatabaseDialog::ID_CHOICE1 = wxNewId();
 //*)
 
-BEGIN_EVENT_TABLE(NewDatabaseDialog,wxDialog)
-	//(*EventTable(NewDatabaseDialog)
+BEGIN_EVENT_TABLE(CreateDatabaseDialog,wxDialog)
+	//(*EventTable(CreateDatabaseDialog)
 	//*)
 END_EVENT_TABLE()
 
-NewDatabaseDialog::NewDatabaseDialog(wxWindow* parent,wxWindowID id)
+CreateDatabaseDialog::CreateDatabaseDialog(wxWindow* parent,wxWindowID id)
 {
-	//(*Initialize(NewDatabaseDialog)
+	//(*Initialize(CreateDatabaseDialog)
 	wxStaticText* StaticText2;
 	wxStaticText* StaticText1;
 	wxBoxSizer* BoxSizer2;
@@ -75,13 +75,13 @@ NewDatabaseDialog::NewDatabaseDialog(wxWindow* parent,wxWindowID id)
 	//*)
 }
 
-NewDatabaseDialog::~NewDatabaseDialog()
+CreateDatabaseDialog::~CreateDatabaseDialog()
 {
-	//(*Destroy(NewDatabaseDialog)
+	//(*Destroy(CreateDatabaseDialog)
 	//*)
 }
 
 
-void NewDatabaseDialog::OnClose(wxCloseEvent& event)
+void CreateDatabaseDialog::OnClose(wxCloseEvent& event)
 {
 }
