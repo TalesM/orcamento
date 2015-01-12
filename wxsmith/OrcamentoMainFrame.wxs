@@ -8,11 +8,14 @@
 			<minsize>10</minsize>
 			<orientation>vertical</orientation>
 			<pos>152,304</pos>
+			<minsize>10,10</minsize>
 			<object class="wxSimpleHtmlListBox" name="ID_SIMPLEHTMLLISTBOX1" variable="SimpleHtmlListBox1" member="yes">
 				<default>-1</default>
 				<pos>223,244</pos>
 			</object>
-			<object class="wxGrid" name="ID_GRID1" variable="Grid1" member="yes" />
+			<object class="wxGrid" name="ID_GRID1" variable="Grid1" member="yes">
+				<pos>78,4</pos>
+			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
 			<object class="wxMenu" variable="Menu1" member="no">

@@ -7,7 +7,6 @@
 	//(*HeadersPCH(CreateDatabaseDialog)
 	#include <wx/sizer.h>
 	#include <wx/stattext.h>
-	#include <wx/textctrl.h>
 	#include <wx/choice.h>
 	#include <wx/dialog.h>
 	//*)
@@ -26,24 +25,26 @@ class CreateDatabaseDialog: public wxDialog
 		CreateDatabaseDialog(wxWindow* parent,wxWindowID id=wxID_ANY);
 		virtual ~CreateDatabaseDialog();
 
-		//(*Declarations(CreateDatabaseDialog)
-		wxDatePickerCtrl* DatePickerCtrl1;
-		wxSpinCtrl* intervalSpin;
-		wxTextCtrl* nameTextCtrl;
-		wxChoice* intervalChoice;
-		wxFilePickerCtrl* filePicker;
-		//*)
-
 		wxString getLocation(){
-		    return filePicker->GetPath();
+		    return fpLocation->GetPath();
+		}
+
+		wxDateTime getStart(){
+		    return dpStart->GetValue();
+//		    return date.Format("%F");
+		}
+
+		wxString getDuration(){
+		    wxString result;
+		    result << spInterval->GetValue() << L" " << chInterval->GetString(chInterval->GetSelection());
+		    return result;
 		}
 
 	protected:
 
 		//(*Identifiers(CreateDatabaseDialog)
-		static const long ID_TEXTCTRL1;
 		static const long ID_FILEPICKERCTRL1;
-		static const long ID_DATEPICKERCTRL1;
+		static const long ID_DATEPICKERCTRL;
 		static const long ID_SPINCTRL1;
 		static const long ID_CHOICE1;
 		//*)
@@ -51,6 +52,13 @@ class CreateDatabaseDialog: public wxDialog
 	private:
 		//(*Handlers(CreateDatabaseDialog)
 		void OnClose(wxCloseEvent& event);
+		//*)
+
+		//(*Declarations(CreateDatabaseDialog)
+		wxDatePickerCtrl* dpStart;
+		wxFilePickerCtrl* fpLocation;
+		wxSpinCtrl* spInterval;
+		wxChoice* chInterval;
 		//*)
 
 		DECLARE_EVENT_TABLE()

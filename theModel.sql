@@ -22,7 +22,7 @@ CREATE TABLE "budget" (
 	"next_id"	    INTEGER REFERENCES budget(budget_id),
 	"start"			DATE NOT NULL, --Must be a date YYYY-MM-DD.
 	"duration"		TEXT NOT NULL, --Must be a date offset MM UNIT.
-	"executing"		INTEGER
+	"executing"		INTEGER NOT NULL DEFAULT 0
 );
 CREATE TABLE "category" (
 	"category_id"	INTEGER PRIMARY KEY,

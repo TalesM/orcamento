@@ -74,10 +74,11 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
+    SplitterWindow1->SetMinSize(wxSize(10,10));
     SplitterWindow1->SetMinimumPaneSize(10);
     SplitterWindow1->SetSashGravity(0.25);
     SimpleHtmlListBox1 = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
-    Grid1 = new wxGrid(SplitterWindow1, ID_GRID1, wxDefaultPosition, wxDefaultSize, 0, _T("ID_GRID1"));
+    Grid1 = new wxGrid(SplitterWindow1, ID_GRID1, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GRID1"));
     SplitterWindow1->SplitVertically(SimpleHtmlListBox1, Grid1);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
@@ -133,17 +134,24 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
 {
     CreateDatabaseDialog dialog(this);
     if ( dialog.ShowModal() == wxID_OK ){
+        wxString location = dialog.getLocation();
+        wxDateTime start  = dialog.getStart();
+        wxString duration = dialog.getDuration();
         // Begin transaction
         wxString model;
         wxFile modelFile(L"theModel.sql");
         if(modelFile.ReadAll(&model)){
-            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database("Teste.orca", SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
             try{
                 SQLite::Transaction transaction(*m_database);
                 m_database->exec(model);
 
-    //            int nb = m_database->exec("INSERT INTO test VALUES (NULL, \"test\")");
-    //            std::cout << "INSERT INTO test VALUES (NULL, \"test\")\", returned " << nb << std::endl;
+                SQLite::Statement stm(*m_database, "INSERT INTO budget(name, start, duration) VALUES (?1, ?2, ?3)");
+                stm.bind(1, start.Format("%B").ToUTF8());
+                stm.bind(2, start.FormatISODate().ToUTF8());
+                stm.bind(3, duration.ToUTF8());
+
+                stm.exec();
 
                 // Commit transaction
                 transaction.commit();

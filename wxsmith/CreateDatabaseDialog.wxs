@@ -17,7 +17,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxFilePickerCtrl" name="ID_FILEPICKERCTRL1" variable="filePicker" member="yes">
+						<object class="wxFilePickerCtrl" name="ID_FILEPICKERCTRL1" variable="fpLocation" member="yes">
 							<message></message>
 							<wildcard>*.orca</wildcard>
 							<style>wxFLP_OVERWRITE_PROMPT|wxFLP_SAVE|wxFLP_USE_TEXTCTRL</style>
@@ -35,7 +35,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxDatePickerCtrl" name="ID_DATEPICKERCTRL" variable="startDatePicker" member="yes" />
+						<object class="wxDatePickerCtrl" name="ID_DATEPICKERCTRL" variable="dpStart" member="yes" />
 						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 						<option>1</option>
@@ -51,7 +51,7 @@
 					<object class="sizeritem">
 						<object class="wxBoxSizer" variable="BoxSizer2" member="no">
 							<object class="sizeritem">
-								<object class="wxSpinCtrl" name="ID_SPINCTRL1" variable="intervalSpin" member="yes">
+								<object class="wxSpinCtrl" name="ID_SPINCTRL1" variable="spInterval" member="yes">
 									<value>1</value>
 									<min>1</min>
 									<max>15</max>
@@ -61,7 +61,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxChoice" name="ID_CHOICE1" variable="intervalChoice" member="yes">
+								<object class="wxChoice" name="ID_CHOICE1" variable="chInterval" member="yes">
 									<content>
 										<item>days</item>
 										<item>weeks</item>
