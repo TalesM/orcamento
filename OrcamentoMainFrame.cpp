@@ -51,6 +51,7 @@ const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
 const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
 const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
+const long OrcamentoMainFrame::ID_MENUITEM2 = wxNewId();
 const long OrcamentoMainFrame::idMenuQuit = wxNewId();
 const long OrcamentoMainFrame::ID_MENUCREATE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
@@ -67,13 +68,14 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(OrcamentoMainFrame)
     wxMenuItem* MenuItem2;
-    wxMenuItem* MenuItem1;
     wxMenu* Menu1;
+    wxMenuItem* mnQuit;
+    wxMenuItem* mnOpen;
     wxMenuBar* MenuBar1;
     wxSplitterWindow* SplitterWindow1;
     wxMenu* Menu2;
 
-    Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    Create(parent, wxID_ANY, _("OrcaMento"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
     SplitterWindow1->SetMinSize(wxSize(10,10));
@@ -89,12 +91,16 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SplitVertically(lbMonths, gdPromises);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
-    MenuItem3 = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
-    MenuItem3->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_NEW_DIR")),wxART_MENU));
-    Menu1->Append(MenuItem3);
+    mnNew = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
+    mnNew->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_NEW_DIR")),wxART_MENU));
+    Menu1->Append(mnNew);
+    mnOpen = new wxMenuItem(Menu1, ID_MENUITEM2, _("Open\tCtrl-O"), _("Open a database."), wxITEM_NORMAL);
+    mnOpen->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_FILE_OPEN")),wxART_MENU));
+    Menu1->Append(mnOpen);
     Menu1->AppendSeparator();
-    MenuItem1 = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
-    Menu1->Append(MenuItem1);
+    mnQuit = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
+    mnQuit->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_QUIT")),wxART_MENU));
+    Menu1->Append(mnQuit);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
     mnCreateBudget = new wxMenuItem(Menu3, ID_MENUCREATE_BUDGET, _("Create Next Budget"), wxEmptyString, wxITEM_NORMAL);
@@ -119,6 +125,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(StatusBar1);
 
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
+    Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
@@ -136,13 +143,16 @@ void OrcamentoMainFrame::RefreshModel()
 {
     lbMonths->Clear();
     try {
-        SQLite::Statement stm(*m_database, "SELECT bud.name, bud.executing FROM budget bud ORDER BY bud.budget_id");
+        SQLite::Statement stm(*m_database, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
         while(stm.executeStep()){
             // TODO (Tales#1#): Mark currently active budget (an executing budget with next being NULL or a planing budget)
             wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
             bool executing = int(stm.getColumn(1));
+            bool active = int(stm.getColumn(2));
             if(not executing){
                 budgetName = "<em>" + budgetName + "</em>";
+            } else if(active){
+                budgetName = "<strong>" + budgetName + "</strong>";
             }
             lbMonths->Append(budgetName);
         }
@@ -175,8 +185,8 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
     wxString model;
     wxFile modelFile(L"theModel.sql");
     if(modelFile.ReadAll(&model)){
-        m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
         try{
+            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
             SQLite::Transaction transaction(*m_database);
             m_database->exec(model);
 
@@ -229,4 +239,19 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
         wxMessageBox(e.what());
     }
     RefreshModel();
+}
+
+void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
+{
+    wxFileDialog openFileDialog(this, L"Select the file", "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    if(openFileDialog.ShowModal() == wxCANCEL){
+        return;
+    }
+    wxString location = openFileDialog.GetPath();
+    try {
+        m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+        RefreshModel();
+    }catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
 }
