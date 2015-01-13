@@ -38,6 +38,14 @@
 			</object>
 			<object class="wxMenu" variable="Menu3" member="yes">
 				<label>Budget</label>
+				<object class="wxMenuItem" name="ID_MENUCREATE_BUDGET" variable="mnCreateBudget" member="yes">
+					<label>Create Next Budget</label>
+					<handler function="OnCreateBudget" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ID_MENUEXECUTE_BUDGET" variable="mnExecuteNextBudget" member="yes">
+					<label>Execute Next Budget</label>
+					<handler function="OnExecuteBudget" entry="EVT_MENU" />
+				</object>
 			</object>
 			<object class="wxMenu" variable="Menu4" member="yes">
 				<label>Promise</label>

@@ -37,6 +37,8 @@ class OrcamentoMainFrame: public wxFrame
         void OnQuit(wxCommandEvent& event);
         void OnAbout(wxCommandEvent& event);
         void OnNew(wxCommandEvent& event);
+        void OnCreateBudget(wxCommandEvent& event);
+        void OnExecuteBudget(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -45,6 +47,8 @@ class OrcamentoMainFrame: public wxFrame
         static const long ID_SPLITTERWINDOW1;
         static const long ID_MENUITEM1;
         static const long idMenuQuit;
+        static const long ID_MENUCREATE_BUDGET;
+        static const long ID_MENUEXECUTE_BUDGET;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         //*)
@@ -52,6 +56,8 @@ class OrcamentoMainFrame: public wxFrame
         //(*Declarations(OrcamentoMainFrame)
         wxSimpleHtmlListBox* lbMonths;
         wxMenu* Menu3;
+        wxMenuItem* mnExecuteNextBudget;
+        wxMenuItem* mnCreateBudget;
         wxMenuItem* MenuItem3;
         wxStatusBar* StatusBar1;
         wxGrid* gdPromises;

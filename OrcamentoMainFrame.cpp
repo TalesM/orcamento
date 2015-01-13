@@ -52,6 +52,8 @@ const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
 const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
 const long OrcamentoMainFrame::idMenuQuit = wxNewId();
+const long OrcamentoMainFrame::ID_MENUCREATE_BUDGET = wxNewId();
+const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 //*)
@@ -95,6 +97,10 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Menu1->Append(MenuItem1);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
+    mnCreateBudget = new wxMenuItem(Menu3, ID_MENUCREATE_BUDGET, _("Create Next Budget"), wxEmptyString, wxITEM_NORMAL);
+    Menu3->Append(mnCreateBudget);
+    mnExecuteNextBudget = new wxMenuItem(Menu3, ID_MENUEXECUTE_BUDGET, _("Execute Next Budget"), wxEmptyString, wxITEM_NORMAL);
+    Menu3->Append(mnExecuteNextBudget);
     MenuBar1->Append(Menu3, _("Budget"));
     Menu4 = new wxMenu();
     MenuBar1->Append(Menu4, _("Promise"));
@@ -114,6 +120,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
+    Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
+    Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
     //*)
 }
@@ -122,51 +130,6 @@ OrcamentoMainFrame::~OrcamentoMainFrame()
 {
     //(*Destroy(OrcamentoMainFrame)
     //*)
-}
-
-void OrcamentoMainFrame::OnQuit(wxCommandEvent& event)
-{
-    Close();
-}
-
-void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
-{
-    wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
-}
-
-void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
-{
-    CreateDatabaseDialog dialog(this);
-    if ( dialog.ShowModal() == wxID_OK ){
-        wxString location = dialog.getLocation();
-        wxDateTime start  = dialog.getStart();
-
-        // Begin transaction
-        wxString model;
-        wxFile modelFile(L"theModel.sql");
-        if(modelFile.ReadAll(&model)){
-            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-            try{
-                SQLite::Transaction transaction(*m_database);
-                m_database->exec(model);
-
-                SQLite::Statement stm(*m_database, "INSERT INTO budget(name, start, duration) VALUES (?1, date(?2, 'start of month'), '1 months')");
-                stm.bind(1, start.Format("%B %Y").ToUTF8());
-                stm.bind(2, start.FormatISODate().ToUTF8());
-                stm.exec();
-
-                // Commit transaction
-                transaction.commit();
-                wxMessageBox(_("Loaded"));
-            } catch (const std::exception &e){
-                wxMessageBox(e.what());
-            }
-            RefreshModel();
-        }
-    } else {
-        wxMessageBox(_("Failed"));
-    }
 }
 
 void OrcamentoMainFrame::RefreshModel()
@@ -188,3 +151,82 @@ void OrcamentoMainFrame::RefreshModel()
     }
 }
 
+void OrcamentoMainFrame::OnQuit(wxCommandEvent& event)
+{
+    Close();
+}
+
+void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
+{
+    wxString msg = wxbuildinfo(long_f);
+    wxMessageBox(msg, _("Welcome to..."));
+}
+
+void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
+{
+    CreateDatabaseDialog dialog(this);
+    if(dialog.ShowModal() != wxID_OK ){
+        return;
+    }
+    wxString location = dialog.getLocation();
+    wxDateTime start  = dialog.getStart();
+
+    // Begin transaction
+    wxString model;
+    wxFile modelFile(L"theModel.sql");
+    if(modelFile.ReadAll(&model)){
+        m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+        try{
+            SQLite::Transaction transaction(*m_database);
+            m_database->exec(model);
+
+            auto query = "INSERT INTO budget(name, start, duration)"
+                         "  VALUES (strftime('%m/%Y', ?1), date(?1, 'start of month'), '1 months')";
+            SQLite::Statement stm(*m_database, query);
+            stm.bind(1, start.FormatISODate().ToUTF8());
+            stm.exec();
+
+            // Commit transaction
+            transaction.commit();
+        } catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
+        RefreshModel();
+    }
+}
+
+void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
+{
+    if(wxMessageBox(L"Are you sure you want to create a new Budget?", L"Create Budget", wxYES_NO|wxCENTRE) != wxYES){
+        return;
+    }
+    try{
+        if(!m_database->exec("INSERT INTO budget(name, start, duration) "
+                             "  SELECT strftime('%m/%Y', start, duration), date(start, duration), duration "
+                             "    FROM budget WHERE budget_id IN (SELECT max(budget_id) FROM budget)")
+        ){
+            wxMessageBox("The total universe time expired :(");
+        }
+    } catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
+    RefreshModel();
+}
+
+void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
+{
+    if(wxMessageBox(L"Are you sure you want to execute the next Budget?", L"Execute Budget", wxYES_NO|wxCENTRE) != wxYES){
+        return;
+    }
+    try{
+        if(!m_database->exec("UPDATE budget SET executing = 1"
+                             "  WHERE budget_id IN (SELECT min(budget_id)"
+                             "  FROM budget WHERE executing=0)"
+        )){
+            wxMessageBox("The total universe time expired :(");
+        }
+    } catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
+    RefreshModel();
+}
