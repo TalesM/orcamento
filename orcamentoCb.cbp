@@ -61,6 +61,7 @@
 			<Add option="-DWX_PRECOMP" />
 			<Add directory="$(#wx)/include" />
 			<Add directory="$(#sqlitecpp.include)" />
+			<Add directory="$(#sqlite3.include)" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)/include" />

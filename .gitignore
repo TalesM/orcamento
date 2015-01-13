@@ -1,9 +1,9 @@
-Debug/
-Release/
+bin/
+obj/
 wx_pch.h.gch/
-.codelite/
-.build-debug/
 .clang/
 compile_commands.json
 *.mk
 *.orca
+*.depend
+*.layout
