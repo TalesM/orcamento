@@ -2955,7 +2955,7 @@
 1402786558 e:\dev\lib\wxwidgets-3.0.1\include\wx\cocoa\mdi.h
 	"wx/frame.h"
 
-1421027535 source:e:\dev\projects\orcamentocb\createdatabasedialog.cpp
+1421112887 source:e:\dev\projects\orcamentocb\createdatabasedialog.cpp
 	"wx_pch.h"
 	"CreateDatabaseDialog.h"
 	<wx/intl.h>
@@ -2966,16 +2966,14 @@
 	<wx/wxprec.h>
 	<wx/wx.h>
 
-1421028451 e:\dev\projects\orcamentocb\createdatabasedialog.h
+1421112910 e:\dev\projects\orcamentocb\createdatabasedialog.h
 	<SQLiteCpp/SQLiteCpp.h>
 	<memory>
 	<wx/sizer.h>
 	<wx/stattext.h>
-	<wx/choice.h>
 	<wx/dialog.h>
 	<wx/datectrl.h>
 	<wx/filepicker.h>
-	<wx/spinctrl.h>
 	<wx/dateevt.h>
 
 1420859315 e:\dev\lib\sqlitecpp\include\sqlitecpp\sqlitecpp.h
@@ -3156,7 +3154,7 @@
 	<wx/frame.h>
 	<wx/statusbr.h>
 
-1421112517 source:e:\dev\projects\orcamentocb\orcamentomainframe.cpp
+1421113224 source:e:\dev\projects\orcamentocb\orcamentomainframe.cpp
 	"wx_pch.h"
 	"OrcamentoMainFrame.h"
 	"CreateDatabaseDialog.h"

@@ -141,7 +141,7 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
     if ( dialog.ShowModal() == wxID_OK ){
         wxString location = dialog.getLocation();
         wxDateTime start  = dialog.getStart();
-        wxString duration = dialog.getDuration();
+
         // Begin transaction
         wxString model;
         wxFile modelFile(L"theModel.sql");
@@ -151,11 +151,9 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
                 SQLite::Transaction transaction(*m_database);
                 m_database->exec(model);
 
-                SQLite::Statement stm(*m_database, "INSERT INTO budget(name, start, duration) VALUES (?1, ?2, ?3)");
+                SQLite::Statement stm(*m_database, "INSERT INTO budget(name, start, duration) VALUES (?1, date(?2, 'start of month'), '1 months')");
                 stm.bind(1, start.Format("%B %Y").ToUTF8());
                 stm.bind(2, start.FormatISODate().ToUTF8());
-                stm.bind(3, duration.ToUTF8());
-
                 stm.exec();
 
                 // Commit transaction
@@ -177,7 +175,6 @@ void OrcamentoMainFrame::RefreshModel()
     try {
         SQLite::Statement stm(*m_database, "SELECT bud.name, bud.executing FROM budget bud ORDER BY bud.budget_id");
         while(stm.executeStep()){
-            // TODO (Tales#1#): Differentiate executing from planing budget.
             // TODO (Tales#1#): Mark currently active budget (an executing budget with next being NULL or a planing budget)
             wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
             bool executing = int(stm.getColumn(1));
