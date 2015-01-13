@@ -31,6 +31,7 @@ class OrcamentoMainFrame: public wxFrame
     private:
         std::unique_ptr<SQLite::Database> m_database;
 
+        void RefreshModel();
 
         //(*Handlers(OrcamentoMainFrame)
         void OnQuit(wxCommandEvent& event);
@@ -40,7 +41,7 @@ class OrcamentoMainFrame: public wxFrame
 
         //(*Identifiers(OrcamentoMainFrame)
         static const long ID_SIMPLEHTMLLISTBOX1;
-        static const long ID_GRID1;
+        static const long ID_GDPROMISES;
         static const long ID_SPLITTERWINDOW1;
         static const long ID_MENUITEM1;
         static const long idMenuQuit;
@@ -49,11 +50,11 @@ class OrcamentoMainFrame: public wxFrame
         //*)
 
         //(*Declarations(OrcamentoMainFrame)
+        wxSimpleHtmlListBox* lbMonths;
         wxMenu* Menu3;
-        wxGrid* Grid1;
         wxMenuItem* MenuItem3;
         wxStatusBar* StatusBar1;
-        wxSimpleHtmlListBox* SimpleHtmlListBox1;
+        wxGrid* gdPromises;
         wxMenu* Menu5;
         wxMenu* Menu4;
         //*)

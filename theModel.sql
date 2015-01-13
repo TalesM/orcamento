@@ -19,7 +19,6 @@ CREATE TABLE "wallet" (
 CREATE TABLE "budget" (
 	"budget_id"		INTEGER PRIMARY KEY,
 	"name"			VARCHAR,
-	"next_id"	    INTEGER REFERENCES budget(budget_id),
 	"start"			DATE NOT NULL, --Must be a date YYYY-MM-DD.
 	"duration"		TEXT NOT NULL, --Must be a date offset MM UNIT.
 	"executing"		INTEGER NOT NULL DEFAULT 0

@@ -9,11 +9,12 @@
 			<orientation>vertical</orientation>
 			<pos>152,304</pos>
 			<minsize>10,10</minsize>
-			<object class="wxSimpleHtmlListBox" name="ID_SIMPLEHTMLLISTBOX1" variable="SimpleHtmlListBox1" member="yes">
+			<object class="wxSimpleHtmlListBox" name="ID_SIMPLEHTMLLISTBOX1" variable="lbMonths" member="yes">
 				<default>-1</default>
 				<pos>223,244</pos>
 			</object>
-			<object class="wxGrid" name="ID_GRID1" variable="Grid1" member="yes">
+			<object class="wxGrid" name="ID_GDPROMISES" variable="gdPromises" member="yes">
+				<cols>5</cols>
 				<pos>78,4</pos>
 			</object>
 		</object>

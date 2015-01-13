@@ -48,7 +48,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
 //(*IdInit(OrcamentoMainFrame)
 const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
-const long OrcamentoMainFrame::ID_GRID1 = wxNewId();
+const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
 const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
 const long OrcamentoMainFrame::idMenuQuit = wxNewId();
@@ -77,9 +77,14 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetMinSize(wxSize(10,10));
     SplitterWindow1->SetMinimumPaneSize(10);
     SplitterWindow1->SetSashGravity(0.25);
-    SimpleHtmlListBox1 = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
-    Grid1 = new wxGrid(SplitterWindow1, ID_GRID1, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GRID1"));
-    SplitterWindow1->SplitVertically(SimpleHtmlListBox1, Grid1);
+    lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
+    gdPromises = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
+    gdPromises->CreateGrid(0,5);
+    gdPromises->EnableEditing(true);
+    gdPromises->EnableGridLines(true);
+    gdPromises->SetDefaultCellFont( gdPromises->GetFont() );
+    gdPromises->SetDefaultCellTextColour( gdPromises->GetForegroundColour() );
+    SplitterWindow1->SplitVertically(lbMonths, gdPromises);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     MenuItem3 = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
@@ -147,7 +152,7 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
                 m_database->exec(model);
 
                 SQLite::Statement stm(*m_database, "INSERT INTO budget(name, start, duration) VALUES (?1, ?2, ?3)");
-                stm.bind(1, start.Format("%B").ToUTF8());
+                stm.bind(1, start.Format("%B %Y").ToUTF8());
                 stm.bind(2, start.FormatISODate().ToUTF8());
                 stm.bind(3, duration.ToUTF8());
 
@@ -159,8 +164,30 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
             } catch (const std::exception &e){
                 wxMessageBox(e.what());
             }
+            RefreshModel();
         }
     } else {
         wxMessageBox(_("Failed"));
     }
 }
+
+void OrcamentoMainFrame::RefreshModel()
+{
+    lbMonths->Clear();
+    try {
+        SQLite::Statement stm(*m_database, "SELECT bud.name, bud.executing FROM budget bud ORDER BY bud.budget_id");
+        while(stm.executeStep()){
+            // TODO (Tales#1#): Differentiate executing from planing budget.
+            // TODO (Tales#1#): Mark currently active budget (an executing budget with next being NULL or a planing budget)
+            wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
+            bool executing = int(stm.getColumn(1));
+            if(not executing){
+                budgetName = "<em>" + budgetName + "</em>";
+            }
+            lbMonths->Append(budgetName);
+        }
+    } catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
+}
+

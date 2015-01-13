@@ -3146,7 +3146,7 @@
 1420907600 e:\dev\projects\orcamentocb\orcamentocbapp.h
 	<wx/app.h>
 
-1421027025 e:\dev\projects\orcamentocb\orcamentomainframe.h
+1421110247 e:\dev\projects\orcamentocb\orcamentomainframe.h
 	<SQLiteCpp/SQLiteCpp.h>
 	<memory>
 	<wx/menu.h>
@@ -3156,7 +3156,7 @@
 	<wx/frame.h>
 	<wx/statusbr.h>
 
-1421030637 source:e:\dev\projects\orcamentocb\orcamentomainframe.cpp
+1421112517 source:e:\dev\projects\orcamentocb\orcamentomainframe.cpp
 	"wx_pch.h"
 	"OrcamentoMainFrame.h"
 	"CreateDatabaseDialog.h"
