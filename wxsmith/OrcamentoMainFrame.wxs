@@ -13,9 +13,18 @@
 			<object class="wxSimpleHtmlListBox" name="ID_SIMPLEHTMLLISTBOX1" variable="lbMonths" member="yes">
 				<default>-1</default>
 				<pos>223,244</pos>
+				<handler function="OnlbMonthsDClick" entry="EVT_LISTBOX" />
 			</object>
 			<object class="wxGrid" name="ID_GDPROMISES" variable="gdPromises" member="yes">
 				<cols>5</cols>
+				<rows>1</rows>
+				<collabels>
+					<item>Category</item>
+					<item>Promise</item>
+					<item>Expected</item>
+					<item>Used</item>
+					<item>Due</item>
+				</collabels>
 				<pos>78,4</pos>
 			</object>
 		</object>

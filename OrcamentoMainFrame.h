@@ -32,6 +32,7 @@ class OrcamentoMainFrame: public wxFrame
         std::unique_ptr<SQLite::Database> m_database;
 
         void RefreshModel();
+        void RefreshPromises();
 
         //(*Handlers(OrcamentoMainFrame)
         void OnQuit(wxCommandEvent& event);
@@ -40,6 +41,7 @@ class OrcamentoMainFrame: public wxFrame
         void OnCreateBudget(wxCommandEvent& event);
         void OnExecuteBudget(wxCommandEvent& event);
         void OnOpen(wxCommandEvent& event);
+        void OnlbMonthsDClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)

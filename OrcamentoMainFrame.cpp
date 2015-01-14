@@ -83,9 +83,14 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
     gdPromises = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
-    gdPromises->CreateGrid(0,5);
+    gdPromises->CreateGrid(1,5);
     gdPromises->EnableEditing(true);
     gdPromises->EnableGridLines(true);
+    gdPromises->SetColLabelValue(0, _("Category"));
+    gdPromises->SetColLabelValue(1, _("Promise"));
+    gdPromises->SetColLabelValue(2, _("Expected"));
+    gdPromises->SetColLabelValue(3, _("Used"));
+    gdPromises->SetColLabelValue(4, _("Due"));
     gdPromises->SetDefaultCellFont( gdPromises->GetFont() );
     gdPromises->SetDefaultCellTextColour( gdPromises->GetForegroundColour() );
     SplitterWindow1->SplitVertically(lbMonths, gdPromises);
@@ -124,6 +129,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
 
+    Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
@@ -155,11 +161,47 @@ void OrcamentoMainFrame::RefreshModel()
                 budgetName = "<strong>" + budgetName + "</strong>";
             }
             lbMonths->Append(budgetName);
+            if(active){
+                lbMonths->SetSelection(lbMonths->GetCount()-1);
+            }
         }
+        RefreshPromises();
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
 }
+
+void OrcamentoMainFrame::RefreshPromises()
+{
+    if(gdPromises->GetNumberRows()){
+        gdPromises->DeleteRows(0, gdPromises->GetNumberRows());
+    }
+    int selected = lbMonths->GetSelection();
+    if(selected >= 0){
+        int budget_id = 1 + selected;
+        try {
+            const char *query = "SELECT cat.name, prom.name, prom.amount, 0, DATE(bud.start, prom.due)"
+                                "FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
+                                "WHERE budget_id = ?1 ORDER BY cat.name, prom.name"
+            ;
+            SQLite::Statement stm(*m_database, query);
+            stm.bind(1, budget_id);
+
+            for(int i = 0; stm.executeStep(); ++i){
+                gdPromises->AppendRows();
+                gdPromises->SetCellValue({i, 0}, wxString::FromUTF8(stm.getColumn(0)) );
+                gdPromises->SetCellValue({i, 1}, wxString::FromUTF8(stm.getColumn(1)) );
+                gdPromises->SetCellValue({i, 2}, wxString::FromUTF8(stm.getColumn(2)) );
+                gdPromises->SetCellValue({i, 3}, wxString::FromUTF8(stm.getColumn(3)) );
+                gdPromises->SetCellValue({i, 4}, wxString::FromUTF8(stm.getColumn(4)) );
+            }
+            gdPromises->AutoSizeColumns();
+        } catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
+    }
+}
+
 
 void OrcamentoMainFrame::OnQuit(wxCommandEvent& event)
 {
@@ -254,4 +296,9 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }
+}
+
+void OrcamentoMainFrame::OnlbMonthsDClick(wxCommandEvent& event)
+{
+    RefreshPromises();
 }

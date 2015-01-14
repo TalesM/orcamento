@@ -7,6 +7,8 @@ DROP TABLE IF EXISTS "promise";
 DROP TABLE IF EXISTS "execution";
 DROP TABLE IF EXISTS "category";
 
+DROP TRIGGER IF EXISTS "budget_insert";
+
 CREATE TABLE "meta" (
     "key"           VARCHAR PRIMARY KEY,
     "value"         TEXT
@@ -47,3 +49,7 @@ CREATE TABLE "execution" (
 	"obs"			TEXT
 );
 
+CREATE TRIGGER "budget_insert" AFTER INSERT ON "budget" FOR EACH ROW
+BEGIN
+    INSERT INTO "promise"("budget_id", "name", "amount") VALUES (NEW.budget_id, 'Previous Balance', IFNULL((SELECT SUM("amount") FROM "promise" WHERE "budget_id"=(NEW.budget_id-1)), 0) );
+END;
