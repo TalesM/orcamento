@@ -83,14 +83,16 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
     gdPromises = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
-    gdPromises->CreateGrid(1,5);
+    gdPromises->CreateGrid(0,6);
+    gdPromises->HideCol(0);
     gdPromises->EnableEditing(true);
     gdPromises->EnableGridLines(true);
-    gdPromises->SetColLabelValue(0, _("Category"));
+    gdPromises->SetColLabelValue(0, _("Id"));
     gdPromises->SetColLabelValue(1, _("Promise"));
     gdPromises->SetColLabelValue(2, _("Expected"));
     gdPromises->SetColLabelValue(3, _("Used"));
     gdPromises->SetColLabelValue(4, _("Due"));
+    gdPromises->SetColLabelValue(5, _("Category"));
     gdPromises->SetDefaultCellFont( gdPromises->GetFont() );
     gdPromises->SetDefaultCellTextColour( gdPromises->GetForegroundColour() );
     SplitterWindow1->SplitVertically(lbMonths, gdPromises);
@@ -180,9 +182,9 @@ void OrcamentoMainFrame::RefreshPromises()
     if(selected >= 0){
         int budget_id = 1 + selected;
         try {
-            const char *query = "SELECT cat.name, prom.name, prom.amount, 0, DATE(bud.start, prom.due)"
-                                "FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
-                                "WHERE budget_id = ?1 ORDER BY cat.name, prom.name"
+            const char *query = "SELECT promise_id, prom.name, prom.amount, 0, DATE(bud.start, prom.due), cat.name"
+                                "  FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
+                                "  WHERE budget_id = ?1 ORDER BY cat.name, prom.name"
             ;
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, budget_id);
@@ -194,6 +196,7 @@ void OrcamentoMainFrame::RefreshPromises()
                 gdPromises->SetCellValue({i, 2}, wxString::FromUTF8(stm.getColumn(2)) );
                 gdPromises->SetCellValue({i, 3}, wxString::FromUTF8(stm.getColumn(3)) );
                 gdPromises->SetCellValue({i, 4}, wxString::FromUTF8(stm.getColumn(4)) );
+                gdPromises->SetCellValue({i, 5}, wxString::FromUTF8(stm.getColumn(5)) );
             }
             gdPromises->AutoSizeColumns();
         } catch (const std::exception &e){

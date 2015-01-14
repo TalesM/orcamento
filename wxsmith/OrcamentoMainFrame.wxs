@@ -16,16 +16,17 @@
 				<handler function="OnlbMonthsDClick" entry="EVT_LISTBOX" />
 			</object>
 			<object class="wxGrid" name="ID_GDPROMISES" variable="gdPromises" member="yes">
-				<cols>5</cols>
-				<rows>1</rows>
+				<cols>6</cols>
 				<collabels>
-					<item>Category</item>
+					<item>Id</item>
 					<item>Promise</item>
 					<item>Expected</item>
 					<item>Used</item>
 					<item>Due</item>
+					<item>Category</item>
 				</collabels>
 				<pos>78,4</pos>
+				<extra_code>gdPromises-&gt;HideCol(0);</extra_code>
 			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
