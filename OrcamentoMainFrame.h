@@ -42,6 +42,7 @@ class OrcamentoMainFrame: public wxFrame
         void OnExecuteBudget(wxCommandEvent& event);
         void OnOpen(wxCommandEvent& event);
         void OnlbMonthsDClick(wxCommandEvent& event);
+        void OnCreatePromise(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -53,6 +54,7 @@ class OrcamentoMainFrame: public wxFrame
         static const long idMenuQuit;
         static const long ID_MENUCREATE_BUDGET;
         static const long ID_MENUEXECUTE_BUDGET;
+        static const long ID_PROMISE_CREATE;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         //*)
@@ -60,6 +62,7 @@ class OrcamentoMainFrame: public wxFrame
         //(*Declarations(OrcamentoMainFrame)
         wxSimpleHtmlListBox* lbMonths;
         wxMenu* Menu3;
+        wxMenuItem* MenuItem1;
         wxMenuItem* mnNew;
         wxMenuItem* mnExecuteNextBudget;
         wxMenuItem* mnCreateBudget;

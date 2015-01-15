@@ -55,6 +55,7 @@ const long OrcamentoMainFrame::ID_MENUITEM2 = wxNewId();
 const long OrcamentoMainFrame::idMenuQuit = wxNewId();
 const long OrcamentoMainFrame::ID_MENUCREATE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
+const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 //*)
@@ -116,6 +117,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Menu3->Append(mnExecuteNextBudget);
     MenuBar1->Append(Menu3, _("Budget"));
     Menu4 = new wxMenu();
+    MenuItem1 = new wxMenuItem(Menu4, ID_PROMISE_CREATE, _("Add a Promise\tCtrl-Insert"), _("Insert a new promise on current budget."), wxITEM_NORMAL);
+    Menu4->Append(MenuItem1);
     MenuBar1->Append(Menu4, _("Promise"));
     Menu5 = new wxMenu();
     MenuBar1->Append(Menu5, _("Execution"));
@@ -137,6 +140,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
+    Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreatePromise);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
     //*)
 }
@@ -198,7 +202,7 @@ void OrcamentoMainFrame::RefreshPromises()
                 gdPromises->SetCellValue({i, 4}, wxString::FromUTF8(stm.getColumn(4)) );
                 gdPromises->SetCellValue({i, 5}, wxString::FromUTF8(stm.getColumn(5)) );
             }
-            gdPromises->AutoSizeColumns();
+            //gdPromises->AutoSizeColumns();
         } catch (const std::exception &e){
             wxMessageBox(e.what());
         }
@@ -303,5 +307,22 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnlbMonthsDClick(wxCommandEvent& event)
 {
+    RefreshPromises();
+}
+
+void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
+{
+    int selection = lbMonths->GetSelection() + 1;
+    if(!selection){
+        return;
+    }
+    auto query = "INSERT INTO promise(budget_id, name, amount, category_id)"
+                 "  VALUES (?1, 'New Promise', 0, (SELECT max(category_id) FROM category))";
+    SQLite::Statement stm(*m_database, query);
+    stm.bind(1, selection);
+    if(!stm.exec()){
+        wxMessageBox("Erro desconhecido");
+    }
+
     RefreshPromises();
 }

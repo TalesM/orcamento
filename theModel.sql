@@ -53,3 +53,17 @@ CREATE TRIGGER "budget_insert" AFTER INSERT ON "budget" FOR EACH ROW
 BEGIN
     INSERT INTO "promise"("budget_id", "name", "amount") VALUES (NEW.budget_id, 'Previous Balance', IFNULL((SELECT SUM("amount") FROM "promise" WHERE "budget_id"=(NEW.budget_id-1)), 0) );
 END;
+
+INSERT INTO "category"(name)
+VALUES
+    ('Income'),
+    ('Habitation'),
+    ('Transport'),
+    ('Food'),
+    ('Personal Care'),
+    ('Entertainment'),
+    ('Compromises'),
+    ('Economy and Investments'),
+    ('Taxes'),
+    ('Gifts'),
+    ('Extras')

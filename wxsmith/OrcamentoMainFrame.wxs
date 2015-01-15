@@ -68,6 +68,12 @@
 			</object>
 			<object class="wxMenu" variable="Menu4" member="yes">
 				<label>Promise</label>
+				<object class="wxMenuItem" name="ID_PROMISE_CREATE" variable="MenuItem1" member="yes">
+					<label>Add a Promise</label>
+					<accel>Ctrl-Insert</accel>
+					<help>Insert a new promise on current budget.</help>
+					<handler function="OnCreatePromise" entry="EVT_MENU" />
+				</object>
 			</object>
 			<object class="wxMenu" variable="Menu5" member="yes">
 				<label>Execution</label>
