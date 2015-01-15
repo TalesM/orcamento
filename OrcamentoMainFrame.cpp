@@ -186,7 +186,7 @@ void OrcamentoMainFrame::RefreshPromises()
     if(selected >= 0){
         int budget_id = 1 + selected;
         try {
-            const char *query = "SELECT promise_id, prom.name, prom.amount, 0, DATE(bud.start, prom.due), cat.name"
+            const char *query = "SELECT promise_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
                                 "  FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
                                 "  WHERE budget_id = ?1 ORDER BY cat.name, prom.name"
             ;
@@ -195,14 +195,29 @@ void OrcamentoMainFrame::RefreshPromises()
 
             for(int i = 0; stm.executeStep(); ++i){
                 gdPromises->AppendRows();
-                gdPromises->SetCellValue({i, 0}, wxString::FromUTF8(stm.getColumn(0)) );
-                gdPromises->SetCellValue({i, 1}, wxString::FromUTF8(stm.getColumn(1)) );
-                gdPromises->SetCellValue({i, 2}, wxString::FromUTF8(stm.getColumn(2)) );
-                gdPromises->SetCellValue({i, 3}, wxString::FromUTF8(stm.getColumn(3)) );
-                gdPromises->SetCellValue({i, 4}, wxString::FromUTF8(stm.getColumn(4)) );
-                gdPromises->SetCellValue({i, 5}, wxString::FromUTF8(stm.getColumn(5)) );
+                gdPromises->SetCellValue(i, 0, wxString::FromUTF8(stm.getColumn(0)) );
+                gdPromises->SetCellValue(i, 1, wxString::FromUTF8(stm.getColumn(1)) );
+                gdPromises->SetCellValue(i, 2, wxString::FromUTF8(stm.getColumn(2)) );
+                gdPromises->SetCellValue(i, 3, wxString::FromUTF8(stm.getColumn(3)) );
+                gdPromises->SetCellValue(i, 4, wxString::FromUTF8(stm.getColumn(4)) );
+                gdPromises->SetCellValue(i, 5, wxString::FromUTF8(stm.getColumn(5)) );
+                if(stm.isColumnNull(5)){
+                    wxGridCellAttr *attrImultLine = new wxGridCellAttr();
+                    attrImultLine->SetReadOnly(true);
+                    gdPromises->SetRowAttr(i, attrImultLine);
+                }
             }
-            //gdPromises->AutoSizeColumns();
+// TODO (Tales#1#): Take care for memory management.
+            auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
+            wxGridCellAttr *attrSpentCol = new wxGridCellAttr();
+            attrSpentCol->SetReadOnly(true);
+            attrSpentCol->SetRenderer(moneyRenderer);
+            gdPromises->SetColAttr(3, attrSpentCol);
+            wxGridCellAttr *attrAmountCol = new wxGridCellAttr();
+            attrAmountCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
+            moneyRenderer->IncRef();
+            attrAmountCol->SetRenderer(moneyRenderer);
+            gdPromises->SetColAttr(2, attrAmountCol);
         } catch (const std::exception &e){
             wxMessageBox(e.what());
         }
