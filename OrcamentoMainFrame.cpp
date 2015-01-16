@@ -207,17 +207,37 @@ void OrcamentoMainFrame::RefreshPromises()
                     gdPromises->SetRowAttr(i, attrImultLine);
                 }
             }
-// TODO (Tales#1#): Take care for memory management.
+            // TODO (Tales#1#): Modularize
             auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
+            //Expected
+            wxGridCellAttr *attrAmountCol = new wxGridCellAttr();
+            gdPromises->SetColAttr(2, attrAmountCol);
+            attrAmountCol->SetRenderer(moneyRenderer);
+            attrAmountCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
+            moneyRenderer->IncRef();
+
+            //Spent
             wxGridCellAttr *attrSpentCol = new wxGridCellAttr();
             attrSpentCol->SetReadOnly(true);
             attrSpentCol->SetRenderer(moneyRenderer);
             gdPromises->SetColAttr(3, attrSpentCol);
-            wxGridCellAttr *attrAmountCol = new wxGridCellAttr();
-            attrAmountCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
-            moneyRenderer->IncRef();
-            attrAmountCol->SetRenderer(moneyRenderer);
-            gdPromises->SetColAttr(2, attrAmountCol);
+
+            //Due
+            wxGridCellAttr *attrDueCol = new wxGridCellAttr();
+//            attrSpentCol->SetReadOnly(true);
+            attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
+            gdPromises->SetColAttr(4, attrDueCol);
+
+            //Category
+            wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
+            wxArrayString choices;
+            SQLite::Statement choicesStm(*m_database, "SELECT name FROM category ORDER BY category_id ASC");
+            while(choicesStm.executeStep()){
+                choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
+            }
+            attrCategoryCol->SetReadOnly();
+            gdPromises->SetColAttr(5, attrCategoryCol);
+
         } catch (const std::exception &e){
             wxMessageBox(e.what());
         }
