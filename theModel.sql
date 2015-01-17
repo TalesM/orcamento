@@ -66,6 +66,11 @@ BEGIN
     UPDATE "promise" SET "amount" = ("amount" + NEW."amount" - OLD."amount")
         WHERE "budget_id" = (NEW."budget_id" + 1) AND "category_id" IS NULL;
 END;
+CREATE TRIGGER "promise_update" AFTER DELETE ON "promise" FOR EACH ROW
+BEGIN
+    UPDATE "promise" SET "amount" = ("amount" - OLD."amount")
+        WHERE "budget_id" = (OLD."budget_id" + 1) AND "category_id" IS NULL;
+END;
 
 INSERT INTO "category"(name)
 VALUES

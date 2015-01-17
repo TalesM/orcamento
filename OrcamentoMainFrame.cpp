@@ -48,12 +48,12 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 
 namespace PromiseColumn{
     constexpr int
-        ID = 0,
-        NAME = 1,
-        ESTIMATED =2,
-        SPENT = 3,
-        DUE = 4,
-        CATEGORY = 5;
+        ID          = 0,
+        NAME        = 1,
+        ESTIMATED   = 2,
+        ACCOUNTED   = 3,
+        DUE         = 4,
+        CATEGORY    = 5;
     constexpr int length = 6;
 };
 
@@ -80,12 +80,14 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 {
     //(*Initialize(OrcamentoMainFrame)
     wxMenuItem* MenuItem2;
+    wxMenu* Menu3;
     wxMenu* Menu1;
     wxMenuItem* mnQuit;
     wxMenuItem* mnOpen;
     wxMenuBar* MenuBar1;
     wxSplitterWindow* SplitterWindow1;
     wxMenu* Menu2;
+    wxMenu* Menu5;
 
     Create(parent, wxID_ANY, _("OrcaMento"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
@@ -101,8 +103,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     gdPromises->EnableGridLines(true);
     gdPromises->SetColLabelValue(0, _("Id"));
     gdPromises->SetColLabelValue(1, _("Promise"));
-    gdPromises->SetColLabelValue(2, _("Expected"));
-    gdPromises->SetColLabelValue(3, _("Used"));
+    gdPromises->SetColLabelValue(2, _("Estimated"));
+    gdPromises->SetColLabelValue(3, _("Accounted"));
     gdPromises->SetColLabelValue(4, _("Due"));
     gdPromises->SetColLabelValue(5, _("Category"));
     gdPromises->SetDefaultCellFont( gdPromises->GetFont() );
@@ -138,12 +140,12 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Menu2->Append(MenuItem2);
     MenuBar1->Append(Menu2, _("Help"));
     SetMenuBar(MenuBar1);
-    StatusBar1 = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
+    sbStatus = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
     int __wxStatusBarWidths_1[1] = { -1 };
     int __wxStatusBarStyles_1[1] = { wxSB_NORMAL };
-    StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
-    StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
-    SetStatusBar(StatusBar1);
+    sbStatus->SetFieldsCount(1,__wxStatusBarWidths_1);
+    sbStatus->SetStatusStyles(1,__wxStatusBarStyles_1);
+    SetStatusBar(sbStatus);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OnGdPromisesCellChange);
@@ -227,12 +229,6 @@ void OrcamentoMainFrame::RefreshPromises()
 
 void OrcamentoMainFrame::RefreshCellAttr()
 {
-//    auto stringRenderer = new wxGridCellStringRenderer();
-//    wxGridCellAttr *attrNameCol = new wxGridCellAttr();
-////    attrNameCol->SetRenderer(new wxGridCellStringRenderer());
-//    attrNameCol->SetEditor(new wxGridCellStringEditor);
-//    gdPromises->SetColAttr(1, attrNameCol);
-
     auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
     //Expected
     wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
@@ -242,10 +238,10 @@ void OrcamentoMainFrame::RefreshCellAttr()
 
     //Spent
     moneyRenderer->IncRef();
-    wxGridCellAttr *attrSpentCol = new wxGridCellAttr();
-    attrSpentCol->SetReadOnly(true);
-    attrSpentCol->SetRenderer(moneyRenderer);
-    gdPromises->SetColAttr(PromiseColumn::SPENT, attrSpentCol);
+    wxGridCellAttr *attrAccountedCol = new wxGridCellAttr();
+    attrAccountedCol->SetReadOnly(true);
+    attrAccountedCol->SetRenderer(moneyRenderer);
+    gdPromises->SetColAttr(PromiseColumn::ACCOUNTED, attrAccountedCol);
 
     //Due
     wxGridCellAttr *attrDueCol = new wxGridCellAttr();

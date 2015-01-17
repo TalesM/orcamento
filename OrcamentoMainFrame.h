@@ -63,14 +63,12 @@ class OrcamentoMainFrame: public wxFrame
 
         //(*Declarations(OrcamentoMainFrame)
         wxSimpleHtmlListBox* lbMonths;
-        wxMenu* Menu3;
         wxMenuItem* MenuItem1;
         wxMenuItem* mnNew;
         wxMenuItem* mnExecuteNextBudget;
         wxMenuItem* mnCreateBudget;
-        wxStatusBar* StatusBar1;
+        wxStatusBar* sbStatus;
         wxGrid* gdPromises;
-        wxMenu* Menu5;
         wxMenu* Menu4;
         //*)
 
