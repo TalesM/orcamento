@@ -411,6 +411,21 @@ void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
         updateField("amount", int(atof(newValue)*100));
         break;
     case PromiseColumn::DUE:
+        try{
+            wxDateTime due{};
+            due.ParseISODate(newValue);
+            int day = due.GetDay() -1;
+            std::string query = "UPDATE promise SET \"due\" = ?2|| ' days' WHERE promise_id = ?1";
+            SQLite::Statement stm(*m_database, query);
+            stm.bind(1, int(id));
+            stm.bind(2, day);
+            if(!stm.exec()){
+                wxMessageBox("Erro desconhecido");
+            }
+        }catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
+        break;
     case PromiseColumn::CATEGORY:
         wxMessageBox(L"Not implemented yet.");
         // TODO (Tales#1#): VETO?
