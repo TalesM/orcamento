@@ -366,6 +366,7 @@ void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
 void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
 {
     wxString s = L"Modified: ";
-    s << event.GetRow() << ", " << event.GetCol() << "\n'" << event.GetString() << "'";
+    int row = event.GetRow(), col = event.GetCol();
+    s << row << ", " << col << "\n'" << event.GetString() << "' -> '" << gdPromises->GetCellValue(row, col) << "'";
     wxMessageBox(s);
 }
