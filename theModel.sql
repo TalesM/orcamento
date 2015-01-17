@@ -35,7 +35,7 @@ CREATE TABLE "promise" (
 	"budget_id"		INTEGER NOT NULL REFERENCES budget(budget_id),
 	"category_id"	INTEGER REFERENCES category(category_id),
 	"name"			VARCHAR NOT NULL,
-	"amount"		INTEGER NOT NULL,
+	"amount"		INTEGER NOT NULL CHECK (typeof(amount) = 'integer'),
 	"due"			TEXT, --Must be a date offset MM UNIT, to be applied on bugdet.start.
 	"obs"			TEXT
 );
@@ -44,14 +44,27 @@ CREATE TABLE "execution" (
 	"promise_id"	INTEGER NOT NULL REFERENCES promise(promise_id),
 	"wallet_id"		INTEGER NOT NULL REFERENCES wallet(wallet_id),
 	"description"   VARCHAR,
-	"amount"		INTEGER NOT NULL,
+	"amount"		INTEGER NOT NULL CHECK (typeof(amount) = 'integer'),
 	"date"			TEXT NOT NULL DEFAULT CURRENT_DATE, --Must be a date YYYY-MM-DD.
 	"obs"			TEXT
 );
 
+--Budget triggers
 CREATE TRIGGER "budget_insert" AFTER INSERT ON "budget" FOR EACH ROW
 BEGIN
     INSERT INTO "promise"("budget_id", "name", "amount") VALUES (NEW.budget_id, 'Previous Balance', IFNULL((SELECT SUM("amount") FROM "promise" WHERE "budget_id"=(NEW.budget_id-1)), 0) );
+END;
+
+--Promise Triggers
+CREATE TRIGGER "promise_insert" AFTER INSERT ON "promise" FOR EACH ROW
+BEGIN
+    UPDATE "promise" SET "amount" = ("amount" + NEW."amount")
+        WHERE "budget_id" = (NEW."budget_id" + 1) AND "category_id" IS NULL;
+END;
+CREATE TRIGGER "promise_update" AFTER UPDATE OF "amount" ON "promise" FOR EACH ROW
+BEGIN
+    UPDATE "promise" SET "amount" = ("amount" + NEW."amount" - OLD."amount")
+        WHERE "budget_id" = (NEW."budget_id" + 1) AND "category_id" IS NULL;
 END;
 
 INSERT INTO "category"(name)

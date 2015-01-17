@@ -412,6 +412,8 @@ void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
         updateField("name", newValue);
         break;
     case PromiseColumn::ESTIMATED:
+        updateField("amount", int(atof(newValue)*100));
+        break;
     case PromiseColumn::DUE:
     case PromiseColumn::CATEGORY:
         wxMessageBox(L"Not implemented yet.");
