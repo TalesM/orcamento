@@ -45,6 +45,9 @@ class OrcamentoMainFrame: public wxFrame
         void OnlbMonthsDClick(wxCommandEvent& event);
         void OnCreatePromise(wxCommandEvent& event);
         void OngdPromisesCellChange(wxGridEvent& event);
+        void OngdPromisesCellSelect(wxGridEvent& event);
+        void OngdPromisesCellRightClick(wxGridEvent& event);
+        void OnmnPromiseEditSelected(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -59,17 +62,22 @@ class OrcamentoMainFrame: public wxFrame
         static const long ID_PROMISE_CREATE;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
+        static const long ID_MENU_PROMISE_EDIT;
+        static const long ID_MENUITEM4;
         //*)
 
         //(*Declarations(OrcamentoMainFrame)
         wxSimpleHtmlListBox* lbMonths;
         wxMenuItem* MenuItem1;
+        wxMenuItem* MenuItem4;
         wxMenuItem* mnNew;
         wxMenuItem* mnExecuteNextBudget;
+        wxMenu cmnPromise;
         wxMenuItem* mnCreateBudget;
         wxStatusBar* sbStatus;
+        wxMenuItem* mnPromiseEdit;
+        wxMenu* mnPromise;
         wxGrid* gdPromises;
-        wxMenu* Menu4;
         //*)
 
         DECLARE_EVENT_TABLE()

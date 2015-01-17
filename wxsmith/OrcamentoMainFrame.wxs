@@ -27,7 +27,9 @@
 				</collabels>
 				<pos>78,4</pos>
 				<extra_code>gdPromises-&gt;HideCol(0);</extra_code>
+				<handler function="OngdPromisesCellRightClick" entry="EVT_CMD_GRID_CELL_RIGHT_CLICK" />
 				<handler function="OngdPromisesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
+				<handler function="OngdPromisesCellSelect" entry="EVT_CMD_GRID_SELECT_CELL" />
 			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
@@ -67,7 +69,7 @@
 					<handler function="OnExecuteBudget" entry="EVT_MENU" />
 				</object>
 			</object>
-			<object class="wxMenu" variable="Menu4" member="yes">
+			<object class="wxMenu" variable="mnPromise" member="yes">
 				<label>Promise</label>
 				<object class="wxMenuItem" name="ID_PROMISE_CREATE" variable="MenuItem1" member="yes">
 					<label>Add a Promise</label>
@@ -93,6 +95,14 @@
 			<fields>1</fields>
 			<widths>-1</widths>
 			<styles>wxSB_NORMAL</styles>
+		</object>
+		<object class="wxMenu" variable="cmnPromise" member="yes">
+			<object class="wxMenuItem" name="ID_MENU_PROMISE_EDIT" variable="MenuItem3" member="yes">
+				<label>Edit Promise</label>
+			</object>
+			<object class="wxMenuItem" name="ID_MENUITEM4" variable="MenuItem4" member="yes">
+				<label>Delete Promise</label>
+			</object>
 		</object>
 	</object>
 </wxsmith>

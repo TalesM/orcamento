@@ -69,6 +69,8 @@ const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
+const long OrcamentoMainFrame::ID_MENU_PROMISE_EDIT = wxNewId();
+const long OrcamentoMainFrame::ID_MENUITEM4 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(OrcamentoMainFrame,wxFrame)
@@ -129,10 +131,10 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     mnExecuteNextBudget = new wxMenuItem(Menu3, ID_MENUEXECUTE_BUDGET, _("Execute Next Budget"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(mnExecuteNextBudget);
     MenuBar1->Append(Menu3, _("Budget"));
-    Menu4 = new wxMenu();
-    MenuItem1 = new wxMenuItem(Menu4, ID_PROMISE_CREATE, _("Add a Promise\tCtrl-Insert"), _("Insert a new promise on current budget."), wxITEM_NORMAL);
-    Menu4->Append(MenuItem1);
-    MenuBar1->Append(Menu4, _("Promise"));
+    mnPromise = new wxMenu();
+    MenuItem1 = new wxMenuItem(mnPromise, ID_PROMISE_CREATE, _("Add a Promise\tCtrl-Insert"), _("Insert a new promise on current budget."), wxITEM_NORMAL);
+    mnPromise->Append(MenuItem1);
+    MenuBar1->Append(mnPromise, _("Promise"));
     Menu5 = new wxMenu();
     MenuBar1->Append(Menu5, _("Execution"));
     Menu2 = new wxMenu();
@@ -146,9 +148,15 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     sbStatus->SetFieldsCount(1,__wxStatusBarWidths_1);
     sbStatus->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
+    mnPromiseEdit = new wxMenuItem((&cmnPromise), ID_MENU_PROMISE_EDIT, _("Edit Promise"), wxEmptyString, wxITEM_NORMAL);
+    cmnPromise.Append(mnPromiseEdit);
+    MenuItem4 = new wxMenuItem((&cmnPromise), ID_MENUITEM4, _("Delete Promise"), wxEmptyString, wxITEM_NORMAL);
+    cmnPromise.Append(MenuItem4);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_RIGHT_CLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellRightClick);
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellChange);
+    Connect(ID_GDPROMISES,wxEVT_GRID_SELECT_CELL,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellSelect);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
@@ -156,6 +164,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
     Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreatePromise);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
+    Connect(ID_MENU_PROMISE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnPromiseEditSelected);
     //*)
 }
 
@@ -441,5 +450,37 @@ void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
         break;
     default:
         break;
+    }
+}
+
+void OrcamentoMainFrame::OngdPromisesCellSelect(wxGridEvent& event)
+{
+    int row = event.GetRow(), col = event.GetCol();
+    if(row > 0 and col == PromiseColumn::ACCOUNTED){
+        wxMessageBox("OIE!");
+    }
+}
+
+void OrcamentoMainFrame::OngdPromisesCellRightClick(wxGridEvent& event)
+{
+    wxPoint point = event.GetPosition();
+    wxGridCellCoords coords(event.GetRow(), event.GetCol());
+    if(coords.GetRow() < 1){
+        return;
+    }
+
+    cmnPromise.SetClientData(&coords);
+    gdPromises->GetPosition();
+    PopupMenu( &cmnPromise, gdPromises->GetPosition() + point);
+    cmnPromise.SetClientData(NULL);
+}
+
+void OrcamentoMainFrame::OnmnPromiseEditSelected(wxCommandEvent& event)
+{
+    if(cmnPromise.GetClientData()){
+        wxGridCellCoords &coords = *reinterpret_cast<wxGridCellCoords*>(cmnPromise.GetClientData());
+        wxString str(L"Happened at ");
+        str << coords.GetRow() << ", " << coords.GetCol();
+        wxMessageBox(str);
     }
 }
