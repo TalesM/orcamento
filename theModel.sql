@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS "meta";
 DROP TABLE IF EXISTS "wallet";
 DROP TABLE IF EXISTS "budget";
 DROP TABLE IF EXISTS "estimate";
-DROP TABLE IF EXISTS "realization";
+DROP TABLE IF EXISTS "execution";
 DROP TABLE IF EXISTS "category";
 
 DROP TRIGGER IF EXISTS "budget_insert";
@@ -44,8 +44,8 @@ CREATE TABLE "estimate" (
 	"due"			TEXT, --Must be a date offset MM UNIT, to be applied on bugdet.start.
 	"obs"			TEXT
 );
-CREATE TABLE "realization" (
-	"realization_id"	INTEGER PRIMARY KEY,
+CREATE TABLE "execution" (
+	"execution_id"	INTEGER PRIMARY KEY,
 	"estimate_id"	INTEGER NOT NULL REFERENCES estimate(estimate_id),
 	"wallet_id"		INTEGER NOT NULL REFERENCES wallet(wallet_id),
 	"description"   VARCHAR,

@@ -60,7 +60,6 @@ namespace EstimateColumn{
 //(*IdInit(OrcamentoMainFrame)
 const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
 const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
-const long OrcamentoMainFrame::ID_PNESTIMATES = wxNewId();
 const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM2 = wxNewId();
@@ -100,8 +99,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetMinimumPaneSize(10);
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
-    pnEstimates = new wxPanel(SplitterWindow1, ID_PNESTIMATES, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PNESTIMATES"));
-    gdEstimates = new wxGrid(pnEstimates, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
+    gdEstimates = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
     gdEstimates->CreateGrid(0,6);
     gdEstimates->HideCol(0);
     gdEstimates->EnableEditing(true);
@@ -114,7 +112,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     gdEstimates->SetColLabelValue(5, _("Category"));
     gdEstimates->SetDefaultCellFont( gdEstimates->GetFont() );
     gdEstimates->SetDefaultCellTextColour( gdEstimates->GetForegroundColour() );
-    SplitterWindow1->SplitVertically(lbMonths, pnEstimates);
+    SplitterWindow1->SplitVertically(lbMonths, gdEstimates);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     mnNew = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
@@ -146,10 +144,10 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     MenuBar1->Append(Menu2, _("Help"));
     SetMenuBar(MenuBar1);
     sbStatus = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
-    int __wxStatusBarWidths_1[1] = { -1 };
-    int __wxStatusBarStyles_1[1] = { wxSB_NORMAL };
-    sbStatus->SetFieldsCount(1,__wxStatusBarWidths_1);
-    sbStatus->SetStatusStyles(1,__wxStatusBarStyles_1);
+    int __wxStatusBarWidths_1[4] = { -1, -1, -1, -1 };
+    int __wxStatusBarStyles_1[4] = { wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL };
+    sbStatus->SetFieldsCount(4,__wxStatusBarWidths_1);
+    sbStatus->SetStatusStyles(4,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
     mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_PROMISE_EDIT, _("Detail"), wxEmptyString, wxITEM_NORMAL);
     cmnEstimate.Append(mnEstimateEdit);
@@ -218,8 +216,7 @@ void OrcamentoMainFrame::RefreshEstimates()
         try {
             const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
                                 "  FROM budget bud JOIN estimate prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
-                                "  WHERE budget_id = ?1 ORDER BY category_id, prom.name"
-            ;
+                                "  WHERE budget_id = ?1 ORDER BY category_id, prom.name";
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, budget_id);
 
@@ -242,6 +239,33 @@ void OrcamentoMainFrame::RefreshEstimates()
         }
     }
 }
+
+void OrcamentoMainFrame::RefreshStatusBar()
+{
+    int budget_id = lbMonths->GetSelection()+1;
+    if(budget_id < 1){
+        return;
+    }
+    try{
+        const char *query = "SELECT budget.name, SUM(estimate.amount)/100.0, IFNULL(SUM(execution.amount)/100.0, 0.00)"
+                            "  FROM budget"
+                            "  JOIN estimate USING(budget_id)"
+                            "  LEFT JOIN execution USING(estimate_id)"
+                            "  WHERE budget_id = ?1"
+        ;
+        SQLite::Statement stm(*m_database, query);
+        stm.bind(1, budget_id);
+        if(!stm.executeStep()){
+            wxMessageBox("ERROR?");
+        }
+        sbStatus->SetStatusText(L"Budget: " + wxString::FromUTF8(stm.getColumn(0)), 1);
+        sbStatus->SetStatusText(L"Estimated: " + wxString::FromUTF8(stm.getColumn(1)), 2);
+        sbStatus->SetStatusText(L"Accounted: " + wxString::FromUTF8(stm.getColumn(2)), 3);
+    } catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
+}
+
 
 void OrcamentoMainFrame::RefreshCellAttr()
 {
@@ -375,6 +399,7 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
 void OrcamentoMainFrame::OnlbMonthsDClick(wxCommandEvent& event)
 {
     RefreshEstimates();
+    RefreshStatusBar();
 }
 
 void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
@@ -425,6 +450,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
         break;
     case EstimateColumn::ESTIMATED:
         updateField("amount", int(atof(newValue)*100));
+        RefreshStatusBar();
         break;
     case EstimateColumn::DUE:
         try{

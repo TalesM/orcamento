@@ -16,7 +16,6 @@
 #include <wx/menu.h>
 #include <wx/htmllbox.h>
 #include <wx/splitter.h>
-#include <wx/panel.h>
 #include <wx/grid.h>
 #include <wx/frame.h>
 #include <wx/statusbr.h>
@@ -35,6 +34,7 @@ class OrcamentoMainFrame: public wxFrame
         void RefreshModel();
         void RefreshEstimates();
         void RefreshCellAttr();
+        void RefreshStatusBar();
 
         //(*Handlers(OrcamentoMainFrame)
         void OnQuit(wxCommandEvent& event);
@@ -54,7 +54,6 @@ class OrcamentoMainFrame: public wxFrame
         //(*Identifiers(OrcamentoMainFrame)
         static const long ID_SIMPLEHTMLLISTBOX1;
         static const long ID_GDPROMISES;
-        static const long ID_PNESTIMATES;
         static const long ID_SPLITTERWINDOW1;
         static const long ID_MENUITEM1;
         static const long ID_MENUITEM2;
@@ -72,7 +71,6 @@ class OrcamentoMainFrame: public wxFrame
         //(*Declarations(OrcamentoMainFrame)
         wxMenuItem* mnExecute;
         wxSimpleHtmlListBox* lbMonths;
-        wxPanel* pnEstimates;
         wxMenuItem* MenuItem1;
         wxMenuItem* MenuItem4;
         wxGrid* gdEstimates;

@@ -92,9 +92,9 @@
 			</object>
 		</object>
 		<object class="wxStatusBar" name="ID_STATUSBAR1" variable="sbStatus" member="yes">
-			<fields>1</fields>
-			<widths>-1</widths>
-			<styles>wxSB_NORMAL</styles>
+			<fields>4</fields>
+			<widths>-1,-1,-1,-1</widths>
+			<styles>wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL</styles>
 		</object>
 		<object class="wxMenu" variable="cmnEstimate" member="yes">
 			<object class="wxMenuItem" name="ID_MENU_PROMISE_EDIT" variable="mnEstimateEdit" member="yes">
