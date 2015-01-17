@@ -148,7 +148,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(sbStatus);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
-    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OnGdPromisesCellChange);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellChange);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
@@ -202,7 +202,7 @@ void OrcamentoMainFrame::RefreshPromises()
         try {
             const char *query = "SELECT promise_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
                                 "  FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
-                                "  WHERE budget_id = ?1 ORDER BY cat.name, prom.name"
+                                "  WHERE budget_id = ?1 ORDER BY category_id, prom.name"
             ;
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, budget_id);
@@ -256,7 +256,7 @@ void OrcamentoMainFrame::RefreshCellAttr()
     while(choicesStm.executeStep()){
         choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
     }
-    attrCategoryCol->SetReadOnly();
+    attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdPromises->SetColAttr(PromiseColumn::CATEGORY, attrCategoryCol);
 }
 
@@ -378,7 +378,7 @@ void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
     RefreshPromises();
 }
 
-void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
+void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
     wxString newValue = gdPromises->GetCellValue(row, col);
@@ -427,8 +427,17 @@ void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
         }
         break;
     case PromiseColumn::CATEGORY:
-        wxMessageBox(L"Not implemented yet.");
-        // TODO (Tales#1#): VETO?
+        try{
+            std::string query = "UPDATE promise SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE promise_id = ?1";
+            SQLite::Statement stm(*m_database, query);
+            stm.bind(1, int(id));
+            stm.bind(2, newValue);
+            if(!stm.exec()){
+                wxMessageBox("Erro desconhecido");
+            }
+        }catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
         break;
     default:
         break;

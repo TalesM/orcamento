@@ -8,6 +8,11 @@ DROP TABLE IF EXISTS "execution";
 DROP TABLE IF EXISTS "category";
 
 DROP TRIGGER IF EXISTS "budget_insert";
+DROP TRIGGER IF EXISTS "budget_update";
+DROP TRIGGER IF EXISTS "budget_delete";
+DROP TRIGGER IF EXISTS "promise_insert";
+DROP TRIGGER IF EXISTS "promise_update";
+DROP TRIGGER IF EXISTS "promise_delete";
 
 CREATE TABLE "meta" (
     "key"           VARCHAR PRIMARY KEY,
@@ -27,7 +32,7 @@ CREATE TABLE "budget" (
 );
 CREATE TABLE "category" (
 	"category_id"	INTEGER PRIMARY KEY,
-	"name"			VARCHAR NOT NULL,
+	"name"			VARCHAR UNIQUE NOT NULL,
 	"obs"			TEXT
 );
 CREATE TABLE "promise" (
@@ -66,7 +71,7 @@ BEGIN
     UPDATE "promise" SET "amount" = ("amount" + NEW."amount" - OLD."amount")
         WHERE "budget_id" = (NEW."budget_id" + 1) AND "category_id" IS NULL;
 END;
-CREATE TRIGGER "promise_update" AFTER DELETE ON "promise" FOR EACH ROW
+CREATE TRIGGER "promise_delete" AFTER DELETE ON "promise" FOR EACH ROW
 BEGIN
     UPDATE "promise" SET "amount" = ("amount" - OLD."amount")
         WHERE "budget_id" = (OLD."budget_id" + 1) AND "category_id" IS NULL;

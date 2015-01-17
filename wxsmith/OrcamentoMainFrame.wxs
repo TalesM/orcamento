@@ -27,7 +27,7 @@
 				</collabels>
 				<pos>78,4</pos>
 				<extra_code>gdPromises-&gt;HideCol(0);</extra_code>
-				<handler function="OnGdPromisesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
+				<handler function="OngdPromisesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
 			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
