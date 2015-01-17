@@ -46,7 +46,7 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     return wxbuild;
 }
 
-namespace PromiseColumn{
+namespace EstimateColumn{
     constexpr int
         ID          = 0,
         NAME        = 1,
@@ -60,6 +60,7 @@ namespace PromiseColumn{
 //(*IdInit(OrcamentoMainFrame)
 const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
 const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
+const long OrcamentoMainFrame::ID_PNESTIMATES = wxNewId();
 const long OrcamentoMainFrame::ID_SPLITTERWINDOW1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM2 = wxNewId();
@@ -70,6 +71,7 @@ const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENU_PROMISE_EDIT = wxNewId();
+const long OrcamentoMainFrame::ID_MENUITEM3 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM4 = wxNewId();
 //*)
 
@@ -98,20 +100,21 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetMinimumPaneSize(10);
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
-    gdPromises = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
-    gdPromises->CreateGrid(0,6);
-    gdPromises->HideCol(0);
-    gdPromises->EnableEditing(true);
-    gdPromises->EnableGridLines(true);
-    gdPromises->SetColLabelValue(0, _("Id"));
-    gdPromises->SetColLabelValue(1, _("Promise"));
-    gdPromises->SetColLabelValue(2, _("Estimated"));
-    gdPromises->SetColLabelValue(3, _("Accounted"));
-    gdPromises->SetColLabelValue(4, _("Due"));
-    gdPromises->SetColLabelValue(5, _("Category"));
-    gdPromises->SetDefaultCellFont( gdPromises->GetFont() );
-    gdPromises->SetDefaultCellTextColour( gdPromises->GetForegroundColour() );
-    SplitterWindow1->SplitVertically(lbMonths, gdPromises);
+    pnEstimates = new wxPanel(SplitterWindow1, ID_PNESTIMATES, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PNESTIMATES"));
+    gdEstimates = new wxGrid(pnEstimates, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
+    gdEstimates->CreateGrid(0,6);
+    gdEstimates->HideCol(0);
+    gdEstimates->EnableEditing(true);
+    gdEstimates->EnableGridLines(true);
+    gdEstimates->SetColLabelValue(0, _("Id"));
+    gdEstimates->SetColLabelValue(1, _("Name"));
+    gdEstimates->SetColLabelValue(2, _("Estimated"));
+    gdEstimates->SetColLabelValue(3, _("Accounted"));
+    gdEstimates->SetColLabelValue(4, _("Due"));
+    gdEstimates->SetColLabelValue(5, _("Category"));
+    gdEstimates->SetDefaultCellFont( gdEstimates->GetFont() );
+    gdEstimates->SetDefaultCellTextColour( gdEstimates->GetForegroundColour() );
+    SplitterWindow1->SplitVertically(lbMonths, pnEstimates);
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
     mnNew = new wxMenuItem(Menu1, ID_MENUITEM1, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
@@ -131,10 +134,10 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     mnExecuteNextBudget = new wxMenuItem(Menu3, ID_MENUEXECUTE_BUDGET, _("Execute Next Budget"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(mnExecuteNextBudget);
     MenuBar1->Append(Menu3, _("Budget"));
-    mnPromise = new wxMenu();
-    MenuItem1 = new wxMenuItem(mnPromise, ID_PROMISE_CREATE, _("Add a Promise\tCtrl-Insert"), _("Insert a new promise on current budget."), wxITEM_NORMAL);
-    mnPromise->Append(MenuItem1);
-    MenuBar1->Append(mnPromise, _("Promise"));
+    mnEstimate = new wxMenu();
+    MenuItem1 = new wxMenuItem(mnEstimate, ID_PROMISE_CREATE, _("Add a Estimate\tCtrl-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
+    mnEstimate->Append(MenuItem1);
+    MenuBar1->Append(mnEstimate, _("Estimate"));
     Menu5 = new wxMenu();
     MenuBar1->Append(Menu5, _("Execution"));
     Menu2 = new wxMenu();
@@ -148,23 +151,27 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     sbStatus->SetFieldsCount(1,__wxStatusBarWidths_1);
     sbStatus->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
-    mnPromiseEdit = new wxMenuItem((&cmnPromise), ID_MENU_PROMISE_EDIT, _("Edit Promise"), wxEmptyString, wxITEM_NORMAL);
-    cmnPromise.Append(mnPromiseEdit);
-    MenuItem4 = new wxMenuItem((&cmnPromise), ID_MENUITEM4, _("Delete Promise"), wxEmptyString, wxITEM_NORMAL);
-    cmnPromise.Append(MenuItem4);
+    mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_PROMISE_EDIT, _("Detail"), wxEmptyString, wxITEM_NORMAL);
+    cmnEstimate.Append(mnEstimateEdit);
+    mnExecute = new wxMenuItem((&cmnEstimate), ID_MENUITEM3, _("Execute"), wxEmptyString, wxITEM_NORMAL);
+    cmnEstimate.Append(mnExecute);
+    mnExecute->Enable(false);
+    cmnEstimate.AppendSeparator();
+    MenuItem4 = new wxMenuItem((&cmnEstimate), ID_MENUITEM4, _("Delete Estimate"), wxEmptyString, wxITEM_NORMAL);
+    cmnEstimate.Append(MenuItem4);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
-    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_RIGHT_CLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellRightClick);
-    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellChange);
-    Connect(ID_GDPROMISES,wxEVT_GRID_SELECT_CELL,(wxObjectEventFunction)&OrcamentoMainFrame::OngdPromisesCellSelect);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_RIGHT_CLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellRightClick);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellChange);
+    Connect(ID_GDPROMISES,wxEVT_GRID_SELECT_CELL,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellSelect);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
-    Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreatePromise);
+    Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateEstimate);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
-    Connect(ID_MENU_PROMISE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnPromiseEditSelected);
+    Connect(ID_MENU_PROMISE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
     //*)
 }
 
@@ -194,37 +201,37 @@ void OrcamentoMainFrame::RefreshModel()
                 lbMonths->SetSelection(lbMonths->GetCount()-1);
             }
         }
-        RefreshPromises();
+        RefreshEstimates();
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
 }
 
-void OrcamentoMainFrame::RefreshPromises()
+void OrcamentoMainFrame::RefreshEstimates()
 {
-    if(gdPromises->GetNumberRows()){
-        gdPromises->DeleteRows(0, gdPromises->GetNumberRows());
+    if(gdEstimates->GetNumberRows()){
+        gdEstimates->DeleteRows(0, gdEstimates->GetNumberRows());
     }
     int selected = lbMonths->GetSelection();
     if(selected >= 0){
         int budget_id = 1 + selected;
         try {
-            const char *query = "SELECT promise_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
-                                "  FROM budget bud JOIN promise prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
+            const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
+                                "  FROM budget bud JOIN estimate prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
                                 "  WHERE budget_id = ?1 ORDER BY category_id, prom.name"
             ;
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, budget_id);
 
             for(int i = 0; stm.executeStep(); ++i){
-                gdPromises->AppendRows();
-                for(int j = 0; j < PromiseColumn::length; ++j){
-                    gdPromises->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
+                gdEstimates->AppendRows();
+                for(int j = 0; j < EstimateColumn::length; ++j){
+                    gdEstimates->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
                 }
-                if(stm.isColumnNull(PromiseColumn::CATEGORY)){
+                if(stm.isColumnNull(EstimateColumn::CATEGORY)){
                     wxGridCellAttr *attrImultLine = new wxGridCellAttr();
                     attrImultLine->SetReadOnly(true);
-                    gdPromises->SetRowAttr(i, attrImultLine);
+                    gdEstimates->SetRowAttr(i, attrImultLine);
                 }
             }
             // TODO (Tales#1#): Modularize
@@ -243,20 +250,20 @@ void OrcamentoMainFrame::RefreshCellAttr()
     wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
     attrExpectedCol->SetRenderer(moneyRenderer);
     attrExpectedCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
-    gdPromises->SetColAttr(PromiseColumn::ESTIMATED, attrExpectedCol);
+    gdEstimates->SetColAttr(EstimateColumn::ESTIMATED, attrExpectedCol);
 
     //Spent
     moneyRenderer->IncRef();
     wxGridCellAttr *attrAccountedCol = new wxGridCellAttr();
     attrAccountedCol->SetReadOnly(true);
     attrAccountedCol->SetRenderer(moneyRenderer);
-    gdPromises->SetColAttr(PromiseColumn::ACCOUNTED, attrAccountedCol);
+    gdEstimates->SetColAttr(EstimateColumn::ACCOUNTED, attrAccountedCol);
 
     //Due
     wxGridCellAttr *attrDueCol = new wxGridCellAttr();
 //            attrSpentCol->SetReadOnly(true);
     attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
-    gdPromises->SetColAttr(PromiseColumn::DUE, attrDueCol);
+    gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
 
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
@@ -266,7 +273,7 @@ void OrcamentoMainFrame::RefreshCellAttr()
         choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
     }
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
-    gdPromises->SetColAttr(PromiseColumn::CATEGORY, attrCategoryCol);
+    gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
 }
 
 
@@ -367,41 +374,41 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnlbMonthsDClick(wxCommandEvent& event)
 {
-    RefreshPromises();
+    RefreshEstimates();
 }
 
-void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
+void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
 {
     int selection = lbMonths->GetSelection() + 1;
     if(!selection){
         return;
     }
-    auto query = "INSERT INTO promise(budget_id, name, amount, category_id)"
-                 "  VALUES (?1, 'New Promise', 0, (SELECT max(category_id) FROM category))";
+    auto query = "INSERT INTO estimate(budget_id, name, amount, category_id)"
+                 "  VALUES (?1, 'New Estimate', 0, (SELECT max(category_id) FROM category))";
     SQLite::Statement stm(*m_database, query);
     stm.bind(1, selection);
     if(!stm.exec()){
         wxMessageBox("Erro desconhecido");
     }
 
-    RefreshPromises();
+    RefreshEstimates();
 }
 
-void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
+void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
-    wxString newValue = gdPromises->GetCellValue(row, col);
-    if(event.GetString() == gdPromises->GetCellValue(row, col)){//The default editor duplicate events, so this avoids the first one.
+    wxString newValue = gdEstimates->GetCellValue(row, col);
+    if(event.GetString() == gdEstimates->GetCellValue(row, col)){//The default editor duplicate events, so this avoids the first one.
         return;
     }
     long id;
-    if(!gdPromises->GetCellValue(row, PromiseColumn::ID).ToCLong(&id)){
-        wxMessageBox(L"Coluna Corrompida: '"+gdPromises->GetColLabelValue(0)+"'");
+    if(!gdEstimates->GetCellValue(row, EstimateColumn::ID).ToCLong(&id)){
+        wxMessageBox(L"Coluna Corrompida: '"+gdEstimates->GetColLabelValue(0)+"'");
         return;
     }
     auto updateField = [this, id=int(id)](std::string field, const auto &value){
         try{
-            std::string query = "UPDATE promise SET \""+field+"\" = ?2 WHERE promise_id = ?1";
+            std::string query = "UPDATE estimate SET \""+field+"\" = ?2 WHERE estimate_id = ?1";
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, id);
             stm.bind(2, value);
@@ -413,18 +420,18 @@ void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
         }
     };
     switch(col){
-    case PromiseColumn::NAME:
+    case EstimateColumn::NAME:
         updateField("name", newValue);
         break;
-    case PromiseColumn::ESTIMATED:
+    case EstimateColumn::ESTIMATED:
         updateField("amount", int(atof(newValue)*100));
         break;
-    case PromiseColumn::DUE:
+    case EstimateColumn::DUE:
         try{
             wxDateTime due{};
             due.ParseISODate(newValue);
             int day = due.GetDay() -1;
-            std::string query = "UPDATE promise SET \"due\" = ?2|| ' days' WHERE promise_id = ?1";
+            std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, int(id));
             stm.bind(2, day);
@@ -435,9 +442,9 @@ void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
             wxMessageBox(e.what());
         }
         break;
-    case PromiseColumn::CATEGORY:
+    case EstimateColumn::CATEGORY:
         try{
-            std::string query = "UPDATE promise SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE promise_id = ?1";
+            std::string query = "UPDATE estimate SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE estimate_id = ?1";
             SQLite::Statement stm(*m_database, query);
             stm.bind(1, int(id));
             stm.bind(2, newValue);
@@ -453,15 +460,15 @@ void OrcamentoMainFrame::OngdPromisesCellChange(wxGridEvent& event)
     }
 }
 
-void OrcamentoMainFrame::OngdPromisesCellSelect(wxGridEvent& event)
+void OrcamentoMainFrame::OngdEstimatesCellSelect(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
-    if(row > 0 and col == PromiseColumn::ACCOUNTED){
+    if(row > 0 and col == EstimateColumn::ACCOUNTED){
         wxMessageBox("OIE!");
     }
 }
 
-void OrcamentoMainFrame::OngdPromisesCellRightClick(wxGridEvent& event)
+void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 {
     wxPoint point = event.GetPosition();
     wxGridCellCoords coords(event.GetRow(), event.GetCol());
@@ -469,16 +476,16 @@ void OrcamentoMainFrame::OngdPromisesCellRightClick(wxGridEvent& event)
         return;
     }
 
-    cmnPromise.SetClientData(&coords);
-    gdPromises->GetPosition();
-    PopupMenu( &cmnPromise, gdPromises->GetPosition() + point);
-    cmnPromise.SetClientData(NULL);
+    cmnEstimate.SetClientData(&coords);
+    gdEstimates->GetPosition();
+    PopupMenu( &cmnEstimate, gdEstimates->GetPosition() + point);
+    cmnEstimate.SetClientData(NULL);
 }
 
-void OrcamentoMainFrame::OnmnPromiseEditSelected(wxCommandEvent& event)
+void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 {
-    if(cmnPromise.GetClientData()){
-        wxGridCellCoords &coords = *reinterpret_cast<wxGridCellCoords*>(cmnPromise.GetClientData());
+    if(cmnEstimate.GetClientData()){
+        wxGridCellCoords &coords = *reinterpret_cast<wxGridCellCoords*>(cmnEstimate.GetClientData());
         wxString str(L"Happened at ");
         str << coords.GetRow() << ", " << coords.GetCol();
         wxMessageBox(str);

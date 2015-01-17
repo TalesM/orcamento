@@ -15,21 +15,21 @@
 				<pos>223,244</pos>
 				<handler function="OnlbMonthsDClick" entry="EVT_LISTBOX" />
 			</object>
-			<object class="wxGrid" name="ID_GDPROMISES" variable="gdPromises" member="yes">
+			<object class="wxGrid" name="ID_GDPROMISES" variable="gdEstimates" member="yes">
 				<cols>6</cols>
 				<collabels>
 					<item>Id</item>
-					<item>Promise</item>
+					<item>Name</item>
 					<item>Estimated</item>
 					<item>Accounted</item>
 					<item>Due</item>
 					<item>Category</item>
 				</collabels>
 				<pos>78,4</pos>
-				<extra_code>gdPromises-&gt;HideCol(0);</extra_code>
-				<handler function="OngdPromisesCellRightClick" entry="EVT_CMD_GRID_CELL_RIGHT_CLICK" />
-				<handler function="OngdPromisesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
-				<handler function="OngdPromisesCellSelect" entry="EVT_CMD_GRID_SELECT_CELL" />
+				<extra_code>gdEstimates-&gt;HideCol(0);</extra_code>
+				<handler function="OngdEstimatesCellRightClick" entry="EVT_CMD_GRID_CELL_RIGHT_CLICK" />
+				<handler function="OngdEstimatesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
+				<handler function="OngdEstimatesCellSelect" entry="EVT_CMD_GRID_SELECT_CELL" />
 			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">
@@ -69,13 +69,13 @@
 					<handler function="OnExecuteBudget" entry="EVT_MENU" />
 				</object>
 			</object>
-			<object class="wxMenu" variable="mnPromise" member="yes">
-				<label>Promise</label>
+			<object class="wxMenu" variable="mnEstimate" member="yes">
+				<label>Estimate</label>
 				<object class="wxMenuItem" name="ID_PROMISE_CREATE" variable="MenuItem1" member="yes">
-					<label>Add a Promise</label>
+					<label>Add a Estimate</label>
 					<accel>Ctrl-Insert</accel>
-					<help>Insert a new promise on current budget.</help>
-					<handler function="OnCreatePromise" entry="EVT_MENU" />
+					<help>Insert a new estimate on current budget.</help>
+					<handler function="OnCreateEstimate" entry="EVT_MENU" />
 				</object>
 			</object>
 			<object class="wxMenu" variable="Menu5" member="no">
@@ -96,12 +96,18 @@
 			<widths>-1</widths>
 			<styles>wxSB_NORMAL</styles>
 		</object>
-		<object class="wxMenu" variable="cmnPromise" member="yes">
-			<object class="wxMenuItem" name="ID_MENU_PROMISE_EDIT" variable="MenuItem3" member="yes">
-				<label>Edit Promise</label>
+		<object class="wxMenu" variable="cmnEstimate" member="yes">
+			<object class="wxMenuItem" name="ID_MENU_PROMISE_EDIT" variable="mnEstimateEdit" member="yes">
+				<label>Detail</label>
+				<handler function="OnmnEstimateEditSelected" entry="EVT_MENU" />
 			</object>
+			<object class="wxMenuItem" name="ID_MENUITEM3" variable="mnExecute" member="yes">
+				<label>Execute</label>
+				<enabled>0</enabled>
+			</object>
+			<object class="separator" />
 			<object class="wxMenuItem" name="ID_MENUITEM4" variable="MenuItem4" member="yes">
-				<label>Delete Promise</label>
+				<label>Delete Estimate</label>
 			</object>
 		</object>
 	</object>

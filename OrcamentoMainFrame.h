@@ -16,6 +16,7 @@
 #include <wx/menu.h>
 #include <wx/htmllbox.h>
 #include <wx/splitter.h>
+#include <wx/panel.h>
 #include <wx/grid.h>
 #include <wx/frame.h>
 #include <wx/statusbr.h>
@@ -32,7 +33,7 @@ class OrcamentoMainFrame: public wxFrame
         std::unique_ptr<SQLite::Database> m_database;
 
         void RefreshModel();
-        void RefreshPromises();
+        void RefreshEstimates();
         void RefreshCellAttr();
 
         //(*Handlers(OrcamentoMainFrame)
@@ -43,16 +44,17 @@ class OrcamentoMainFrame: public wxFrame
         void OnExecuteBudget(wxCommandEvent& event);
         void OnOpen(wxCommandEvent& event);
         void OnlbMonthsDClick(wxCommandEvent& event);
-        void OnCreatePromise(wxCommandEvent& event);
-        void OngdPromisesCellChange(wxGridEvent& event);
-        void OngdPromisesCellSelect(wxGridEvent& event);
-        void OngdPromisesCellRightClick(wxGridEvent& event);
-        void OnmnPromiseEditSelected(wxCommandEvent& event);
+        void OnCreateEstimate(wxCommandEvent& event);
+        void OngdEstimatesCellChange(wxGridEvent& event);
+        void OngdEstimatesCellSelect(wxGridEvent& event);
+        void OngdEstimatesCellRightClick(wxGridEvent& event);
+        void OnmnEstimateEditSelected(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
         static const long ID_SIMPLEHTMLLISTBOX1;
         static const long ID_GDPROMISES;
+        static const long ID_PNESTIMATES;
         static const long ID_SPLITTERWINDOW1;
         static const long ID_MENUITEM1;
         static const long ID_MENUITEM2;
@@ -63,21 +65,24 @@ class OrcamentoMainFrame: public wxFrame
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_MENU_PROMISE_EDIT;
+        static const long ID_MENUITEM3;
         static const long ID_MENUITEM4;
         //*)
 
         //(*Declarations(OrcamentoMainFrame)
+        wxMenuItem* mnExecute;
         wxSimpleHtmlListBox* lbMonths;
+        wxPanel* pnEstimates;
         wxMenuItem* MenuItem1;
         wxMenuItem* MenuItem4;
+        wxGrid* gdEstimates;
         wxMenuItem* mnNew;
         wxMenuItem* mnExecuteNextBudget;
-        wxMenu cmnPromise;
         wxMenuItem* mnCreateBudget;
+        wxMenu* mnEstimate;
         wxStatusBar* sbStatus;
-        wxMenuItem* mnPromiseEdit;
-        wxMenu* mnPromise;
-        wxGrid* gdPromises;
+        wxMenu cmnEstimate;
+        wxMenuItem* mnEstimateEdit;
         //*)
 
         DECLARE_EVENT_TABLE()
