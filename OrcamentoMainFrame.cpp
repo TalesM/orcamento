@@ -135,6 +135,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SetStatusBar(StatusBar1);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OnGdPromisesCellChange);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
@@ -360,4 +361,11 @@ void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
     }
 
     RefreshPromises();
+}
+
+void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
+{
+    wxString s = L"Modified: ";
+    s << event.GetRow() << ", " << event.GetCol() << "\n'" << event.GetString() << "'";
+    wxMessageBox(s);
 }

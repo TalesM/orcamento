@@ -44,6 +44,7 @@ class OrcamentoMainFrame: public wxFrame
         void OnOpen(wxCommandEvent& event);
         void OnlbMonthsDClick(wxCommandEvent& event);
         void OnCreatePromise(wxCommandEvent& event);
+        void OnGdPromisesCellChange(wxGridEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
