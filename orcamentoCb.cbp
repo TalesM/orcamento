@@ -53,7 +53,7 @@
 			<Add option="-mthreads" />
 			<Add option="-Winvalid-pch" />
 			<Add option="-include wx_pch.h" />
-			<Add option="-std=gnu++11" />
+			<Add option="-std=gnu++1y" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-D__WXMSW__" />
 			<Add option="-DWXUSINGDLL" />

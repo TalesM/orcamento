@@ -46,6 +46,17 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     return wxbuild;
 }
 
+namespace PromiseColumn{
+    constexpr int
+        ID = 0,
+        NAME = 1,
+        ESTIMATED =2,
+        SPENT = 3,
+        DUE = 4,
+        CATEGORY = 5;
+    constexpr int length = 6;
+};
+
 //(*IdInit(OrcamentoMainFrame)
 const long OrcamentoMainFrame::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
 const long OrcamentoMainFrame::ID_GDPROMISES = wxNewId();
@@ -196,53 +207,61 @@ void OrcamentoMainFrame::RefreshPromises()
 
             for(int i = 0; stm.executeStep(); ++i){
                 gdPromises->AppendRows();
-                gdPromises->SetCellValue(i, 0, wxString::FromUTF8(stm.getColumn(0)) );
-                gdPromises->SetCellValue(i, 1, wxString::FromUTF8(stm.getColumn(1)) );
-                gdPromises->SetCellValue(i, 2, wxString::FromUTF8(stm.getColumn(2)) );
-                gdPromises->SetCellValue(i, 3, wxString::FromUTF8(stm.getColumn(3)) );
-                gdPromises->SetCellValue(i, 4, wxString::FromUTF8(stm.getColumn(4)) );
-                gdPromises->SetCellValue(i, 5, wxString::FromUTF8(stm.getColumn(5)) );
-                if(stm.isColumnNull(5)){
+                for(int j = 0; j < PromiseColumn::length; ++j){
+                    gdPromises->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
+                }
+                if(stm.isColumnNull(PromiseColumn::CATEGORY)){
                     wxGridCellAttr *attrImultLine = new wxGridCellAttr();
                     attrImultLine->SetReadOnly(true);
                     gdPromises->SetRowAttr(i, attrImultLine);
                 }
             }
             // TODO (Tales#1#): Modularize
-            auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
-            //Expected
-            wxGridCellAttr *attrAmountCol = new wxGridCellAttr();
-            gdPromises->SetColAttr(2, attrAmountCol);
-            attrAmountCol->SetRenderer(moneyRenderer);
-            attrAmountCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
-            moneyRenderer->IncRef();
-
-            //Spent
-            wxGridCellAttr *attrSpentCol = new wxGridCellAttr();
-            attrSpentCol->SetReadOnly(true);
-            attrSpentCol->SetRenderer(moneyRenderer);
-            gdPromises->SetColAttr(3, attrSpentCol);
-
-            //Due
-            wxGridCellAttr *attrDueCol = new wxGridCellAttr();
-//            attrSpentCol->SetReadOnly(true);
-            attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
-            gdPromises->SetColAttr(4, attrDueCol);
-
-            //Category
-            wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
-            wxArrayString choices;
-            SQLite::Statement choicesStm(*m_database, "SELECT name FROM category ORDER BY category_id ASC");
-            while(choicesStm.executeStep()){
-                choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
-            }
-            attrCategoryCol->SetReadOnly();
-            gdPromises->SetColAttr(5, attrCategoryCol);
+            RefreshCellAttr();
 
         } catch (const std::exception &e){
             wxMessageBox(e.what());
         }
     }
+}
+
+void OrcamentoMainFrame::RefreshCellAttr()
+{
+//    auto stringRenderer = new wxGridCellStringRenderer();
+//    wxGridCellAttr *attrNameCol = new wxGridCellAttr();
+////    attrNameCol->SetRenderer(new wxGridCellStringRenderer());
+//    attrNameCol->SetEditor(new wxGridCellStringEditor);
+//    gdPromises->SetColAttr(1, attrNameCol);
+
+    auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
+    //Expected
+    wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
+    attrExpectedCol->SetRenderer(moneyRenderer);
+    attrExpectedCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
+    gdPromises->SetColAttr(PromiseColumn::ESTIMATED, attrExpectedCol);
+
+    //Spent
+    moneyRenderer->IncRef();
+    wxGridCellAttr *attrSpentCol = new wxGridCellAttr();
+    attrSpentCol->SetReadOnly(true);
+    attrSpentCol->SetRenderer(moneyRenderer);
+    gdPromises->SetColAttr(PromiseColumn::SPENT, attrSpentCol);
+
+    //Due
+    wxGridCellAttr *attrDueCol = new wxGridCellAttr();
+//            attrSpentCol->SetReadOnly(true);
+    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
+    gdPromises->SetColAttr(PromiseColumn::DUE, attrDueCol);
+
+    //Category
+    wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
+    wxArrayString choices;
+    SQLite::Statement choicesStm(*m_database, "SELECT name FROM category ORDER BY category_id ASC");
+    while(choicesStm.executeStep()){
+        choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
+    }
+    attrCategoryCol->SetReadOnly();
+    gdPromises->SetColAttr(PromiseColumn::CATEGORY, attrCategoryCol);
 }
 
 
@@ -365,8 +384,40 @@ void OrcamentoMainFrame::OnCreatePromise(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnGdPromisesCellChange(wxGridEvent& event)
 {
-    wxString s = L"Modified: ";
     int row = event.GetRow(), col = event.GetCol();
-    s << row << ", " << col << "\n'" << event.GetString() << "' -> '" << gdPromises->GetCellValue(row, col) << "'";
-    wxMessageBox(s);
+    wxString newValue = gdPromises->GetCellValue(row, col);
+    if(event.GetString() == gdPromises->GetCellValue(row, col)){//The default editor duplicate events, so this avoids the first one.
+        return;
+    }
+    long id;
+    if(!gdPromises->GetCellValue(row, PromiseColumn::ID).ToCLong(&id)){
+        wxMessageBox(L"Coluna Corrompida: '"+gdPromises->GetColLabelValue(0)+"'");
+        return;
+    }
+    auto updateField = [this, id=int(id)](std::string field, const auto &value){
+        try{
+            std::string query = "UPDATE promise SET \""+field+"\" = ?2 WHERE promise_id = ?1";
+            SQLite::Statement stm(*m_database, query);
+            stm.bind(1, id);
+            stm.bind(2, value);
+            if(!stm.exec()){
+                wxMessageBox("Erro desconhecido");
+            }
+        }catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
+    };
+    switch(col){
+    case PromiseColumn::NAME:
+        updateField("name", newValue);
+        break;
+    case PromiseColumn::ESTIMATED:
+    case PromiseColumn::DUE:
+    case PromiseColumn::CATEGORY:
+        wxMessageBox(L"Not implemented yet.");
+        // TODO (Tales#1#): VETO?
+        break;
+    default:
+        break;
+    }
 }

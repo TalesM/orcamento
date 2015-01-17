@@ -33,7 +33,7 @@ class OrcamentoMainFrame: public wxFrame
 
         void RefreshModel();
         void RefreshPromises();
-        void refreshStyle();
+        void RefreshCellAttr();
 
         //(*Handlers(OrcamentoMainFrame)
         void OnQuit(wxCommandEvent& event);
