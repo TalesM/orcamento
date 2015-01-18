@@ -26,10 +26,11 @@ class OrcamentoMainFrame: public wxFrame
     public:
 
         OrcamentoMainFrame(wxWindow* parent,wxWindowID id = -1);
+
         virtual ~OrcamentoMainFrame();
 
     private:
-        std::unique_ptr<SQLite::Database> m_database;
+        std::unique_ptr<SQLite::Database> _database;
 
         void RefreshModel();
         void RefreshEstimates();
@@ -49,6 +50,7 @@ class OrcamentoMainFrame: public wxFrame
         void OngdEstimatesCellSelect(wxGridEvent& event);
         void OngdEstimatesCellRightClick(wxGridEvent& event);
         void OnmnEstimateEditSelected(wxCommandEvent& event);
+        void OnWalletsOverview(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -61,6 +63,7 @@ class OrcamentoMainFrame: public wxFrame
         static const long ID_MENUCREATE_BUDGET;
         static const long ID_MENUEXECUTE_BUDGET;
         static const long ID_PROMISE_CREATE;
+        static const long ID_MENUITEM5;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_MENU_PROMISE_EDIT;

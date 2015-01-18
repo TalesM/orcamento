@@ -62,6 +62,7 @@
 				<label>Budget</label>
 				<object class="wxMenuItem" name="ID_MENUCREATE_BUDGET" variable="mnCreateBudget" member="yes">
 					<label>Create Next Budget</label>
+					<accel>Alt-b</accel>
 					<handler function="OnCreateBudget" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="ID_MENUEXECUTE_BUDGET" variable="mnExecuteNextBudget" member="yes">
@@ -73,13 +74,18 @@
 				<label>Estimate</label>
 				<object class="wxMenuItem" name="ID_PROMISE_CREATE" variable="MenuItem1" member="yes">
 					<label>Add a Estimate</label>
-					<accel>Ctrl-Insert</accel>
+					<accel>Alt-Insert</accel>
 					<help>Insert a new estimate on current budget.</help>
 					<handler function="OnCreateEstimate" entry="EVT_MENU" />
 				</object>
 			</object>
 			<object class="wxMenu" variable="Menu5" member="no">
-				<label>Execution</label>
+				<label>Wallet</label>
+				<object class="wxMenuItem" name="ID_MENUITEM5" variable="mnWalletsOverview" member="no">
+					<label>Overview</label>
+					<accel>Alt-w</accel>
+					<handler function="OnWalletsOverview" entry="EVT_MENU" />
+				</object>
 			</object>
 			<object class="wxMenu" variable="Menu2" member="no">
 				<label>Help</label>

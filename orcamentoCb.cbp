@@ -76,6 +76,8 @@
 		<Unit filename="OrcamentoMainFrame.cpp" />
 		<Unit filename="OrcamentoMainFrame.h" />
 		<Unit filename="README.md" />
+		<Unit filename="WalletOverview.cpp" />
+		<Unit filename="WalletOverview.h" />
 		<Unit filename="orcamentoCbApp.cpp" />
 		<Unit filename="orcamentoCbApp.h" />
 		<Unit filename="resource.rc">
@@ -88,6 +90,7 @@
 		</Unit>
 		<Unit filename="wxsmith/CreateDatabaseDialog.wxs" />
 		<Unit filename="wxsmith/OrcamentoMainFrame.wxs" />
+		<Unit filename="wxsmith/WalletOverview.wxs" />
 		<Extensions>
 			<code_completion />
 			<envvars />
@@ -98,6 +101,7 @@
 				<resources>
 					<wxFrame wxs="wxsmith/OrcamentoMainFrame.wxs" src="OrcamentoMainFrame.cpp" hdr="OrcamentoMainFrame.h" fwddecl="0" i18n="1" name="OrcamentoMainFrame" language="CPP" />
 					<wxDialog wxs="wxsmith/CreateDatabaseDialog.wxs" src="CreateDatabaseDialog.cpp" hdr="CreateDatabaseDialog.h" fwddecl="0" i18n="1" name="CreateDatabaseDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/WalletOverview.wxs" src="WalletOverview.cpp" hdr="WalletOverview.h" fwddecl="0" i18n="1" name="WalletOverview" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

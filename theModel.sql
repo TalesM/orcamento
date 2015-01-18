@@ -20,12 +20,12 @@ CREATE TABLE "meta" (
 );
 CREATE TABLE "wallet" (
 	"wallet_id"		INTEGER PRIMARY KEY,
-	"name"			VARCHAR,
+	"name"			VARCHAR UNIQUE NOT NULL,
 	"obs"			TEXT
 );
 CREATE TABLE "budget" (
 	"budget_id"		INTEGER PRIMARY KEY,
-	"name"			VARCHAR,
+	"name"			VARCHAR UNIQUE,
 	"start"			DATE NOT NULL, --Must be a date YYYY-MM-DD.
 	"duration"		TEXT NOT NULL, --Must be a date offset MM UNIT.
 	"executing"		INTEGER NOT NULL DEFAULT 0
@@ -89,4 +89,9 @@ VALUES
     ('Economy and Investments'),
     ('Taxes'),
     ('Gifts'),
-    ('Extras')
+    ('Extras');
+
+INSERT INTO "wallet"(name)
+VALUES
+    ('Pocket'),
+    ('Bank');

@@ -10,6 +10,7 @@
 #include "wx_pch.h"
 #include "OrcamentoMainFrame.h"
 #include "CreateDatabaseDialog.h"
+#include "WalletOverview.h"
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(OrcamentoMainFrame)
@@ -67,6 +68,7 @@ const long OrcamentoMainFrame::idMenuQuit = wxNewId();
 const long OrcamentoMainFrame::ID_MENUCREATE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
+const long OrcamentoMainFrame::ID_MENUITEM5 = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENU_PROMISE_EDIT = wxNewId();
@@ -87,6 +89,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     wxMenu* Menu1;
     wxMenuItem* mnQuit;
     wxMenuItem* mnOpen;
+    wxMenuItem* mnWalletsOverview;
     wxMenuBar* MenuBar1;
     wxSplitterWindow* SplitterWindow1;
     wxMenu* Menu2;
@@ -127,17 +130,19 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Menu1->Append(mnQuit);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
-    mnCreateBudget = new wxMenuItem(Menu3, ID_MENUCREATE_BUDGET, _("Create Next Budget"), wxEmptyString, wxITEM_NORMAL);
+    mnCreateBudget = new wxMenuItem(Menu3, ID_MENUCREATE_BUDGET, _("Create Next Budget\tAlt-b"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(mnCreateBudget);
     mnExecuteNextBudget = new wxMenuItem(Menu3, ID_MENUEXECUTE_BUDGET, _("Execute Next Budget"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(mnExecuteNextBudget);
     MenuBar1->Append(Menu3, _("Budget"));
     mnEstimate = new wxMenu();
-    MenuItem1 = new wxMenuItem(mnEstimate, ID_PROMISE_CREATE, _("Add a Estimate\tCtrl-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
+    MenuItem1 = new wxMenuItem(mnEstimate, ID_PROMISE_CREATE, _("Add a Estimate\tAlt-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
     mnEstimate->Append(MenuItem1);
     MenuBar1->Append(mnEstimate, _("Estimate"));
     Menu5 = new wxMenu();
-    MenuBar1->Append(Menu5, _("Execution"));
+    mnWalletsOverview = new wxMenuItem(Menu5, ID_MENUITEM5, _("Overview\tAlt-w"), wxEmptyString, wxITEM_NORMAL);
+    Menu5->Append(mnWalletsOverview);
+    MenuBar1->Append(Menu5, _("Wallet"));
     Menu2 = new wxMenu();
     MenuItem2 = new wxMenuItem(Menu2, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
     Menu2->Append(MenuItem2);
@@ -168,6 +173,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
     Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateEstimate);
+    Connect(ID_MENUITEM5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnWalletsOverview);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
     Connect(ID_MENU_PROMISE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
     //*)
@@ -183,7 +189,7 @@ void OrcamentoMainFrame::RefreshModel()
 {
     lbMonths->Clear();
     try {
-        SQLite::Statement stm(*m_database, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
+        SQLite::Statement stm(*_database, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
         while(stm.executeStep()){
             // TODO (Tales#1#): Mark currently active budget (an executing budget with next being NULL or a planing budget)
             wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
@@ -217,7 +223,7 @@ void OrcamentoMainFrame::RefreshEstimates()
             const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
                                 "  FROM budget bud JOIN estimate prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
                                 "  WHERE budget_id = ?1 ORDER BY category_id, prom.name";
-            SQLite::Statement stm(*m_database, query);
+            SQLite::Statement stm(*_database, query);
             stm.bind(1, budget_id);
 
             for(int i = 0; stm.executeStep(); ++i){
@@ -253,7 +259,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
                             "  LEFT JOIN execution USING(estimate_id)"
                             "  WHERE budget_id = ?1"
         ;
-        SQLite::Statement stm(*m_database, query);
+        SQLite::Statement stm(*_database, query);
         stm.bind(1, budget_id);
         if(!stm.executeStep()){
             wxMessageBox("ERROR?");
@@ -292,7 +298,7 @@ void OrcamentoMainFrame::RefreshCellAttr()
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
-    SQLite::Statement choicesStm(*m_database, "SELECT name FROM category ORDER BY category_id ASC");
+    SQLite::Statement choicesStm(*_database, "SELECT name FROM category ORDER BY category_id ASC");
     while(choicesStm.executeStep()){
         choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
     }
@@ -326,13 +332,13 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
     wxFile modelFile(L"theModel.sql");
     if(modelFile.ReadAll(&model)){
         try{
-            m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-            SQLite::Transaction transaction(*m_database);
-            m_database->exec(model);
+            _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+            SQLite::Transaction transaction(*_database);
+            _database->exec(model);
 
             auto query = "INSERT INTO budget(name, start, duration)"
                          "  VALUES (strftime('%m/%Y', ?1), date(?1, 'start of month'), '1 months')";
-            SQLite::Statement stm(*m_database, query);
+            SQLite::Statement stm(*_database, query);
             stm.bind(1, start.FormatISODate().ToUTF8());
             stm.exec();
 
@@ -351,7 +357,7 @@ void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!m_database->exec("INSERT INTO budget(name, start, duration) "
+        if(!_database->exec("INSERT INTO budget(name, start, duration) "
                              "  SELECT strftime('%m/%Y', start, duration), date(start, duration), duration "
                              "    FROM budget WHERE budget_id IN (SELECT max(budget_id) FROM budget)")
         ){
@@ -369,7 +375,7 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!m_database->exec("UPDATE budget SET executing = 1"
+        if(!_database->exec("UPDATE budget SET executing = 1"
                              "  WHERE budget_id IN (SELECT min(budget_id)"
                              "  FROM budget WHERE executing=0)"
         )){
@@ -389,7 +395,7 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
     }
     wxString location = openFileDialog.GetPath();
     try {
-        m_database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+        _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
         RefreshModel();
     }catch (const std::exception &e){
         wxMessageBox(e.what());
@@ -410,7 +416,7 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
     }
     auto query = "INSERT INTO estimate(budget_id, name, amount, category_id)"
                  "  VALUES (?1, 'New Estimate', 0, (SELECT max(category_id) FROM category))";
-    SQLite::Statement stm(*m_database, query);
+    SQLite::Statement stm(*_database, query);
     stm.bind(1, selection);
     if(!stm.exec()){
         wxMessageBox("Erro desconhecido");
@@ -434,7 +440,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     auto updateField = [this, id=int(id)](std::string field, const auto &value){
         try{
             std::string query = "UPDATE estimate SET \""+field+"\" = ?2 WHERE estimate_id = ?1";
-            SQLite::Statement stm(*m_database, query);
+            SQLite::Statement stm(*_database, query);
             stm.bind(1, id);
             stm.bind(2, value);
             if(!stm.exec()){
@@ -458,7 +464,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
             due.ParseISODate(newValue);
             int day = due.GetDay() -1;
             std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
-            SQLite::Statement stm(*m_database, query);
+            SQLite::Statement stm(*_database, query);
             stm.bind(1, int(id));
             stm.bind(2, day);
             if(!stm.exec()){
@@ -471,7 +477,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     case EstimateColumn::CATEGORY:
         try{
             std::string query = "UPDATE estimate SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE estimate_id = ?1";
-            SQLite::Statement stm(*m_database, query);
+            SQLite::Statement stm(*_database, query);
             stm.bind(1, int(id));
             stm.bind(2, newValue);
             if(!stm.exec()){
@@ -516,4 +522,12 @@ void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
         str << coords.GetRow() << ", " << coords.GetCol();
         wxMessageBox(str);
     }
+}
+
+void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
+{
+    WalletOverview overview(this);
+    overview.giveDatabase(_database);
+    overview.ShowModal();
+    _database = overview.takeDatabase();
 }

@@ -4,7 +4,7 @@
  * Author:    TalesM (tales.miranda88@gmail.com)
  * Created:   2015-01-10
  * Copyright: TalesM (talesm.github.io)
- * License:   
+ * License:
  **************************************************************/
 
 #ifndef WX_PCH_H_INCLUDED
@@ -22,6 +22,7 @@
 #endif
 
 #ifdef WX_PRECOMP
+#include <wx/htmllbox.h>
     // put here all your rarely-changing header files
 #endif // WX_PRECOMP
 
