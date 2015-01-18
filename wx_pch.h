@@ -23,6 +23,7 @@
 
 #ifdef WX_PRECOMP
 #include <wx/htmllbox.h>
+#include <wx/gbsizer.h>
     // put here all your rarely-changing header files
 #endif // WX_PRECOMP
 

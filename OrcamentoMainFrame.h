@@ -47,10 +47,10 @@ class OrcamentoMainFrame: public wxFrame
         void OnlbMonthsDClick(wxCommandEvent& event);
         void OnCreateEstimate(wxCommandEvent& event);
         void OngdEstimatesCellChange(wxGridEvent& event);
-        void OngdEstimatesCellSelect(wxGridEvent& event);
         void OngdEstimatesCellRightClick(wxGridEvent& event);
         void OnmnEstimateEditSelected(wxCommandEvent& event);
         void OnWalletsOverview(wxCommandEvent& event);
+        void OngdEstimatesCellLeftDClick(wxGridEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)

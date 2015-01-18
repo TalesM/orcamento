@@ -9,7 +9,9 @@
 
 #include "wx_pch.h"
 #include "OrcamentoMainFrame.h"
+
 #include "CreateDatabaseDialog.h"
+#include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
 #include <wx/msgdlg.h>
 
@@ -165,8 +167,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_RIGHT_CLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellRightClick);
+    Connect(ID_GDPROMISES,wxEVT_GRID_CELL_LEFT_DCLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellLeftDClick);
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellChange);
-    Connect(ID_GDPROMISES,wxEVT_GRID_SELECT_CELL,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellSelect);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
@@ -492,14 +494,6 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     }
 }
 
-void OrcamentoMainFrame::OngdEstimatesCellSelect(wxGridEvent& event)
-{
-    int row = event.GetRow(), col = event.GetCol();
-    if(row > 0 and col == EstimateColumn::ACCOUNTED){
-        wxMessageBox("OIE!");
-    }
-}
-
 void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 {
     wxPoint point = event.GetPosition();
@@ -530,4 +524,13 @@ void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
     overview.giveDatabase(_database);
     overview.ShowModal();
     _database = overview.takeDatabase();
+}
+
+void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
+{
+    int row = event.GetRow(), col = event.GetCol();
+    if(row > 0 and col == EstimateColumn::ACCOUNTED){
+        ExecutionDialog executionDialog(this);
+        executionDialog.ShowModal();
+    }
 }

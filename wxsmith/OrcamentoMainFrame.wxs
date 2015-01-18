@@ -28,8 +28,8 @@
 				<pos>78,4</pos>
 				<extra_code>gdEstimates-&gt;HideCol(0);</extra_code>
 				<handler function="OngdEstimatesCellRightClick" entry="EVT_CMD_GRID_CELL_RIGHT_CLICK" />
+				<handler function="OngdEstimatesCellLeftDClick" entry="EVT_CMD_GRID_CELL_LEFT_DCLICK" />
 				<handler function="OngdEstimatesCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
-				<handler function="OngdEstimatesCellSelect" entry="EVT_CMD_GRID_SELECT_CELL" />
 			</object>
 		</object>
 		<object class="wxMenuBar" variable="MenuBar1" member="no">

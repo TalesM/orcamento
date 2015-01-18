@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="ExecutionDialog">
+		<title>Execution</title>
+		<id_arg>0</id_arg>
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<object class="wxGridBagSizer" variable="gbzExecution" member="no">
+			<object class="sizeritem">
+				<object class="wxStaticText" name="wxID_ANY" variable="StaticText1" member="no">
+					<label>Budget:</label>
+				</object>
+				<col>0</col>
+				<row>0</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="txBudget" member="yes">
+					<value>Text</value>
+				</object>
+				<colspan>2</colspan>
+				<col>1</col>
+				<row>0</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="txEstimateName" member="yes">
+					<value>Text</value>
+				</object>
+				<colspan>2</colspan>
+				<col>1</col>
+				<row>1</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="wxID_ANY" variable="StaticText3" member="no">
+					<label>Estimated:</label>
+				</object>
+				<col>0</col>
+				<row>2</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_TEXTCTRL3" variable="txEstimateAmount" member="yes">
+					<value>Text</value>
+				</object>
+				<col>1</col>
+				<row>2</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="wxID_ANY" variable="StaticText4" member="no">
+					<label>Accounted:</label>
+				</object>
+				<colspan>3</colspan>
+				<col>0</col>
+				<row>3</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxGrid" name="ID_GRID1" variable="gdExecutions" member="yes">
+					<cols>6</cols>
+					<rows>1</rows>
+					<collabels>
+						<item>Id</item>
+						<item>Amount</item>
+						<item>Date</item>
+						<item>Wallet</item>
+						<item>Description</item>
+						<item>Obs.</item>
+					</collabels>
+					<rowlabels>
+						<item>Total</item>
+					</rowlabels>
+					<celltext>
+						<item>0</item>
+						<item>0.0</item>
+					</celltext>
+					<minsize>-1,250</minsize>
+				</object>
+				<colspan>2</colspan>
+				<col>0</col>
+				<row>4</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxButton" name="ID_EXECUTION_ADD" variable="btAdd" member="yes">
+					<label>Add</label>
+					<minsize>-1,-1</minsize>
+					<handler function="OnbtAddClick" entry="EVT_BUTTON" />
+				</object>
+				<col>0</col>
+				<row>5</row>
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxButton" name="wxID_CANCEL" variable="btClose" member="yes">
+					<label>Close</label>
+				</object>
+				<col>1</col>
+				<row>6</row>
+				<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="wxID_ANY" variable="StaticText2" member="no">
+					<label>Item Name:</label>
+				</object>
+				<col>0</col>
+				<row>1</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>
