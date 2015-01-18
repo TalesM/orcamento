@@ -26,3 +26,10 @@ Goals for V0.1
 - Execution management;
 - Budget sequence result consistency enforcement and cycle prevention;
 - Table like view with ordering.
+
+
+TODO for who knows...
+- CHECK against change in fields estimate for table execution and budget for table estimate. 
+- Some way do deactivate, delete budget for human error.
+- Some way to delete wallet, execution, estimate for humar error too.
+- Provide some save feature (which calls commit, obviously)
