@@ -42,7 +42,6 @@ class WalletOverviewDialog: public wxDialog
         }
 
 	protected:
-        std::unique_ptr<SQLite::Database> _database;
 
 		//(*Identifiers(WalletOverviewDialog)
 		static const long ID_SIMPLEHTMLLISTBOX1;
@@ -51,6 +50,7 @@ class WalletOverviewDialog: public wxDialog
 		//*)
 
 	private:
+        std::unique_ptr<SQLite::Database> _database;
 
 		//(*Handlers(WalletOverviewDialog)
 		void OnlsWalletsSelect(wxCommandEvent& event);

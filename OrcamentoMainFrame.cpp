@@ -293,7 +293,6 @@ void OrcamentoMainFrame::RefreshCellAttr()
 
     //Due
     wxGridCellAttr *attrDueCol = new wxGridCellAttr();
-//            attrSpentCol->SetReadOnly(true);
     attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
     gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
 
@@ -530,7 +529,9 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
     if(row > 0 and col == EstimateColumn::ACCOUNTED){
-        ExecutionDialog executionDialog(this);
+        ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, 0)));
+        executionDialog.giveDatabase(_database);
         executionDialog.ShowModal();
+        _database = executionDialog.takeDatabase();
     }
 }

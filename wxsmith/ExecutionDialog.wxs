@@ -18,6 +18,7 @@
 			<object class="sizeritem">
 				<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="txBudget" member="yes">
 					<value>Text</value>
+					<style>wxTE_READONLY</style>
 				</object>
 				<colspan>2</colspan>
 				<col>1</col>
@@ -29,6 +30,7 @@
 			<object class="sizeritem">
 				<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="txEstimateName" member="yes">
 					<value>Text</value>
+					<style>wxTE_READONLY</style>
 				</object>
 				<colspan>2</colspan>
 				<col>1</col>
@@ -50,6 +52,7 @@
 			<object class="sizeritem">
 				<object class="wxTextCtrl" name="ID_TEXTCTRL3" variable="txEstimateAmount" member="yes">
 					<value>Text</value>
+					<style>wxTE_READONLY</style>
 				</object>
 				<col>1</col>
 				<row>2</row>
@@ -58,10 +61,9 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxStaticText" name="wxID_ANY" variable="StaticText4" member="no">
-					<label>Accounted:</label>
+				<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText5" member="yes">
+					<label>Accounted</label>
 				</object>
-				<colspan>3</colspan>
 				<col>0</col>
 				<row>3</row>
 				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -69,9 +71,51 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText6" member="yes">
+					<label>Leftover</label>
+				</object>
+				<col>0</col>
+				<row>4</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_TEXTCTRL4" variable="txAccounted" member="yes">
+					<value>Text</value>
+					<style>wxTE_READONLY</style>
+				</object>
+				<col>1</col>
+				<row>3</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_TEXTCTRL5" variable="txLeftover" member="yes">
+					<value>Text</value>
+					<style>wxTE_READONLY</style>
+				</object>
+				<col>1</col>
+				<row>4</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="wxID_ANY" variable="StaticText4" member="no">
+					<label>History:</label>
+				</object>
+				<colspan>3</colspan>
+				<col>0</col>
+				<row>5</row>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
 				<object class="wxGrid" name="ID_GRID1" variable="gdExecutions" member="yes">
 					<cols>6</cols>
-					<rows>1</rows>
 					<collabels>
 						<item>Id</item>
 						<item>Amount</item>
@@ -83,15 +127,12 @@
 					<rowlabels>
 						<item>Total</item>
 					</rowlabels>
-					<celltext>
-						<item>0</item>
-						<item>0.0</item>
-					</celltext>
 					<minsize>-1,250</minsize>
+					<handler function="OngdExecutionsCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
 				</object>
 				<colspan>2</colspan>
 				<col>0</col>
-				<row>4</row>
+				<row>6</row>
 				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 				<border>5</border>
 				<option>1</option>
@@ -103,7 +144,7 @@
 					<handler function="OnbtAddClick" entry="EVT_BUTTON" />
 				</object>
 				<col>0</col>
-				<row>5</row>
+				<row>7</row>
 				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 				<border>5</border>
 				<option>1</option>
@@ -113,7 +154,7 @@
 					<label>Close</label>
 				</object>
 				<col>1</col>
-				<row>6</row>
+				<row>8</row>
 				<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 				<border>5</border>
 				<option>1</option>
