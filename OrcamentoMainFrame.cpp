@@ -10,7 +10,7 @@
 #include "wx_pch.h"
 #include "OrcamentoMainFrame.h"
 #include "CreateDatabaseDialog.h"
-#include "WalletOverview.h"
+#include "WalletOverviewDialog.h"
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(OrcamentoMainFrame)
@@ -526,7 +526,7 @@ void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
 {
-    WalletOverview overview(this);
+    WalletOverviewDialog overview(this);
     overview.giveDatabase(_database);
     overview.ShowModal();
     _database = overview.takeDatabase();

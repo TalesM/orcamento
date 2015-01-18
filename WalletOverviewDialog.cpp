@@ -1,30 +1,30 @@
 #include "wx_pch.h"
 #include <algorithm>
-#include "WalletOverview.h"
+#include "WalletOverviewDialog.h"
 
 #ifndef WX_PRECOMP
-	//(*InternalHeadersPCH(WalletOverview)
+	//(*InternalHeadersPCH(WalletOverviewDialog)
 	#include <wx/intl.h>
 	#include <wx/string.h>
 	//*)
 #endif
-//(*InternalHeaders(WalletOverview)
+//(*InternalHeaders(WalletOverviewDialog)
 //*)
 
-//(*IdInit(WalletOverview)
-const long WalletOverview::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
-const long WalletOverview::ID_TX_NAME = wxNewId();
-const long WalletOverview::ID_TX_OBS = wxNewId();
+//(*IdInit(WalletOverviewDialog)
+const long WalletOverviewDialog::ID_SIMPLEHTMLLISTBOX1 = wxNewId();
+const long WalletOverviewDialog::ID_TX_NAME = wxNewId();
+const long WalletOverviewDialog::ID_TX_OBS = wxNewId();
 //*)
 
-BEGIN_EVENT_TABLE(WalletOverview,wxDialog)
-	//(*EventTable(WalletOverview)
+BEGIN_EVENT_TABLE(WalletOverviewDialog,wxDialog)
+	//(*EventTable(WalletOverviewDialog)
 	//*)
 END_EVENT_TABLE()
 
-WalletOverview::WalletOverview(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
+WalletOverviewDialog::WalletOverviewDialog(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxSize& size)
 {
-	//(*Initialize(WalletOverview)
+	//(*Initialize(WalletOverviewDialog)
 	wxStaticText* StaticText2;
 	wxStaticText* StaticText1;
 	wxBoxSizer* BoxSizer2;
@@ -62,8 +62,8 @@ WalletOverview::WalletOverview(wxWindow* parent,wxWindowID id,const wxPoint& pos
 	BoxSizer2->Add(btRemove, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer3 = new wxBoxSizer(wxHORIZONTAL);
-	BoxSizer3->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer3->Add(0,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer3->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer3->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	Button1 = new wxButton(this, wxID_CANCEL, _("Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 	BoxSizer3->Add(Button1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(BoxSizer3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -71,22 +71,22 @@ WalletOverview::WalletOverview(wxWindow* parent,wxWindowID id,const wxPoint& pos
 	BoxSizer1->Fit(this);
 	BoxSizer1->SetSizeHints(this);
 
-	Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&WalletOverview::OnlsWalletsSelect);
-	Connect(ID_TX_NAME,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&WalletOverview::OntxNameText);
-	Connect(ID_TX_OBS,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&WalletOverview::OntxObsText);
-	Connect(wxID_APPLY,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverview::OnbtEditClick);
-	Connect(wxID_ADD,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverview::OnbtAddClick);
-	Connect(wxID_REMOVE,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverview::OnbtRemoveClick);
+	Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&WalletOverviewDialog::OnlsWalletsSelect);
+	Connect(ID_TX_NAME,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&WalletOverviewDialog::OntxNameText);
+	Connect(ID_TX_OBS,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&WalletOverviewDialog::OntxObsText);
+	Connect(wxID_APPLY,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverviewDialog::OnbtEditClick);
+	Connect(wxID_ADD,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverviewDialog::OnbtAddClick);
+	Connect(wxID_REMOVE,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WalletOverviewDialog::OnbtRemoveClick);
 	//*)
 }
 
-WalletOverview::~WalletOverview()
+WalletOverviewDialog::~WalletOverviewDialog()
 {
-	//(*Destroy(WalletOverview)
+	//(*Destroy(WalletOverviewDialog)
 	//*)
 }
 
-void WalletOverview::giveDatabase(std::unique_ptr<SQLite::Database>& database)
+void WalletOverviewDialog::giveDatabase(std::unique_ptr<SQLite::Database>& database)
 {
     _database = std::move(database);
     lsWallets->Clear();
@@ -101,7 +101,7 @@ void WalletOverview::giveDatabase(std::unique_ptr<SQLite::Database>& database)
 }
 
 
-void WalletOverview::OnlsWalletsSelect(wxCommandEvent& event)
+void WalletOverviewDialog::OnlsWalletsSelect(wxCommandEvent& event)
 {
     try{
         SQLite::Statement stm(*_database, "SELECT name, wallet.obs, COUNT(execution_id) FROM wallet LEFT JOIN execution USING(wallet_id) WHERE wallet_id = ?1");
@@ -117,7 +117,7 @@ void WalletOverview::OnlsWalletsSelect(wxCommandEvent& event)
     }
 }
 
-void WalletOverview::OntxNameText(wxCommandEvent& event)
+void WalletOverviewDialog::OntxNameText(wxCommandEvent& event)
 {
     int id = lsWallets->GetSelection() + 1;
     if(id > 0){
@@ -129,7 +129,7 @@ void WalletOverview::OntxNameText(wxCommandEvent& event)
     }));
 }
 
-void WalletOverview::OntxObsText(wxCommandEvent& event)
+void WalletOverviewDialog::OntxObsText(wxCommandEvent& event)
 {
     int id = lsWallets->GetSelection() + 1;
     if(id > 0){
@@ -137,7 +137,7 @@ void WalletOverview::OntxObsText(wxCommandEvent& event)
     }
 }
 
-void WalletOverview::OnbtEditClick(wxCommandEvent& event)
+void WalletOverviewDialog::OnbtEditClick(wxCommandEvent& event)
 {
     try{
         SQLite::Statement stm(*_database, "UPDATE wallet SET name = ?2, obs = ?3 WHERE wallet_id = ?1");
@@ -153,7 +153,7 @@ void WalletOverview::OnbtEditClick(wxCommandEvent& event)
     }
 }
 
-void WalletOverview::OnbtAddClick(wxCommandEvent& event)
+void WalletOverviewDialog::OnbtAddClick(wxCommandEvent& event)
 {
     try{
         SQLite::Statement stm(*_database, "INSERT INTO wallet(name, obs) VALUES (?2, ?3)");
@@ -168,7 +168,7 @@ void WalletOverview::OnbtAddClick(wxCommandEvent& event)
     }
 }
 
-void WalletOverview::OnbtRemoveClick(wxCommandEvent& event)
+void WalletOverviewDialog::OnbtRemoveClick(wxCommandEvent& event)
 {
     wxMessageBox("Not implemented yet.");
 }

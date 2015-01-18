@@ -6,7 +6,7 @@
 #include <memory>
 
 #ifndef WX_PRECOMP
-	//(*HeadersPCH(WalletOverview)
+	//(*HeadersPCH(WalletOverviewDialog)
 	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
@@ -15,17 +15,17 @@
 	#include <wx/dialog.h>
 	//*)
 #endif
-//(*Headers(WalletOverview)
+//(*Headers(WalletOverviewDialog)
 //*)
 
-class WalletOverview: public wxDialog
+class WalletOverviewDialog: public wxDialog
 {
 	public:
 
-		WalletOverview(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
-		virtual ~WalletOverview();
+		WalletOverviewDialog(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
+		virtual ~WalletOverviewDialog();
 
-		//(*Declarations(WalletOverview)
+		//(*Declarations(WalletOverviewDialog)
 		wxTextCtrl* txName;
 		wxButton* Button1;
 		wxButton* btAdd;
@@ -44,7 +44,7 @@ class WalletOverview: public wxDialog
 	protected:
         std::unique_ptr<SQLite::Database> _database;
 
-		//(*Identifiers(WalletOverview)
+		//(*Identifiers(WalletOverviewDialog)
 		static const long ID_SIMPLEHTMLLISTBOX1;
 		static const long ID_TX_NAME;
 		static const long ID_TX_OBS;
@@ -52,7 +52,7 @@ class WalletOverview: public wxDialog
 
 	private:
 
-		//(*Handlers(WalletOverview)
+		//(*Handlers(WalletOverviewDialog)
 		void OnlsWalletsSelect(wxCommandEvent& event);
 		void OntxNameText(wxCommandEvent& event);
 		void OntxObsText(wxCommandEvent& event);
