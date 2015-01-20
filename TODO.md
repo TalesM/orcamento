@@ -12,7 +12,7 @@ TODO for V0.1
 	happen only once per budget;_ok_
 1. Create some way to copy estimates for the following budgets.
 1. Create some way to import/export the budget as CSV.
-2. Halt open or creating action if path invalid;
+2. Halt open or creating action if path invalid; _ok_
 3. Show leftover on status bar;
 4. Reopen last file on startup;
 5. Write a nice readme.

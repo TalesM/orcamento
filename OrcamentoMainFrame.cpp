@@ -332,6 +332,10 @@ DIALOG_SHOW: //Don't do this at home, kids.
         return;
     }
     wxString location = dialog.getLocation();
+    if(location.Trim().length()==0){
+        wxMessageBox("Invalid Path");
+        goto DIALOG_SHOW;
+    }
     wxDateTime start  = dialog.getStart();
 
     // Begin transaction
@@ -399,7 +403,7 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
 void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
 {
     wxFileDialog openFileDialog(this, L"Select the file", "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
-    if(openFileDialog.ShowModal() == wxCANCEL){
+    if(openFileDialog.ShowModal() != wxID_OK){
         return;
     }
     wxString location = openFileDialog.GetPath();
