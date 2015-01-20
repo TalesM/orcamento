@@ -11,6 +11,7 @@
 #include "OrcamentoMainFrame.h"
 
 #include <string>
+#include <vector>
 #include <wx/msgdlg.h>
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
@@ -76,6 +77,7 @@ const long OrcamentoMainFrame::ID_MENUITEM5 = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
 const long OrcamentoMainFrame::ID_MENU_ESTIMATE_EDIT = wxNewId();
+const long OrcamentoMainFrame::ID_MENU_ESTIMATE_COPYSELECTEDTO = wxNewId();
 const long OrcamentoMainFrame::ID_MENU_ESTIMATE_DELETE = wxNewId();
 //*)
 
@@ -153,13 +155,15 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     MenuBar1->Append(Menu2, _("Help"));
     SetMenuBar(MenuBar1);
     sbStatus = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
-    int __wxStatusBarWidths_1[5] = { -1, -1, -1, -1, -1 };
+    int __wxStatusBarWidths_1[5] = { -2, -1, -1, -1, -1 };
     int __wxStatusBarStyles_1[5] = { wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL };
     sbStatus->SetFieldsCount(5,__wxStatusBarWidths_1);
     sbStatus->SetStatusStyles(5,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
     mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_EDIT, _("Execute"), wxEmptyString, wxITEM_NORMAL);
     cmnEstimate.Append(mnEstimateEdit);
+    mnEstimateCopySelectedTo = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_COPYSELECTEDTO, _("Copy Selected Rows to...\tCtrl-Alt-p"), _("Copies all selected rows to anothe budget."), wxITEM_NORMAL);
+    cmnEstimate.Append(mnEstimateCopySelectedTo);
     cmnEstimate.AppendSeparator();
     mnEstimateDelete = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_DELETE, _("Delete Estimate"), wxEmptyString, wxITEM_NORMAL);
     cmnEstimate.Append(mnEstimateDelete);
@@ -177,6 +181,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENUITEM5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnWalletsOverview);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
     Connect(ID_MENU_ESTIMATE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
+    Connect(ID_MENU_ESTIMATE_COPYSELECTEDTO,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected);
     Connect(ID_MENU_ESTIMATE_DELETE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateDeleteSelected);
     //*)
 }
@@ -618,3 +623,54 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
     }
 }
 
+
+void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& event)
+{
+    wxArrayInt selectedRows = gdEstimates->GetSelectedRows();
+    if(selectedRows.size()==0){
+        wxMessageBox(L"You need to select at least an entire row.");
+        return;
+    }
+    int budget_id = lbMonths->GetSelection()+1;
+    if(budget_id <= 0){
+        return;
+    }
+    int increment = 0;
+    try{
+        auto query ="SELECT name FROM budget WHERE budget_id > ?1 ORDER BY budget_id ASC";
+        SQLite::Statement stm(*_database, query);
+        stm.bind(1, budget_id);
+        wxArrayString options;
+        while(stm.executeStep()){
+            options.push_back(wxString::FromUTF8(stm.getColumn(0)));
+        }
+        if(options.size()==0){
+            wxMessageBox(L"This is the last budget.");
+            return;
+        }
+        increment = 1 + wxGetSingleChoiceIndex(L"Select the destiny Budget", "Select Budget", options, 0, this);
+    }catch (const std::exception &e){
+        wxMessageBox(e.what());
+    }
+    if(increment <=0){
+        return;
+    }
+    for(int row: selectedRows){
+        int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
+        try{
+            auto query ="INSERT OR REPLACE INTO estimate(budget_id, category_id,name, amount, due, obs)"
+                        "  SELECT budget_id + ?2, category_id, name, amount, due, obs"
+                        "    FROM estimate "
+                        "    WHERE category_id IS NOT NULL "
+                        "      AND name IS NOT NULL "
+                        "      AND estimate_id = ?1";
+            SQLite::Statement stm(*_database, query);
+            stm.bind(1, id);
+            stm.bind(2, increment);
+//            stm.bind(2, obsDialog.GetValue());
+            stm.exec();
+        }catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
+    }
+}

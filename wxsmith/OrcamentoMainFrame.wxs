@@ -100,13 +100,19 @@
 		</object>
 		<object class="wxStatusBar" name="ID_STATUSBAR1" variable="sbStatus" member="yes">
 			<fields>5</fields>
-			<widths>-1,-1,-1,-1,-1</widths>
+			<widths>-2,-1,-1,-1,-1</widths>
 			<styles>wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL</styles>
 		</object>
 		<object class="wxMenu" variable="cmnEstimate" member="yes">
 			<object class="wxMenuItem" name="ID_MENU_ESTIMATE_EDIT" variable="mnEstimateEdit" member="yes">
 				<label>Execute</label>
 				<handler function="OnmnEstimateEditSelected" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_ESTIMATE_COPYSELECTEDTO" variable="mnEstimateCopySelectedTo" member="yes">
+				<label>Copy Selected Rows to...</label>
+				<accel>Ctrl-Alt-p</accel>
+				<help>Copies all selected rows to anothe budget.</help>
+				<handler function="OnmnEstimateCopySelectedToSelected" entry="EVT_MENU" />
 			</object>
 			<object class="separator" />
 			<object class="wxMenuItem" name="ID_MENU_ESTIMATE_DELETE" variable="mnEstimateDelete" member="yes">

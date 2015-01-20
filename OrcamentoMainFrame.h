@@ -52,6 +52,7 @@ class OrcamentoMainFrame: public wxFrame
         void OnWalletsOverview(wxCommandEvent& event);
         void OngdEstimatesCellLeftDClick(wxGridEvent& event);
         void OnmnEstimateDeleteSelected(wxCommandEvent& event);
+        void OnmnEstimateCopySelectedToSelected(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -68,6 +69,7 @@ class OrcamentoMainFrame: public wxFrame
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         static const long ID_MENU_ESTIMATE_EDIT;
+        static const long ID_MENU_ESTIMATE_COPYSELECTEDTO;
         static const long ID_MENU_ESTIMATE_DELETE;
         //*)
 
@@ -81,6 +83,7 @@ class OrcamentoMainFrame: public wxFrame
         wxMenuItem* mnCreateBudget;
         wxMenu* mnEstimate;
         wxStatusBar* sbStatus;
+        wxMenuItem* mnEstimateCopySelectedTo;
         wxMenu cmnEstimate;
         wxMenuItem* mnEstimateEdit;
         //*)

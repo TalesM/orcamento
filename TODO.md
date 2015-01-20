@@ -10,7 +10,7 @@ TODO for V0.1
 1. Show accounted collumn value correcly after closing Execution Dialog; _ok_
 1. Forbid two estimates to have the same name and same budget_id. A name should 
 	happen only once per budget;_ok_
-1. Create some way to copy estimates for the following budgets.
+1. Create some way to copy estimates for the following budgets. _ok_
 1. <del>Create some way to import/export the budget as CSV.</del>
 	<ins>If I really need to do this, I can use tooling over the database file.
 2. Halt open or creating action if path invalid; _ok_
