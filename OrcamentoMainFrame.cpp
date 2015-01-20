@@ -153,10 +153,10 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     MenuBar1->Append(Menu2, _("Help"));
     SetMenuBar(MenuBar1);
     sbStatus = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
-    int __wxStatusBarWidths_1[4] = { -1, -1, -1, -1 };
-    int __wxStatusBarStyles_1[4] = { wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL };
-    sbStatus->SetFieldsCount(4,__wxStatusBarWidths_1);
-    sbStatus->SetStatusStyles(4,__wxStatusBarStyles_1);
+    int __wxStatusBarWidths_1[5] = { -1, -1, -1, -1, -1 };
+    int __wxStatusBarStyles_1[5] = { wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL, wxSB_NORMAL };
+    sbStatus->SetFieldsCount(5,__wxStatusBarWidths_1);
+    sbStatus->SetStatusStyles(5,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
     mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_EDIT, _("Execute"), wxEmptyString, wxITEM_NORMAL);
     cmnEstimate.Append(mnEstimateEdit);
@@ -255,11 +255,19 @@ void OrcamentoMainFrame::RefreshStatusBar()
         return;
     }
     try{
-        const char *query = "SELECT budget.name, SUM(estimate.amount)/100.0, IFNULL(SUM(execution.amount)/100.0, 0.00)"
-                            "  FROM budget"
-                            "  JOIN estimate USING(budget_id)"
-                            "  LEFT JOIN execution USING(estimate_id)"
-                            "  WHERE budget_id = ?1"
+        auto query= "SELECT "
+                    "    budget.name,"
+                    "    SUM(estimate.amount)/100.0,"
+                    "    SUM(execution_estimate.amount)/100.0,"
+                    "    (SUM(estimate.amount) - SUM(execution_estimate.amount))/100.0"
+                    "  FROM budget"
+                    "  JOIN estimate USING(budget_id)"
+                    "  LEFT JOIN (SELECT "
+                    "      IFNULL(SUM(execution.amount)/100.0, 0.0) AS amount,"
+                    "      estimate_id"
+                    "    FROM execution GROUP BY estimate_id"
+                    "  ) execution_estimate USING(estimate_id)"
+                    "  WHERE budget_id = ?1"
         ;
         SQLite::Statement stm(*_database, query);
         stm.bind(1, budget_id);
@@ -269,6 +277,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
         sbStatus->SetStatusText(L"Budget: " + wxString::FromUTF8(stm.getColumn(0)), 1);
         sbStatus->SetStatusText(L"Estimated: " + wxString::FromUTF8(stm.getColumn(1)), 2);
         sbStatus->SetStatusText(L"Accounted: " + wxString::FromUTF8(stm.getColumn(2)), 3);
+        sbStatus->SetStatusText(L"Remaining: " + wxString::FromUTF8(stm.getColumn(3)), 4);
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
