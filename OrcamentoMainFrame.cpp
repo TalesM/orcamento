@@ -10,10 +10,11 @@
 #include "wx_pch.h"
 #include "OrcamentoMainFrame.h"
 
+#include <string>
+#include <wx/msgdlg.h>
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
-#include <wx/msgdlg.h>
 
 //(*InternalHeaders(OrcamentoMainFrame)
 #include <wx/artprov.h>
@@ -56,8 +57,9 @@ namespace EstimateColumn{
         ESTIMATED   = 2,
         ACCOUNTED   = 3,
         DUE         = 4,
-        CATEGORY    = 5;
-    constexpr int length = 6;
+        CATEGORY    = 5,
+        OBS         = 6;
+    constexpr int length = 7;
 };
 
 //(*IdInit(OrcamentoMainFrame)
@@ -73,9 +75,8 @@ const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM5 = wxNewId();
 const long OrcamentoMainFrame::idMenuAbout = wxNewId();
 const long OrcamentoMainFrame::ID_STATUSBAR1 = wxNewId();
-const long OrcamentoMainFrame::ID_MENU_PROMISE_EDIT = wxNewId();
-const long OrcamentoMainFrame::ID_MENUITEM3 = wxNewId();
-const long OrcamentoMainFrame::ID_MENUITEM4 = wxNewId();
+const long OrcamentoMainFrame::ID_MENU_ESTIMATE_EDIT = wxNewId();
+const long OrcamentoMainFrame::ID_MENU_ESTIMATE_DELETE = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(OrcamentoMainFrame,wxFrame)
@@ -105,7 +106,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
     gdEstimates = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
-    gdEstimates->CreateGrid(0,6);
+    gdEstimates->CreateGrid(0,7);
     gdEstimates->HideCol(0);
     gdEstimates->EnableEditing(true);
     gdEstimates->EnableGridLines(true);
@@ -115,6 +116,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     gdEstimates->SetColLabelValue(3, _("Accounted"));
     gdEstimates->SetColLabelValue(4, _("Due"));
     gdEstimates->SetColLabelValue(5, _("Category"));
+    gdEstimates->SetColLabelValue(6, _("Observation"));
     gdEstimates->SetDefaultCellFont( gdEstimates->GetFont() );
     gdEstimates->SetDefaultCellTextColour( gdEstimates->GetForegroundColour() );
     SplitterWindow1->SplitVertically(lbMonths, gdEstimates);
@@ -156,14 +158,11 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     sbStatus->SetFieldsCount(4,__wxStatusBarWidths_1);
     sbStatus->SetStatusStyles(4,__wxStatusBarStyles_1);
     SetStatusBar(sbStatus);
-    mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_PROMISE_EDIT, _("Detail"), wxEmptyString, wxITEM_NORMAL);
+    mnEstimateEdit = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_EDIT, _("Execute"), wxEmptyString, wxITEM_NORMAL);
     cmnEstimate.Append(mnEstimateEdit);
-    mnExecute = new wxMenuItem((&cmnEstimate), ID_MENUITEM3, _("Execute"), wxEmptyString, wxITEM_NORMAL);
-    cmnEstimate.Append(mnExecute);
-    mnExecute->Enable(false);
     cmnEstimate.AppendSeparator();
-    MenuItem4 = new wxMenuItem((&cmnEstimate), ID_MENUITEM4, _("Delete Estimate"), wxEmptyString, wxITEM_NORMAL);
-    cmnEstimate.Append(MenuItem4);
+    mnEstimateDelete = new wxMenuItem((&cmnEstimate), ID_MENU_ESTIMATE_DELETE, _("Delete Estimate"), wxEmptyString, wxITEM_NORMAL);
+    cmnEstimate.Append(mnEstimateDelete);
 
     Connect(ID_SIMPLEHTMLLISTBOX1,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnlbMonthsDClick);
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_RIGHT_CLICK,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellRightClick);
@@ -177,7 +176,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateEstimate);
     Connect(ID_MENUITEM5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnWalletsOverview);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
-    Connect(ID_MENU_PROMISE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
+    Connect(ID_MENU_ESTIMATE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
+    Connect(ID_MENU_ESTIMATE_DELETE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateDeleteSelected);
     //*)
 }
 
@@ -222,7 +222,7 @@ void OrcamentoMainFrame::RefreshEstimates()
     if(selected >= 0){
         int budget_id = 1 + selected;
         try {
-            const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name"
+            const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name, prom.obs"
                                 "  FROM budget bud JOIN estimate prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
                                 "  WHERE budget_id = ?1 ORDER BY category_id, prom.name";
             SQLite::Statement stm(*_database, query);
@@ -305,6 +305,11 @@ void OrcamentoMainFrame::RefreshCellAttr()
     }
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
+
+    //OBS
+    wxGridCellAttr *obsCol = new wxGridCellAttr();
+    obsCol->SetReadOnly();
+    gdEstimates->SetColAttr(EstimateColumn::OBS, obsCol);
 }
 
 
@@ -322,6 +327,7 @@ void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
 void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
 {
     CreateDatabaseDialog dialog(this);
+DIALOG_SHOW: //Don't do this at home, kids.
     if(dialog.ShowModal() != wxID_OK ){
         return;
     }
@@ -347,6 +353,8 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
             transaction.commit();
         } catch (const std::exception &e){
             wxMessageBox(e.what());
+            _database = nullptr;
+            goto DIALOG_SHOW;
         }
         RefreshModel();
     }
@@ -415,15 +423,20 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
     if(!selection){
         return;
     }
-    auto query = "INSERT INTO estimate(budget_id, name, amount, category_id)"
-                 "  VALUES (?1, 'New Estimate', 0, (SELECT max(category_id) FROM category))";
-    SQLite::Statement stm(*_database, query);
-    stm.bind(1, selection);
-    if(!stm.exec()){
-        wxMessageBox("Erro desconhecido");
+    try {
+        auto query = "INSERT INTO estimate(budget_id, amount, category_id)"
+                     "  VALUES (?1, 0, (SELECT max(category_id) FROM category))";
+        SQLite::Statement stm(*_database, query);
+        stm.bind(1, selection);
+        if(!stm.exec()){
+            wxMessageBox("Erro desconhecido");
+        }
+        gdEstimates->AppendRows();
+        int newRow = gdEstimates->GetNumberRows()-1;
+        gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(_database->getLastInsertRowid()));
+    }catch (const std::exception &e){
+        wxMessageBox(e.what());
     }
-
-    RefreshEstimates();
 }
 
 void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
@@ -461,15 +474,24 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
         break;
     case EstimateColumn::DUE:
         try{
-            wxDateTime due{};
-            due.ParseISODate(newValue);
-            int day = due.GetDay() -1;
-            std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
-            SQLite::Statement stm(*_database, query);
-            stm.bind(1, int(id));
-            stm.bind(2, day);
-            if(!stm.exec()){
-                wxMessageBox("Erro desconhecido");
+            if(newValue.length()){
+                wxDateTime due{};
+                due.ParseISODate(newValue);
+                int day = due.GetDay() -1;
+                std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
+                SQLite::Statement stm(*_database, query);
+                stm.bind(1, int(id));
+                stm.bind(2, day);
+                if(!stm.exec()){
+                    wxMessageBox("Erro desconhecido");
+                }
+            } else {
+                std::string query = "UPDATE estimate SET \"due\" = NULL WHERE estimate_id = ?1";
+                SQLite::Statement stm(*_database, query);
+                stm.bind(1, int(id));
+                if(!stm.exec()){
+                    wxMessageBox("Erro desconhecido");
+                }
             }
         }catch (const std::exception &e){
             wxMessageBox(e.what());
@@ -495,14 +517,13 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
 
 void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 {
-    wxPoint point = event.GetPosition();
-    wxGridCellCoords coords(event.GetRow(), event.GetCol());
-    if(coords.GetRow() < 1){
+    int row = event.GetRow();
+    if(row < 1){
         return;
     }
 
-    cmnEstimate.SetClientData(&coords);
-    gdEstimates->GetPosition();
+    wxPoint point = event.GetPosition();
+    cmnEstimate.SetClientData(reinterpret_cast<void*>(row));
     PopupMenu( &cmnEstimate, gdEstimates->GetPosition() + point);
     cmnEstimate.SetClientData(NULL);
 }
@@ -510,10 +531,37 @@ void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 {
     if(cmnEstimate.GetClientData()){
-        wxGridCellCoords &coords = *reinterpret_cast<wxGridCellCoords*>(cmnEstimate.GetClientData());
-        wxString str(L"Happened at ");
-        str << coords.GetRow() << ", " << coords.GetCol();
-        wxMessageBox(str);
+        int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
+        ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID)));
+        executionDialog.giveDatabase(_database);
+        executionDialog.ShowModal();
+        _database = executionDialog.takeDatabase();
+        RefreshEstimates();
+        RefreshStatusBar();
+    }
+}
+
+void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
+{
+    if(cmnEstimate.GetClientData()){
+        int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
+        if(wxMessageBox(L"Are you sure you want to delete \""
+                        +gdEstimates->GetCellValue(row, EstimateColumn::NAME)+"\"",
+                        "Delete Confirmation", wxOK|wxCENTRE|wxCANCEL, this) != wxOK
+        ){
+            return;
+        }
+        try {
+            SQLite::Statement stm(*_database, "DELETE FROM estimate WHERE estimate_id = ?1");
+            stm.bind(1, gdEstimates->GetCellValue(row, EstimateColumn::ID));
+            stm.exec();
+            RefreshEstimates();
+            RefreshStatusBar();
+        } catch(std::exception &e){
+            wxMessageBox(e.what());
+        }
+    } else {
+        wxMessageBox(L"Unknown error. Event called by wrong caller.");
     }
 }
 
@@ -528,10 +576,32 @@ void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
 void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
-    if(row > 0 and col == EstimateColumn::ACCOUNTED){
+    if(row <= 0){
+        return;
+    }
+    if(col == EstimateColumn::ACCOUNTED){
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, 0)));
         executionDialog.giveDatabase(_database);
         executionDialog.ShowModal();
         _database = executionDialog.takeDatabase();
+        RefreshEstimates();
+        RefreshStatusBar();
+    } else if(col ==EstimateColumn::OBS){
+        wxTextEntryDialog obsDialog(this, L"Write an Observation for \""+gdEstimates->GetCellValue(row, EstimateColumn::NAME)+L"\"",
+                                    L"OBS", gdEstimates->GetCellValue(row, EstimateColumn::OBS), wxTE_MULTILINE|wxTextEntryDialogStyle);
+        if(obsDialog.ShowModal() != wxID_OK){
+            return;
+        }
+        try{
+            int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
+            SQLite::Statement stm(*_database, R"==(UPDATE "estimate" SET "obs" = ?2 WHERE "estimate_id" = ?1 )==");
+            stm.bind(1, id);
+            stm.bind(2, obsDialog.GetValue());
+            stm.exec();
+            gdEstimates->SetCellValue(row, EstimateColumn::OBS, obsDialog.GetValue());
+        }catch (const std::exception &e){
+            wxMessageBox(e.what());
+        }
     }
 }
+

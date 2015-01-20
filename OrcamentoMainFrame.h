@@ -51,6 +51,7 @@ class OrcamentoMainFrame: public wxFrame
         void OnmnEstimateEditSelected(wxCommandEvent& event);
         void OnWalletsOverview(wxCommandEvent& event);
         void OngdEstimatesCellLeftDClick(wxGridEvent& event);
+        void OnmnEstimateDeleteSelected(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(OrcamentoMainFrame)
@@ -66,16 +67,14 @@ class OrcamentoMainFrame: public wxFrame
         static const long ID_MENUITEM5;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
-        static const long ID_MENU_PROMISE_EDIT;
-        static const long ID_MENUITEM3;
-        static const long ID_MENUITEM4;
+        static const long ID_MENU_ESTIMATE_EDIT;
+        static const long ID_MENU_ESTIMATE_DELETE;
         //*)
 
         //(*Declarations(OrcamentoMainFrame)
-        wxMenuItem* mnExecute;
         wxSimpleHtmlListBox* lbMonths;
+        wxMenuItem* mnEstimateDelete;
         wxMenuItem* MenuItem1;
-        wxMenuItem* MenuItem4;
         wxGrid* gdEstimates;
         wxMenuItem* mnNew;
         wxMenuItem* mnExecuteNextBudget;

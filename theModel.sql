@@ -45,10 +45,12 @@ CREATE TABLE "estimate" (
 	"estimate_id"	INTEGER PRIMARY KEY,
 	"budget_id"		INTEGER NOT NULL REFERENCES budget(budget_id),
 	"category_id"	INTEGER REFERENCES category(category_id),
-	"name"			VARCHAR NOT NULL,
+	"name"			VARCHAR,
 	"amount"		INTEGER NOT NULL CHECK (typeof(amount) = 'integer'),
 	"due"			TEXT, --Must be a date offset MM UNIT, to be applied on bugdet.start.
-	"obs"			TEXT
+	"obs"			TEXT,
+
+	CONSTRAINT "u_name_per_budget" UNIQUE ("budget_id", "name")
 );
 CREATE TABLE "execution" (
 	"execution_id"	INTEGER PRIMARY KEY,

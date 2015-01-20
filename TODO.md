@@ -7,8 +7,9 @@ Contents
 TODO for V0.1
 -------------
 
-1. Show accounted collumn value correcly after closing Execution Dialog;
-1. Forbid two estimates to have the same name and same budget_id. A name should happen only once per budget;
+1. Show accounted collumn value correcly after closing Execution Dialog; _ok_
+1. Forbid two estimates to have the same name and same budget_id. A name should 
+	happen only once per budget;_ok_
 1. Create some way to copy estimates for the following budgets.
 1. Create some way to import/export the budget as CSV.
 2. Halt open or creating action if path invalid;

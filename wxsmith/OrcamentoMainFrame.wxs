@@ -16,7 +16,7 @@
 				<handler function="OnlbMonthsDClick" entry="EVT_LISTBOX" />
 			</object>
 			<object class="wxGrid" name="ID_GDPROMISES" variable="gdEstimates" member="yes">
-				<cols>6</cols>
+				<cols>7</cols>
 				<collabels>
 					<item>Id</item>
 					<item>Name</item>
@@ -24,6 +24,7 @@
 					<item>Accounted</item>
 					<item>Due</item>
 					<item>Category</item>
+					<item>Observation</item>
 				</collabels>
 				<pos>78,4</pos>
 				<extra_code>gdEstimates-&gt;HideCol(0);</extra_code>
@@ -103,17 +104,14 @@
 			<styles>wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL</styles>
 		</object>
 		<object class="wxMenu" variable="cmnEstimate" member="yes">
-			<object class="wxMenuItem" name="ID_MENU_PROMISE_EDIT" variable="mnEstimateEdit" member="yes">
-				<label>Detail</label>
+			<object class="wxMenuItem" name="ID_MENU_ESTIMATE_EDIT" variable="mnEstimateEdit" member="yes">
+				<label>Execute</label>
 				<handler function="OnmnEstimateEditSelected" entry="EVT_MENU" />
 			</object>
-			<object class="wxMenuItem" name="ID_MENUITEM3" variable="mnExecute" member="yes">
-				<label>Execute</label>
-				<enabled>0</enabled>
-			</object>
 			<object class="separator" />
-			<object class="wxMenuItem" name="ID_MENUITEM4" variable="MenuItem4" member="yes">
+			<object class="wxMenuItem" name="ID_MENU_ESTIMATE_DELETE" variable="mnEstimateDelete" member="yes">
 				<label>Delete Estimate</label>
+				<handler function="OnmnEstimateDeleteSelected" entry="EVT_MENU" />
 			</object>
 		</object>
 	</object>
