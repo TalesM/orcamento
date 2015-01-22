@@ -390,7 +390,7 @@ DIALOG_SHOW: //Don't do this at home, kids.
     wxFile modelFile(L"theModel.sql");
     if(modelFile.ReadAll(&model)){
         try{
-            _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+            _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location.ToUTF8(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
             SQLite::Transaction transaction(*_database);
             _database->exec(model);
 
@@ -455,7 +455,7 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
     }
     wxString location = openFileDialog.GetPath();
     try {
-        _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location, SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+        _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location.ToUTF8(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
         RefreshModel();
     }catch (const std::exception &e){
         wxMessageBox(e.what());
@@ -517,7 +517,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     };
     switch(col){
     case EstimateColumn::NAME:
-        updateField("name", newValue);
+        updateField("name", newValue.ToUTF8());
         break;
     case EstimateColumn::ESTIMATED:
         updateField("amount", int(atof(newValue)*100));
