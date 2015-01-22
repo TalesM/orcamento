@@ -186,6 +186,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENU_ESTIMATE_COPYSELECTEDTO,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected);
     Connect(ID_MENU_ESTIMATE_DELETE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateDeleteSelected);
     //*)
+
+    SetupCellAttr();
 }
 
 OrcamentoMainFrame::~OrcamentoMainFrame()
@@ -193,6 +195,41 @@ OrcamentoMainFrame::~OrcamentoMainFrame()
     //(*Destroy(OrcamentoMainFrame)
     //*)
 }
+
+void OrcamentoMainFrame::SetupCellAttr()
+{
+    auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
+    //Due
+    wxGridCellAttr *attrDueCol = new wxGridCellAttr();
+    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
+    gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
+
+    //Expected
+    wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
+    attrExpectedCol->SetRenderer(moneyRenderer);
+    attrExpectedCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
+    gdEstimates->SetColAttr(EstimateColumn::ESTIMATED, attrExpectedCol);
+
+    //Accounted
+    moneyRenderer->IncRef();
+    wxGridCellAttr *attrAccountedCol = new wxGridCellAttr();
+    attrAccountedCol->SetReadOnly(true);
+    attrAccountedCol->SetRenderer(moneyRenderer);
+    gdEstimates->SetColAttr(EstimateColumn::ACCOUNTED, attrAccountedCol);
+
+    //Remaining
+    moneyRenderer->IncRef();
+    wxGridCellAttr *attrRemainingCol = new wxGridCellAttr();
+    attrRemainingCol->SetReadOnly(true);
+    attrRemainingCol->SetRenderer(moneyRenderer);
+    gdEstimates->SetColAttr(EstimateColumn::REMAINING, attrRemainingCol);
+
+    //OBS
+    wxGridCellAttr *obsCol = new wxGridCellAttr();
+    obsCol->SetReadOnly();
+    gdEstimates->SetColAttr(EstimateColumn::OBS, obsCol);
+}
+
 
 void OrcamentoMainFrame::RefreshModel()
 {
@@ -302,40 +339,6 @@ void OrcamentoMainFrame::RefreshStatusBar()
 
 void OrcamentoMainFrame::RefreshCellAttr()
 {
-    auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
-
-    //Due
-    wxGridCellAttr *attrDueCol = new wxGridCellAttr();
-    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
-    gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
-
-    //Expected
-    wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
-    attrExpectedCol->SetRenderer(moneyRenderer);
-    attrExpectedCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
-    gdEstimates->SetColAttr(EstimateColumn::ESTIMATED, attrExpectedCol);
-
-    //Accounted
-    moneyRenderer->IncRef();
-    wxGridCellAttr *attrAccountedCol = new wxGridCellAttr();
-    attrAccountedCol->SetReadOnly(true);
-    attrAccountedCol->SetRenderer(moneyRenderer);
-    gdEstimates->SetColAttr(EstimateColumn::ACCOUNTED, attrAccountedCol);
-
-    //Remaining
-    moneyRenderer->IncRef();
-    wxGridCellAttr *attrRemainingCol = new wxGridCellAttr();
-    attrRemainingCol->SetReadOnly(true);
-    attrRemainingCol->SetRenderer(moneyRenderer);
-    gdEstimates->SetColAttr(EstimateColumn::REMAINING, attrRemainingCol);
-    if(lbMonths->GetSelection() > _activeIndex){
-        gdEstimates->HideCol(EstimateColumn::ACCOUNTED);
-        gdEstimates->HideCol(EstimateColumn::REMAINING);
-    } else {
-        gdEstimates->ShowCol(EstimateColumn::ACCOUNTED);
-        gdEstimates->ShowCol(EstimateColumn::REMAINING);
-    }
-
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
@@ -346,10 +349,14 @@ void OrcamentoMainFrame::RefreshCellAttr()
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
 
-    //OBS
-    wxGridCellAttr *obsCol = new wxGridCellAttr();
-    obsCol->SetReadOnly();
-    gdEstimates->SetColAttr(EstimateColumn::OBS, obsCol);
+    //Show the execution only if possible.
+    if(lbMonths->GetSelection() > _activeIndex){
+        gdEstimates->HideCol(EstimateColumn::ACCOUNTED);
+        gdEstimates->HideCol(EstimateColumn::REMAINING);
+    } else {
+        gdEstimates->ShowCol(EstimateColumn::ACCOUNTED);
+        gdEstimates->ShowCol(EstimateColumn::REMAINING);
+    }
 }
 
 
