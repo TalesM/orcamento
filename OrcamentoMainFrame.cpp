@@ -55,12 +55,13 @@ namespace EstimateColumn{
     constexpr int
         ID          = 0,
         NAME        = 1,
-        ESTIMATED   = 2,
-        ACCOUNTED   = 3,
-        DUE         = 4,
-        CATEGORY    = 5,
-        OBS         = 6;
-    constexpr int length = 7;
+        DUE         = 2,
+        ESTIMATED   = 3,
+        ACCOUNTED   = 4,
+        REMAINING   = 5,
+        CATEGORY    = 6,
+        OBS         = 7;
+    constexpr int length = 8;
 };
 
 //(*IdInit(OrcamentoMainFrame)
@@ -108,17 +109,18 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SplitterWindow1->SetSashGravity(0.25);
     lbMonths = new wxSimpleHtmlListBox(SplitterWindow1, ID_SIMPLEHTMLLISTBOX1, wxPoint(223,244), wxDefaultSize, 0, 0, wxHLB_DEFAULT_STYLE, wxDefaultValidator, _T("ID_SIMPLEHTMLLISTBOX1"));
     gdEstimates = new wxGrid(SplitterWindow1, ID_GDPROMISES, wxPoint(78,4), wxDefaultSize, 0, _T("ID_GDPROMISES"));
-    gdEstimates->CreateGrid(0,7);
+    gdEstimates->CreateGrid(0,8);
     gdEstimates->HideCol(0);
     gdEstimates->EnableEditing(true);
     gdEstimates->EnableGridLines(true);
     gdEstimates->SetColLabelValue(0, _("Id"));
     gdEstimates->SetColLabelValue(1, _("Name"));
-    gdEstimates->SetColLabelValue(2, _("Estimated"));
-    gdEstimates->SetColLabelValue(3, _("Accounted"));
-    gdEstimates->SetColLabelValue(4, _("Due"));
-    gdEstimates->SetColLabelValue(5, _("Category"));
-    gdEstimates->SetColLabelValue(6, _("Observation"));
+    gdEstimates->SetColLabelValue(2, _("Due"));
+    gdEstimates->SetColLabelValue(3, _("Estimated"));
+    gdEstimates->SetColLabelValue(4, _("Accounted"));
+    gdEstimates->SetColLabelValue(5, _("Remaining"));
+    gdEstimates->SetColLabelValue(6, _("Category"));
+    gdEstimates->SetColLabelValue(7, _("Observation"));
     gdEstimates->SetDefaultCellFont( gdEstimates->GetFont() );
     gdEstimates->SetDefaultCellTextColour( gdEstimates->GetForegroundColour() );
     SplitterWindow1->SplitVertically(lbMonths, gdEstimates);
@@ -197,8 +199,8 @@ void OrcamentoMainFrame::RefreshModel()
     lbMonths->Clear();
     try {
         SQLite::Statement stm(*_database, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
+        _activeIndex = -1;
         while(stm.executeStep()){
-            // TODO (Tales#1#): Mark currently active budget (an executing budget with next being NULL or a planing budget)
             wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
             bool executing = int(stm.getColumn(1));
             bool active = int(stm.getColumn(2));
@@ -206,6 +208,7 @@ void OrcamentoMainFrame::RefreshModel()
                 budgetName = "<em>" + budgetName + "</em>";
             } else if(active){
                 budgetName = "<strong>" + budgetName + "</strong>";
+                _activeIndex = lbMonths->GetCount();
             }
             lbMonths->Append(budgetName);
             if(active){
@@ -223,33 +226,41 @@ void OrcamentoMainFrame::RefreshEstimates()
     if(gdEstimates->GetNumberRows()){
         gdEstimates->DeleteRows(0, gdEstimates->GetNumberRows());
     }
-    int selected = lbMonths->GetSelection();
-    if(selected >= 0){
-        int budget_id = 1 + selected;
-        try {
-            const char *query = "SELECT estimate_id, prom.name, prom.amount/100.0, 0, DATE(bud.start, prom.due), cat.name, prom.obs"
-                                "  FROM budget bud JOIN estimate prom USING(budget_id) LEFT JOIN category cat USING(category_id)"
-                                "  WHERE budget_id = ?1 ORDER BY category_id, prom.name";
-            SQLite::Statement stm(*_database, query);
-            stm.bind(1, budget_id);
+    int budget_id = lbMonths->GetSelection() + 1;
+    if(budget_id <= 0){
+        return;
+    }
+    try {
+        auto query = "SELECT estimate_id, prom.name, DATE(bud.start, prom.due),"
+                     "    prom.amount/100.0, SUM(exc.amount)/100.0, "
+                     "    (prom.amount-SUM(exc.amount))/100.0, "
+                     "    cat.name, prom.obs"
+                     "  FROM budget bud "
+                     "  JOIN estimate prom USING(budget_id)"
+                     "  LEFT JOIN category cat USING(category_id)"
+                     "  LEFT JOIN execution exc USING(estimate_id)"
+                     "  WHERE budget_id = ?1"
+                     "  GROUP BY estimate_id"
+                     "  ORDER BY category_id, prom.name";
+        SQLite::Statement stm(*_database, query);
+        stm.bind(1, budget_id);
 
-            for(int i = 0; stm.executeStep(); ++i){
-                gdEstimates->AppendRows();
-                for(int j = 0; j < EstimateColumn::length; ++j){
-                    gdEstimates->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
-                }
-                if(stm.isColumnNull(EstimateColumn::CATEGORY)){
-                    wxGridCellAttr *attrImultLine = new wxGridCellAttr();
-                    attrImultLine->SetReadOnly(true);
-                    gdEstimates->SetRowAttr(i, attrImultLine);
-                }
+        for(int i = 0; stm.executeStep(); ++i){
+            gdEstimates->AppendRows();
+            for(int j = 0; j < EstimateColumn::length; ++j){
+                gdEstimates->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
             }
-            // TODO (Tales#1#): Modularize
-            RefreshCellAttr();
-
-        } catch (const std::exception &e){
-            wxMessageBox(e.what());
+            if(stm.isColumnNull(EstimateColumn::CATEGORY)){
+                wxGridCellAttr *attrImultLine = new wxGridCellAttr();
+                attrImultLine->SetReadOnly(true);
+                gdEstimates->SetRowAttr(i, attrImultLine);
+            }
         }
+        // TODO (Tales#1#): Modularize
+        RefreshCellAttr();
+
+    } catch (const std::exception &e){
+        wxMessageBox(e.what());
     }
 }
 
@@ -268,7 +279,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
                     "  FROM budget"
                     "  JOIN estimate USING(budget_id)"
                     "  LEFT JOIN (SELECT "
-                    "      IFNULL(SUM(execution.amount)/100.0, 0.0) AS amount,"
+                    "      IFNULL(SUM(execution.amount), 0) AS amount,"
                     "      estimate_id"
                     "    FROM execution GROUP BY estimate_id"
                     "  ) execution_estimate USING(estimate_id)"
@@ -292,23 +303,38 @@ void OrcamentoMainFrame::RefreshStatusBar()
 void OrcamentoMainFrame::RefreshCellAttr()
 {
     auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
+
+    //Due
+    wxGridCellAttr *attrDueCol = new wxGridCellAttr();
+    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
+    gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
+
     //Expected
     wxGridCellAttr *attrExpectedCol = new wxGridCellAttr();
     attrExpectedCol->SetRenderer(moneyRenderer);
     attrExpectedCol->SetEditor(new wxGridCellFloatEditor(-1, 2));
     gdEstimates->SetColAttr(EstimateColumn::ESTIMATED, attrExpectedCol);
 
-    //Spent
+    //Accounted
     moneyRenderer->IncRef();
     wxGridCellAttr *attrAccountedCol = new wxGridCellAttr();
     attrAccountedCol->SetReadOnly(true);
     attrAccountedCol->SetRenderer(moneyRenderer);
     gdEstimates->SetColAttr(EstimateColumn::ACCOUNTED, attrAccountedCol);
 
-    //Due
-    wxGridCellAttr *attrDueCol = new wxGridCellAttr();
-    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
-    gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
+    //Remaining
+    moneyRenderer->IncRef();
+    wxGridCellAttr *attrRemainingCol = new wxGridCellAttr();
+    attrRemainingCol->SetReadOnly(true);
+    attrRemainingCol->SetRenderer(moneyRenderer);
+    gdEstimates->SetColAttr(EstimateColumn::REMAINING, attrRemainingCol);
+    if(lbMonths->GetSelection() > _activeIndex){
+        gdEstimates->HideCol(EstimateColumn::ACCOUNTED);
+        gdEstimates->HideCol(EstimateColumn::REMAINING);
+    } else {
+        gdEstimates->ShowCol(EstimateColumn::ACCOUNTED);
+        gdEstimates->ShowCol(EstimateColumn::REMAINING);
+    }
 
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();

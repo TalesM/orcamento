@@ -16,13 +16,14 @@
 				<handler function="OnlbMonthsDClick" entry="EVT_LISTBOX" />
 			</object>
 			<object class="wxGrid" name="ID_GDPROMISES" variable="gdEstimates" member="yes">
-				<cols>7</cols>
+				<cols>8</cols>
 				<collabels>
 					<item>Id</item>
 					<item>Name</item>
+					<item>Due</item>
 					<item>Estimated</item>
 					<item>Accounted</item>
-					<item>Due</item>
+					<item>Remaining</item>
 					<item>Category</item>
 					<item>Observation</item>
 				</collabels>

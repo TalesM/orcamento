@@ -31,6 +31,7 @@ class OrcamentoMainFrame: public wxFrame
 
     private:
         std::unique_ptr<SQLite::Database> _database;
+        int _activeIndex = -1;
 
         void RefreshModel();
         void RefreshEstimates();
