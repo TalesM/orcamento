@@ -553,7 +553,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
             std::string query = "UPDATE estimate SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE estimate_id = ?1";
             SQLite::Statement stm(*_database, query);
             stm.bind(1, int(id));
-            stm.bind(2, newValue);
+            stm.bind(2, newValue.ToUTF8());
             if(!stm.exec()){
                 wxMessageBox("Erro desconhecido");
             }
@@ -647,7 +647,7 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
             int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
             SQLite::Statement stm(*_database, R"==(UPDATE "estimate" SET "obs" = ?2 WHERE "estimate_id" = ?1 )==");
             stm.bind(1, id);
-            stm.bind(2, obsDialog.GetValue());
+            stm.bind(2, obsDialog.GetValue().ToUTF8());
             stm.exec();
             gdEstimates->SetCellValue(row, EstimateColumn::OBS, obsDialog.GetValue());
         }catch (const std::exception &e){

@@ -262,10 +262,10 @@ void ExecutionDialog::OngdExecutionsCellChange(wxGridEvent& event)
         }
         break;
     case ExecutionColumn::DESCRIPTION:
-        updateField("description", newValue);
+        updateField("description", newValue.ToUTF8());
         break;
     case ExecutionColumn::OBS:
-        updateField("obs", newValue);
+        updateField("obs", newValue.ToUTF8());
         break;
     default:
         break;
