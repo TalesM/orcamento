@@ -168,6 +168,10 @@ BEGIN
         );
 END;
 
+INSERT INTO "meta"("key", "value")
+VALUES
+    ('format-version', '0.1.0');
+
 INSERT INTO "category"(name)
 VALUES
     ('Income'),
