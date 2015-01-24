@@ -54,7 +54,15 @@ Limitations
 	
 Goals
 -----
-TODO
+The goal for this app was create a easier budget management tool than my old
+excel spreadsheet. On technical side, I also wanted to get practice on SQLite
+databases, being wxWidgets and C++11 and 14 more like bonus experience. 
+
+Because of that I made it as personal need it may be a little too specific in 
+some resources, as I do not have a general dataset to base my requirements. 
+I probably can not even notice when it happens, but suggestions are welcome as
+I want it to be more general. A token of my good faith is the app interface language, 
+witch is English instead of Portuguese (my mother language) :)
 
 Dependencies
 ------------
@@ -66,4 +74,6 @@ To finish.
 
 Licence issues
 --------------
-TODO
+I started this project using MIT license, but then I decided that GPL would
+be more suited for it, as MIT sounds too library-y for me. So read the <license.TXT>
+if you want to modify or use this as part of other app or library.
