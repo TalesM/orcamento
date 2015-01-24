@@ -1,7 +1,7 @@
 /***************************************************************
- * Name:      orcamentoCbMain.cpp
+ * Name:      orcamentoMainFrame.cpp
  * Purpose:   Code for Application Frame
- * Author:    TalesM (tales.miranda88@gmail.com)
+ * Author:    TalesM
  * Created:   2015-01-10
  * Copyright: TalesM (talesm.github.io)
  * License:   GPL3 - See license.txt
@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <wx/msgdlg.h>
+#include <wx/aboutdlg.h>
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
@@ -32,10 +33,9 @@ enum wxbuildinfoformat {
 
 wxString wxbuildinfo(wxbuildinfoformat format)
 {
-    wxString wxbuild(wxVERSION_STRING);
-
     if (format == long_f )
     {
+        wxString wxbuild;
 #if defined(__WXMSW__)
         wxbuild << _T("-Windows");
 #elif defined(__UNIX__)
@@ -47,9 +47,16 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 #else
         wxbuild << _T("-ANSI build");
 #endif // wxUSE_UNICODE
+        return wxbuild;
     }
+    return wxVERSION_STRING;
+}
 
-    return wxbuild;
+inline wxString isoDate(){
+    wxString date(__DATE__), time(__TIME__);
+    wxDateTime isoDate;
+    isoDate.ParseFormat(date+" "+time, "%b %d %Y %T");
+    return isoDate.FormatISOCombined();
 }
 
 namespace EstimateColumn{
@@ -106,7 +113,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     SetClientSize(wxSize(800,600));
     {
     	wxIcon FrameIcon;
-    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("E:\\dev\\projects\\orcamentoCb\\orca_1.ico"))));
+    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
     	SetIcon(FrameIcon);
     }
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
@@ -374,7 +381,21 @@ void OrcamentoMainFrame::OnQuit(wxCommandEvent& event)
 void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
 {
     wxString msg = wxbuildinfo(long_f);
-    wxMessageBox(msg, _("Welcome to..."));
+    wxAboutDialogInfo info;
+    info.SetName(_("OrcaMento"));
+    //info.SetVersion(_("0.1 Alpha"));
+    info.SetVersion(_("Build ")+isoDate()+_("(")+msg+_(")"));
+    info.SetDescription(_("A small program to manage finances. \n"));
+    info.SetCopyright(_("(C) 2014 TalesM (talesm.github.io, tales.miranda88@gmail.com)"));
+    info.SetWebSite(_("https://github.com/TalesM/orcamento"));
+    	wxIcon FrameIcon;
+    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
+        info.SetIcon(FrameIcon);
+
+    wxString licenseString = "This program is licensed by the terms of GPL 3.\nSee the included <LICENSE.txt> for more detail.";
+    info.SetLicence(licenseString);
+
+    wxAboutBox(info);
 }
 
 void OrcamentoMainFrame::OnNew(wxCommandEvent& event)

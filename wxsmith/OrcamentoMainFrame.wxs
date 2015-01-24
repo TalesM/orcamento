@@ -2,7 +2,7 @@
 <wxsmith>
 	<object class="wxFrame" name="OrcamentoMainFrame">
 		<title>OrcaMento</title>
-		<icon>E:\dev\projects\orcamentoCb\orca_1.ico</icon>
+		<icon>orca_1.ico</icon>
 		<size>800,600</size>
 		<id_arg>0</id_arg>
 		<object class="wxSplitterWindow" name="ID_SPLITTERWINDOW1" variable="SplitterWindow1" member="no">
