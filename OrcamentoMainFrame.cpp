@@ -383,8 +383,8 @@ void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
     wxString msg = wxbuildinfo(long_f);
     wxAboutDialogInfo info;
     info.SetName(_("OrcaMento"));
-    //info.SetVersion(_("0.1 Alpha"));
-    info.SetVersion(_("Build ")+isoDate()+_("(")+msg+_(")"));
+    info.SetVersion(_("0.1 Alpha"));
+//    info.SetVersion(_("Build ")+isoDate()+_("(")+msg+_(")"));
     info.SetDescription(_("A small program to manage finances. \n"));
     info.SetCopyright(_("(C) 2014 TalesM (talesm.github.io, tales.miranda88@gmail.com)"));
     info.SetWebSite(_("https://github.com/TalesM/orcamento"));
