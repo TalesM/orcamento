@@ -24,16 +24,16 @@ Features
 
 - Multiple wallets;
 - Monthly budgets;
-- Safe storage (we use sqlite3 under the hood, so your data will be mostly ok. 
+- Safe storage (we use [sqlite3][SQLite] under the hood, so your data will be mostly ok. 
 	Do regular backup, however)
-- Free and visible format (again it's sqlite3, there are many programs out 
+- Free and visible format (again it's [sqlite3][SQLite], there are many programs out 
 	there able to see and export your info, in case you give up this program or
 	I give up it's development).
-- Cross platform-ish. It is developed using wxWidgets and sqlite3 (Using 
-	SQLiteCpp as a c++11 layer). I use mingw32 on windows, it should be super 
+- Cross platform-ish. It is developed using [wxWidgets][] and [sqlite3][SQLite] (Using 
+	[SQLiteC++][] as a c++11 layer). I use mingw32 on windows, it should be super 
 	easy to port to Linux or Mac now.
-- For developers thinking about working on contributing, I am using c++11 
-	features and even some c++14 that gcc supports, so the code is actual and
+- For developers thinking about working on contributing, I am using [c++11][] 
+	features and even some [c++14][] that [gcc 4.9.2][gcc492] supports, so the code is actual and
 	should not be difficult pick up. Some messy code was made to enable the
 	quick release of v0.1, but I intend to clean it until v0.2.
 
@@ -55,8 +55,8 @@ Limitations
 Goals
 -----
 The goal for this app was create a easier budget management tool than my old
-excel spreadsheet. On technical side, I also wanted to get practice on SQLite
-databases, being wxWidgets and C++11 and 14 more like bonus experience. 
+excel spreadsheet. On technical side, I wanted to get practice on [SQLite][]
+databases, being [wxWidgets][] and C++11 and 14 more like bonus experience. 
 
 Because of that I made it as personal need it may be a little too specific in 
 some resources, as I do not have a general dataset to base my requirements. 
@@ -66,14 +66,22 @@ witch is English instead of Portuguese (my mother language) :)
 
 Dependencies
 ------------
-1. WxWidgets 3.0.x;
-2. sqlite3;
-3. SQLiteCpp.
+1. [wxWidgets 3.0.x][wxWidgets];
+2. [SQLite 3][SQLite];
+3. [SQLiteC++][].
 
-To finish.
+It was compiled using [TDM-gcc](http://tdm-gcc.tdragon.net), [version 4.9.2](http://sourceforge.net/projects/tdm-gcc/files/TDM-GCC%20Installer/tdm-gcc-4.9.2.exe/download). 
+It should be compilable in any port of [gcc 4.9.2][gcc492] or later.
 
 Licence issues
 --------------
 I started this project using MIT license, but then I decided that GPL would
-be more suited for it, as MIT sounds too library-y for me. So read the <license.TXT>
+be more suited for it, as MIT sounds too library-y for me. So read the [license.TXT](https://github.com/TalesM/orcamento/blob/master/LICENSE.txt)
 if you want to modify or use this as part of other app or library.
+
+[SQLite]: http://sqlite.org/
+[SQLiteC++]: http://srombauts.github.io/SQLiteCpp/ 
+[wxWidgets]: http://wxwidgets.org/
+[c++11]: https://gcc.gnu.org/projects/cxx0x.html
+[c++14]: https://gcc.gnu.org/projects/cxx1y.html
+[gcc492]: https://gcc.gnu.org/gcc-4.9/
