@@ -4,7 +4,7 @@
  * Author:    TalesM (tales.miranda88@gmail.com)
  * Created:   2015-01-10
  * Copyright: TalesM (talesm.github.io)
- * License:
+ * License:   GPL3 - See license.txt
  **************************************************************/
 
 #include "wx_pch.h"
@@ -20,6 +20,7 @@
 //(*InternalHeaders(OrcamentoMainFrame)
 #include <wx/artprov.h>
 #include <wx/bitmap.h>
+#include <wx/icon.h>
 #include <wx/intl.h>
 #include <wx/image.h>
 #include <wx/string.h>
@@ -103,6 +104,11 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
 
     Create(parent, wxID_ANY, _("OrcaMento"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
+    {
+    	wxIcon FrameIcon;
+    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("E:\\dev\\projects\\orcamentoCb\\orca_1.ico"))));
+    	SetIcon(FrameIcon);
+    }
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
     SplitterWindow1->SetMinSize(wxSize(10,10));
     SplitterWindow1->SetMinimumPaneSize(10);
