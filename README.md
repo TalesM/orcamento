@@ -70,7 +70,8 @@ Dependencies
 2. [SQLite 3][SQLite];
 3. [SQLiteC++][].
 
-To finish.
+It was compiled using [TDM-gcc](http://tdm-gcc.tdragon.net), [version 4.9.2](http://sourceforge.net/projects/tdm-gcc/files/TDM-GCC%20Installer/tdm-gcc-4.9.2.exe/download). 
+It should be compilable in any port of [gcc 4.9.2][gcc492] or later.
 
 Licence issues
 --------------
