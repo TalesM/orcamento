@@ -35,6 +35,7 @@ class ExecutionDialog: public wxDialog
 		wxStaticText* StaticText5;
 		wxTextCtrl* txBudget;
 		wxTextCtrl* txEstimateName;
+		wxButton* btDelete;
 		//*)
 
 		void giveDatabase(std::unique_ptr<SQLite::Database> &database);
@@ -55,6 +56,7 @@ class ExecutionDialog: public wxDialog
 		static const long ID_TEXTCTRL5;
 		static const long ID_GRID1;
 		static const long ID_EXECUTION_ADD;
+		static const long ID_BTDELETE;
 		//*)
 
 	private:
@@ -68,6 +70,7 @@ class ExecutionDialog: public wxDialog
 		//(*Handlers(ExecutionDialog)
 		void OnbtAddClick(wxCommandEvent& event);
 		void OngdExecutionsCellChange(wxGridEvent& event);
+		void OnbtDeleteClick(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

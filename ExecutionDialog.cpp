@@ -22,6 +22,7 @@ const long ExecutionDialog::ID_TEXTCTRL4 = wxNewId();
 const long ExecutionDialog::ID_TEXTCTRL5 = wxNewId();
 const long ExecutionDialog::ID_GRID1 = wxNewId();
 const long ExecutionDialog::ID_EXECUTION_ADD = wxNewId();
+const long ExecutionDialog::ID_BTDELETE = wxNewId();
 //*)
 
 namespace ExecutionColumn{
@@ -89,6 +90,8 @@ ExecutionDialog::ExecutionDialog(wxWindow* parent,wxWindowID id, int estimateId,
 	btAdd = new wxButton(this, ID_EXECUTION_ADD, _("Add"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_EXECUTION_ADD"));
 	btAdd->SetMinSize(wxSize(-1,-1));
 	gbzExecution->Add(btAdd, wxGBPosition(7, 0), wxDefaultSpan, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	btDelete = new wxButton(this, ID_BTDELETE, _("Delete"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BTDELETE"));
+	gbzExecution->Add(btDelete, wxGBPosition(7, 1), wxDefaultSpan, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	btClose = new wxButton(this, wxID_CANCEL, _("Close"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 	gbzExecution->Add(btClose, wxGBPosition(8, 1), wxDefaultSpan, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	StaticText2 = new wxStaticText(this, wxID_ANY, _("Item Name:"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
@@ -99,9 +102,11 @@ ExecutionDialog::ExecutionDialog(wxWindow* parent,wxWindowID id, int estimateId,
 
 	Connect(ID_GRID1,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&ExecutionDialog::OngdExecutionsCellChange);
 	Connect(ID_EXECUTION_ADD,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ExecutionDialog::OnbtAddClick);
+	Connect(ID_BTDELETE,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&ExecutionDialog::OnbtDeleteClick);
 	//*)
 	gbzExecution->AddGrowableCol(1);
 	gbzExecution->AddGrowableRow(4);
+	gdExecutions->HideCol(0);
 }
 
 ExecutionDialog::~ExecutionDialog()
@@ -121,7 +126,7 @@ void ExecutionDialog::RefreshModel(){
 
         auto query = "SELECT budget.name, estimate.name, estimate.amount, "
                      "    IFNULL(SUM(execution.amount), 0), "
-                     "    estimate.amount - IFNULL(SUM(execution.amount), 0), "
+                     "    IFNULL(SUM(execution.amount), 0) - estimate.amount, "
                      "    COUNT(execution_id)"
                      "  FROM estimate JOIN budget USING(budget_id)"
                      "  LEFT JOIN execution USING(estimate_id)"
@@ -269,5 +274,31 @@ void ExecutionDialog::OngdExecutionsCellChange(wxGridEvent& event)
         break;
     default:
         break;
+    }
+}
+
+void ExecutionDialog::OnbtDeleteClick(wxCommandEvent& event)
+{
+    wxArrayInt arrSelected = gdExecutions->GetSelectedRows();
+    if(arrSelected.size() == 0){
+        wxMessageBox("You need to select a row to delete");
+        return;
+    }
+    if(wxMessageBox(L"Are you sure you want do delete these executions?", "Confirm Delete", wxOK | wxCENTRE | wxCANCEL | wxICON_QUESTION, this) != wxOK){
+        return;
+    }
+    try{
+        for(int row: arrSelected){
+            std::string query = "DELETE FROM execution WHERE execution_id = ?1";
+            int id = atoi(gdExecutions->GetCellValue(row, ExecutionColumn::ID));
+            SQLite::Statement stm(*_database, query);
+            stm.bind(1, int(id));
+            if(!stm.exec()){
+                wxMessageBox("Unknown Error");
+            }
+        }
+        RefreshExecutions();
+    }catch (const std::exception &e){
+        wxMessageBox(e.what());
     }
 }

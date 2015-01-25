@@ -283,7 +283,7 @@ void OrcamentoMainFrame::RefreshEstimates()
     try {
         auto query = "SELECT estimate_id, prom.name, DATE(bud.start, prom.due),"
                      "    prom.amount/100.0, SUM(exc.amount)/100.0, "
-                     "    (prom.amount-SUM(exc.amount))/100.0, "
+                     "    (IFNULL(SUM(exc.amount), 0)-prom.amount)/100.0, "
                      "    cat.name, prom.obs"
                      "  FROM budget bud "
                      "  JOIN estimate prom USING(budget_id)"
@@ -325,7 +325,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
                     "    budget.name,"
                     "    SUM(estimate.amount)/100.0,"
                     "    SUM(execution_estimate.amount)/100.0,"
-                    "    (SUM(estimate.amount) - SUM(execution_estimate.amount))/100.0"
+                    "    (SUM(execution_estimate.amount) - SUM(estimate.amount))/100.0"
                     "  FROM budget"
                     "  JOIN estimate USING(budget_id)"
                     "  LEFT JOIN (SELECT "
@@ -343,7 +343,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
         sbStatus->SetStatusText(L"Budget: " + wxString::FromUTF8(stm.getColumn(0)), 1);
         sbStatus->SetStatusText(L"Estimated: " + wxString::FromUTF8(stm.getColumn(1)), 2);
         sbStatus->SetStatusText(L"Accounted: " + wxString::FromUTF8(stm.getColumn(2)), 3);
-        sbStatus->SetStatusText(L"Remaining: " + wxString::FromUTF8(stm.getColumn(3)), 4);
+        sbStatus->SetStatusText(L"Difference: " + wxString::FromUTF8(stm.getColumn(3)), 4);
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
