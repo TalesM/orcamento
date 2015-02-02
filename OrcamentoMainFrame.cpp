@@ -263,24 +263,6 @@ void OrcamentoMainFrame::RefreshModel()
                 lbMonths->SetSelection(lbMonths->GetCount()-1);
             }
         });
-
-//        SQLite::Statement stm(_document->_model, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
-//        _activeIndex = -1;
-//        while(stm.executeStep()){
-//            wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
-//            bool executing = int(stm.getColumn(1));
-//            bool active = int(stm.getColumn(2));
-//            if(not executing){
-//                budgetName = "<em>" + budgetName + "</em>";
-//            } else if(active){
-//                budgetName = "<strong>" + budgetName + "</strong>";
-//                _activeIndex = lbMonths->GetCount();
-//            }
-//            lbMonths->Append(budgetName);
-//            if(active){
-//                lbMonths->SetSelection(lbMonths->GetCount()-1);
-//            }
-//        }
         RefreshEstimates();
     } catch (const std::exception &e){
         wxMessageBox(e.what());

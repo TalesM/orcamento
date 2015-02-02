@@ -105,11 +105,23 @@
 			<Option virtualFolder="ui/include/" />
 		</Unit>
 		<Unit filename="README.md" />
+		<Unit filename="WalletDetailView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="WalletDetailView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="WalletOverviewDialog.cpp">
 			<Option virtualFolder="ui/src/" />
 		</Unit>
 		<Unit filename="WalletOverviewDialog.h">
 			<Option virtualFolder="ui/include/" />
+		</Unit>
+		<Unit filename="WalletView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="WalletView.h">
+			<Option virtualFolder="model/views/" />
 		</Unit>
 		<Unit filename="orcamentoCbApp.cpp">
 			<Option virtualFolder="config/" />

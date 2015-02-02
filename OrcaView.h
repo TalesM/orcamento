@@ -34,15 +34,24 @@ public:
         _sql(sql)
     {}
 
+    virtual ~OrcaView(){}
+
     void look(SQLite::Database &model, HANDLER handler)
     {
         SQLite::Statement stm(model, _sql);
-        _handler = handler;
+        setup(stm);
         while(stm.executeStep()){
             exec(stm, handler);
         }
     }
 
+protected:
+    /**
+     * @brief Use this to bind your stuff.
+     */
+    virtual void setup(SQLite::Statement &stm) {};
+
+private:
     template<class ...FARGS>
     void exec(SQLite::Statement &stm, std::function<void(FARGS...)> handler, size_t c=0){
         exec(stm, bind_first(handler, stm.getColumn(c)), c+1);
@@ -54,7 +63,6 @@ public:
 
 private:
     std::string _sql;
-    HANDLER _handler;
 };
 
 #endif // _ORCA_VIEW_H

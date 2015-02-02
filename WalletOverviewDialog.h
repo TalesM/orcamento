@@ -2,7 +2,9 @@
 #define WALLETOVERVIEW_H
 
 #include "wx_pch.h"
-#include <OrcaDocument.h>
+#include "OrcaDocument.h"
+#include "WalletView.h"
+#include "WalletDetailView.h"
 #include <memory>
 
 #ifndef WX_PRECOMP
@@ -51,6 +53,8 @@ class WalletOverviewDialog: public wxDialog
 
 	private:
         std::unique_ptr<OrcaDocument> _document;
+        WalletView _walletView;
+        WalletDetailView _walletDetailView;
 
 		//(*Handlers(WalletOverviewDialog)
 		void OnlsWalletsSelect(wxCommandEvent& event);

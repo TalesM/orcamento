@@ -91,10 +91,9 @@ void WalletOverviewDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
     _document = std::move(database);
     lsWallets->Clear();
     try{
-        SQLite::Statement stm(_document->_model, "SELECT name FROM wallet ORDER BY wallet_id");
-        while(stm.executeStep()){
-            lsWallets->Append(wxString::FromUTF8(stm.getColumn(0)));
-        }
+        _document->look(_walletView, [this](const std::string &name){
+            lsWallets->Append(wxString::FromUTF8(name.c_str()));
+        });
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }
@@ -104,14 +103,18 @@ void WalletOverviewDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
 void WalletOverviewDialog::OnlsWalletsSelect(wxCommandEvent& event)
 {
     try{
-        SQLite::Statement stm(_document->_model, "SELECT name, wallet.obs, COUNT(execution_id) FROM wallet LEFT JOIN execution USING(wallet_id) WHERE wallet_id = ?1");
-        stm.bind(1, lsWallets->GetSelection()+1);
-        if(!stm.executeStep()){
+        bool retrieved = false;
+        _walletDetailView.walletId(lsWallets->GetSelection()+1);
+        _document->look(_walletDetailView, [this, &retrieved](const std::string &name, const std::string &obs, bool hasExecution){
+            txName->ChangeValue(wxString::FromUTF8(name.c_str()));
+            txObs->ChangeValue(wxString::FromUTF8(obs.c_str()));
+            btRemove->Enable(not hasExecution);//Always false, but I intend to fix.
+            retrieved = true;
+        });
+        if(!retrieved){
             wxMessageBox("Error while retrieving wallet info.");
         }
-        txName->ChangeValue(wxString::FromUTF8(stm.getColumn(0)));
-        txObs->ChangeValue(wxString::FromUTF8(stm.getColumn(1)));
-        btRemove->Enable(stm.getColumn(2).getInt() == 0);
+
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }

@@ -5,6 +5,7 @@
 #include <memory>
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
+#include "OrcaView.h"
 
 /** @brief A document
  */
@@ -30,6 +31,11 @@ public:
     static std::unique_ptr<OrcaDocument> load(const wxString &path)
     {
         return load(static_cast<std::string>(path.ToUTF8()));
+    }
+
+    template<typename ...ARGS>
+    void look(OrcaView<ARGS...> &view, typename OrcaView<ARGS...>::HANDLER handler){
+        view.look(_model, handler);
     }
 //private:
     SQLite::Database _model;
