@@ -2,7 +2,7 @@
 #define WALLETOVERVIEW_H
 
 #include "wx_pch.h"
-#include <SQLiteCpp/SQLiteCpp.h>
+#include <OrcaDocument.h>
 #include <memory>
 
 #ifndef WX_PRECOMP
@@ -35,10 +35,10 @@ class WalletOverviewDialog: public wxDialog
 		wxButton* btEdit;
 		//*)
 
-        void giveDatabase(std::unique_ptr<SQLite::Database> &database);
+        void giveDatabase(std::unique_ptr<OrcaDocument> &database);
 
-        std::unique_ptr<SQLite::Database> takeDatabase(){
-            return std::move(_database);
+        std::unique_ptr<OrcaDocument> takeDatabase(){
+            return std::move(_document);
         }
 
 	protected:
@@ -50,7 +50,7 @@ class WalletOverviewDialog: public wxDialog
 		//*)
 
 	private:
-        std::unique_ptr<SQLite::Database> _database;
+        std::unique_ptr<OrcaDocument> _document;
 
 		//(*Handlers(WalletOverviewDialog)
 		void OnlsWalletsSelect(wxCommandEvent& event);

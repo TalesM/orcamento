@@ -1,7 +1,7 @@
 #ifndef EXECUTIONDIALOG_H
 #define EXECUTIONDIALOG_H
 
-#include <SQLiteCpp/SQLiteCpp.h>
+#include <OrcaDocument.h>
 #include <memory>
 
 #ifndef WX_PRECOMP
@@ -38,10 +38,10 @@ class ExecutionDialog: public wxDialog
 		wxButton* btDelete;
 		//*)
 
-		void giveDatabase(std::unique_ptr<SQLite::Database> &database);
+		void giveDatabase(std::unique_ptr<OrcaDocument> &document);
 
-        std::unique_ptr<SQLite::Database> takeDatabase(){
-            return std::move(_database);
+        std::unique_ptr<OrcaDocument> takeDatabase(){
+            return std::move(_document);
         }
 
 	protected:
@@ -61,7 +61,7 @@ class ExecutionDialog: public wxDialog
 
 	private:
 	    int _estimateId;
-        std::unique_ptr<SQLite::Database> _database;
+        std::unique_ptr<OrcaDocument> _document;
 
         void RefreshModel();
         void RefreshExecutions();

@@ -115,9 +115,9 @@ ExecutionDialog::~ExecutionDialog()
 	//*)
 }
 
-void ExecutionDialog::giveDatabase(std::unique_ptr<SQLite::Database>& database)
+void ExecutionDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
 {
-    _database = std::move(database);
+    _document = std::move(database);
     RefreshModel();
 }
 
@@ -131,7 +131,7 @@ void ExecutionDialog::RefreshModel(){
                      "  FROM estimate JOIN budget USING(budget_id)"
                      "  LEFT JOIN execution USING(estimate_id)"
                      "  WHERE estimate_id = ?1";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, _estimateId);
         if(!stm.executeStep()){
             wxMessageBox("Erro desconhecido");
@@ -157,7 +157,7 @@ void ExecutionDialog::RefreshExecutions()
         auto query = "SELECT execution_id, amount/100.0, \"date\", wallet.name, description, execution.obs"
                      "  FROM execution JOIN wallet USING(wallet_id)"
                      "  WHERE estimate_id = ?1";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, _estimateId);
         for(int i = 0; stm.executeStep(); ++i){
             gdExecutions->AppendRows();
@@ -198,7 +198,7 @@ void ExecutionDialog::OnbtAddClick(wxCommandEvent& event)
     try {
         auto query = "SELECT wallet_id, name"
                      "  FROM wallet";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         while(stm.executeStep()){
             walletIds.push_back(stm.getColumn(0));
             walletNames.push_back(wxString::FromUTF8(stm.getColumn(1)));
@@ -213,7 +213,7 @@ void ExecutionDialog::OnbtAddClick(wxCommandEvent& event)
     try{
         auto query = "INSERT INTO execution(estimate_id, wallet_id, amount, \"date\")"
                      "  VALUES (?1, ?2, 0, date('now'))";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, _estimateId);
         stm.bind(2, walletIds[selected]);
         stm.exec();
@@ -238,7 +238,7 @@ void ExecutionDialog::OngdExecutionsCellChange(wxGridEvent& event)
     auto updateField = [this, id=int(id)](std::string field, const auto &value){
         try{
             std::string query = "UPDATE execution SET \""+field+"\" = ?2 WHERE execution_id = ?1";
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, id);
             stm.bind(2, value);
             if(!stm.exec()){
@@ -256,7 +256,7 @@ void ExecutionDialog::OngdExecutionsCellChange(wxGridEvent& event)
     case ExecutionColumn::DATE:
         try{
             std::string query = "UPDATE execution SET \"date\" = date(?2) WHERE execution_id = ?1";
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, int(id));
             stm.bind(2, newValue);
             if(!stm.exec()){
@@ -291,7 +291,7 @@ void ExecutionDialog::OnbtDeleteClick(wxCommandEvent& event)
         for(int row: arrSelected){
             std::string query = "DELETE FROM execution WHERE execution_id = ?1";
             int id = atoi(gdExecutions->GetCellValue(row, ExecutionColumn::ID));
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, int(id));
             if(!stm.exec()){
                 wxMessageBox("Unknown Error");

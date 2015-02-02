@@ -10,7 +10,7 @@
 #ifndef ORCAMENTOMAINFRAME_H
 #define ORCAMENTOMAINFRAME_H
 
-#include <SQLiteCpp/SQLiteCpp.h>
+#include "OrcaDocument.h"
 #include <memory>
 //(*Headers(OrcamentoMainFrame)
 #include <wx/menu.h>
@@ -30,7 +30,7 @@ class OrcamentoMainFrame: public wxFrame
         virtual ~OrcamentoMainFrame();
 
     private:
-        std::unique_ptr<SQLite::Database> _database;
+        std::unique_ptr<OrcaDocument> _document;
         int _activeIndex = -1;
 
         void SetupCellAttr();

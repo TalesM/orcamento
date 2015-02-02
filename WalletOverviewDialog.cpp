@@ -86,12 +86,12 @@ WalletOverviewDialog::~WalletOverviewDialog()
 	//*)
 }
 
-void WalletOverviewDialog::giveDatabase(std::unique_ptr<SQLite::Database>& database)
+void WalletOverviewDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
 {
-    _database = std::move(database);
+    _document = std::move(database);
     lsWallets->Clear();
     try{
-        SQLite::Statement stm(*_database, "SELECT name FROM wallet ORDER BY wallet_id");
+        SQLite::Statement stm(_document->_model, "SELECT name FROM wallet ORDER BY wallet_id");
         while(stm.executeStep()){
             lsWallets->Append(wxString::FromUTF8(stm.getColumn(0)));
         }
@@ -104,7 +104,7 @@ void WalletOverviewDialog::giveDatabase(std::unique_ptr<SQLite::Database>& datab
 void WalletOverviewDialog::OnlsWalletsSelect(wxCommandEvent& event)
 {
     try{
-        SQLite::Statement stm(*_database, "SELECT name, wallet.obs, COUNT(execution_id) FROM wallet LEFT JOIN execution USING(wallet_id) WHERE wallet_id = ?1");
+        SQLite::Statement stm(_document->_model, "SELECT name, wallet.obs, COUNT(execution_id) FROM wallet LEFT JOIN execution USING(wallet_id) WHERE wallet_id = ?1");
         stm.bind(1, lsWallets->GetSelection()+1);
         if(!stm.executeStep()){
             wxMessageBox("Error while retrieving wallet info.");
@@ -140,7 +140,7 @@ void WalletOverviewDialog::OntxObsText(wxCommandEvent& event)
 void WalletOverviewDialog::OnbtEditClick(wxCommandEvent& event)
 {
     try{
-        SQLite::Statement stm(*_database, "UPDATE wallet SET name = ?2, obs = ?3 WHERE wallet_id = ?1");
+        SQLite::Statement stm(_document->_model, "UPDATE wallet SET name = ?2, obs = ?3 WHERE wallet_id = ?1");
         stm.bind(1, lsWallets->GetSelection()+1);
         stm.bind(2, txName->GetValue().ToUTF8());
         stm.bind(3, txObs->GetValue().ToUTF8());
@@ -156,7 +156,7 @@ void WalletOverviewDialog::OnbtEditClick(wxCommandEvent& event)
 void WalletOverviewDialog::OnbtAddClick(wxCommandEvent& event)
 {
     try{
-        SQLite::Statement stm(*_database, "INSERT INTO wallet(name, obs) VALUES (?2, ?3)");
+        SQLite::Statement stm(_document->_model, "INSERT INTO wallet(name, obs) VALUES (?2, ?3)");
         stm.bind(2, txName->GetValue().ToUTF8());
         stm.bind(3, txObs->GetValue().ToUTF8());
         if(!stm.exec()){

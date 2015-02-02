@@ -248,7 +248,7 @@ void OrcamentoMainFrame::RefreshModel()
 {
     lbMonths->Clear();
     try {
-        SQLite::Statement stm(*_database, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
+        SQLite::Statement stm(_document->_model, "SELECT name, executing, budget_id IN (SELECT max(budget_id) FROM budget WHERE budget.executing=1) FROM budget ORDER BY budget_id");
         _activeIndex = -1;
         while(stm.executeStep()){
             wxString budgetName = wxString::FromUTF8(stm.getColumn(0));//
@@ -292,7 +292,7 @@ void OrcamentoMainFrame::RefreshEstimates()
                      "  WHERE budget_id = ?1"
                      "  GROUP BY estimate_id"
                      "  ORDER BY category_id, prom.name";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, budget_id);
 
         for(int i = 0; stm.executeStep(); ++i){
@@ -335,7 +335,7 @@ void OrcamentoMainFrame::RefreshStatusBar()
                     "  ) execution_estimate USING(estimate_id)"
                     "  WHERE budget_id = ?1"
         ;
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, budget_id);
         if(!stm.executeStep()){
             wxMessageBox("ERROR?");
@@ -355,7 +355,7 @@ void OrcamentoMainFrame::RefreshCellAttr()
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
-    SQLite::Statement choicesStm(*_database, "SELECT name FROM category ORDER BY category_id ASC");
+    SQLite::Statement choicesStm(_document->_model, "SELECT name FROM category ORDER BY category_id ASC");
     while(choicesStm.executeStep()){
         choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
     }
@@ -417,21 +417,10 @@ DIALOG_SHOW: //Don't do this at home, kids.
     wxFile modelFile(L"theModel.sql");
     if(modelFile.ReadAll(&model)){
         try{
-            _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location.ToUTF8(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
-            SQLite::Transaction transaction(*_database);
-            _database->exec(model);
-
-            auto query = "INSERT INTO budget(name, start, duration)"
-                         "  VALUES (strftime('%m/%Y', ?1), date(?1, 'start of month'), '1 months')";
-            SQLite::Statement stm(*_database, query);
-            stm.bind(1, start.FormatISODate().ToUTF8());
-            stm.exec();
-
-            // Commit transaction
-            transaction.commit();
+            _document = OrcaDocument::create(location, start);
         } catch (const std::exception &e){
             wxMessageBox(e.what());
-            _database = nullptr;
+            _document = nullptr;
             goto DIALOG_SHOW;
         }
         RefreshModel();
@@ -444,7 +433,7 @@ void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!_database->exec("INSERT INTO budget(name, start, duration) "
+        if(!_document->_model.exec("INSERT INTO budget(name, start, duration) "
                              "  SELECT strftime('%m/%Y', start, duration), date(start, duration), duration "
                              "    FROM budget WHERE budget_id IN (SELECT max(budget_id) FROM budget)")
         ){
@@ -462,7 +451,7 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!_database->exec("UPDATE budget SET executing = 1"
+        if(!_document->_model.exec("UPDATE budget SET executing = 1"
                              "  WHERE budget_id IN (SELECT min(budget_id)"
                              "  FROM budget WHERE executing=0)"
         )){
@@ -482,7 +471,7 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
     }
     wxString location = openFileDialog.GetPath();
     try {
-        _database = std::unique_ptr<SQLite::Database>(new SQLite::Database(location.ToUTF8(), SQLITE_OPEN_READWRITE|SQLITE_OPEN_CREATE));
+        _document = OrcaDocument::load(location);
         RefreshModel();
     }catch (const std::exception &e){
         wxMessageBox(e.what());
@@ -504,14 +493,14 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
     try {
         auto query = "INSERT INTO estimate(budget_id, amount, category_id)"
                      "  VALUES (?1, 0, (SELECT max(category_id) FROM category))";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, selection);
         if(!stm.exec()){
             wxMessageBox("Erro desconhecido");
         }
         gdEstimates->AppendRows();
         int newRow = gdEstimates->GetNumberRows()-1;
-        gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(_database->getLastInsertRowid()));
+        gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(_document->_model.getLastInsertRowid()));
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }
@@ -532,7 +521,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     auto updateField = [this, id=int(id)](std::string field, const auto &value){
         try{
             std::string query = "UPDATE estimate SET \""+field+"\" = ?2 WHERE estimate_id = ?1";
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, id);
             stm.bind(2, value);
             if(!stm.exec()){
@@ -557,7 +546,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
                 due.ParseISODate(newValue);
                 int day = due.GetDay() -1;
                 std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
-                SQLite::Statement stm(*_database, query);
+                SQLite::Statement stm(_document->_model, query);
                 stm.bind(1, int(id));
                 stm.bind(2, day);
                 if(!stm.exec()){
@@ -565,7 +554,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
                 }
             } else {
                 std::string query = "UPDATE estimate SET \"due\" = NULL WHERE estimate_id = ?1";
-                SQLite::Statement stm(*_database, query);
+                SQLite::Statement stm(_document->_model, query);
                 stm.bind(1, int(id));
                 if(!stm.exec()){
                     wxMessageBox("Erro desconhecido");
@@ -578,7 +567,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     case EstimateColumn::CATEGORY:
         try{
             std::string query = "UPDATE estimate SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE estimate_id = ?1";
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, int(id));
             stm.bind(2, newValue.ToUTF8());
             if(!stm.exec()){
@@ -611,9 +600,9 @@ void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
     if(cmnEstimate.GetClientData()){
         int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID)));
-        executionDialog.giveDatabase(_database);
+        executionDialog.giveDatabase(_document);
         executionDialog.ShowModal();
-        _database = executionDialog.takeDatabase();
+        _document = executionDialog.takeDatabase();
         RefreshEstimates();
         RefreshStatusBar();
     }
@@ -630,7 +619,7 @@ void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
             return;
         }
         try {
-            SQLite::Statement stm(*_database, "DELETE FROM estimate WHERE estimate_id = ?1");
+            SQLite::Statement stm(_document->_model, "DELETE FROM estimate WHERE estimate_id = ?1");
             stm.bind(1, gdEstimates->GetCellValue(row, EstimateColumn::ID));
             stm.exec();
             RefreshEstimates();
@@ -646,9 +635,9 @@ void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
 void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
 {
     WalletOverviewDialog overview(this);
-    overview.giveDatabase(_database);
+    overview.giveDatabase(_document);
     overview.ShowModal();
-    _database = overview.takeDatabase();
+    _document = overview.takeDatabase();
 }
 
 void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
@@ -659,9 +648,9 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
     }
     if(col == EstimateColumn::ACCOUNTED){
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, 0)));
-        executionDialog.giveDatabase(_database);
+        executionDialog.giveDatabase(_document);
         executionDialog.ShowModal();
-        _database = executionDialog.takeDatabase();
+        _document = executionDialog.takeDatabase();
         RefreshEstimates();
         RefreshStatusBar();
     } else if(col ==EstimateColumn::OBS){
@@ -672,7 +661,7 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
         }
         try{
             int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
-            SQLite::Statement stm(*_database, R"==(UPDATE "estimate" SET "obs" = ?2 WHERE "estimate_id" = ?1 )==");
+            SQLite::Statement stm(_document->_model, R"==(UPDATE "estimate" SET "obs" = ?2 WHERE "estimate_id" = ?1 )==");
             stm.bind(1, id);
             stm.bind(2, obsDialog.GetValue().ToUTF8());
             stm.exec();
@@ -698,7 +687,7 @@ void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& even
     int increment = 0;
     try{
         auto query ="SELECT name FROM budget WHERE budget_id > ?1 ORDER BY budget_id ASC";
-        SQLite::Statement stm(*_database, query);
+        SQLite::Statement stm(_document->_model, query);
         stm.bind(1, budget_id);
         wxArrayString options;
         while(stm.executeStep()){
@@ -724,7 +713,7 @@ void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& even
                         "    WHERE category_id IS NOT NULL "
                         "      AND name IS NOT NULL "
                         "      AND estimate_id = ?1";
-            SQLite::Statement stm(*_database, query);
+            SQLite::Statement stm(_document->_model, query);
             stm.bind(1, id);
             stm.bind(2, increment);
 //            stm.bind(2, obsDialog.GetValue());
