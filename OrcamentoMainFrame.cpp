@@ -248,9 +248,8 @@ void OrcamentoMainFrame::RefreshModel()
 {
     lbMonths->Clear();
     try {
-        BudgetView budgetView;
         _activeIndex = -1;
-        budgetView.look(_document->_model, [this](std::string name, int executing, int active){
+        _document->look(_budgetView, [this](std::string name, int executing, int active){
             wxString budgetName(wxString::FromUTF8(name.c_str()));
             if(not executing){
                 budgetName = "<em>" + budgetName + "</em>";
@@ -279,32 +278,47 @@ void OrcamentoMainFrame::RefreshEstimates()
         return;
     }
     try {
-        auto query = "SELECT estimate_id, prom.name, DATE(bud.start, prom.due),"
-                     "    prom.amount/100.0, SUM(exc.amount)/100.0, "
-                     "    (IFNULL(SUM(exc.amount), 0)-prom.amount)/100.0, "
-                     "    cat.name, prom.obs"
-                     "  FROM budget bud "
-                     "  JOIN estimate prom USING(budget_id)"
-                     "  LEFT JOIN category cat USING(category_id)"
-                     "  LEFT JOIN execution exc USING(estimate_id)"
-                     "  WHERE budget_id = ?1"
-                     "  GROUP BY estimate_id"
-                     "  ORDER BY category_id, prom.name";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, budget_id);
-
-        for(int i = 0; stm.executeStep(); ++i){
+        int i = 0;
+        auto refreshFunction = [this, &i](int id,
+                                          std::string name,
+                                          std::string due,
+                                          double estimated,
+                                          double accounted,
+                                          double remaining,
+                                          std::string category,
+                                          std::string obs){
             gdEstimates->AppendRows();
-            for(int j = 0; j < EstimateColumn::length; ++j){
-                gdEstimates->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
-            }
-            if(stm.isColumnNull(EstimateColumn::CATEGORY)){
+            gdEstimates->SetCellValue(i, EstimateColumn::ID,
+                                      wxString::FromDouble(id));
+            gdEstimates->SetCellValue(i, EstimateColumn::NAME,
+                                      wxString::FromUTF8(name.c_str()));
+            gdEstimates->SetCellValue(i, EstimateColumn::DUE,
+                                      wxString::FromUTF8(due.c_str()));
+            gdEstimates->SetCellValue(i, EstimateColumn::ESTIMATED,
+                                      wxString::FromDouble(estimated));            gdEstimates->SetCellValue(i, EstimateColumn::ACCOUNTED,
+                                      wxString::FromDouble(accounted) );
+            gdEstimates->SetCellValue(i, EstimateColumn::REMAINING,
+                                      wxString::FromDouble(remaining) );
+            gdEstimates->SetCellValue(i, EstimateColumn::CATEGORY,
+                                      wxString::FromUTF8(category.c_str()) );
+            gdEstimates->SetCellValue(i, EstimateColumn::OBS,
+                                      wxString::FromUTF8(obs.c_str()) );
+
+            if(category == ""){
                 wxGridCellAttr *attrImultLine = new wxGridCellAttr();
                 attrImultLine->SetReadOnly(true);
                 gdEstimates->SetRowAttr(i, attrImultLine);
             }
+            ++i;
+        };
+        if(lbMonths->GetSelection() > _activeIndex){
+            using namespace std::placeholders;
+            _estimatePlaningView.budgetId(budget_id);
+            _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
+        } else {
+            _estimateExecutingView.budgetId(budget_id);
+            _document->look(_estimateExecutingView, refreshFunction);
         }
-        // TODO (Tales#1#): Modularize
         RefreshCellAttr();
 
     } catch (const std::exception &e){

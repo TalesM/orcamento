@@ -82,6 +82,18 @@
 		<Unit filename="CreateDatabaseDialog.h">
 			<Option virtualFolder="ui/include/" />
 		</Unit>
+		<Unit filename="EstimateExecutingView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="EstimateExecutingView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="EstimatePlaningView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="EstimatePlaningView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="ExecutionDialog.cpp">
 			<Option virtualFolder="ui/src/" />
 		</Unit>

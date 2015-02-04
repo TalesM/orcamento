@@ -12,6 +12,8 @@
 
 #include <memory>
 #include "BudgetView.h"
+#include "EstimateExecutingView.h"
+#include "EstimatePlaningView.h"
 #include "OrcaDocument.h"
 //(*Headers(OrcamentoMainFrame)
 #include <wx/menu.h>
@@ -33,6 +35,9 @@ public:
 private:
     std::unique_ptr<OrcaDocument> _document;
     int _activeIndex = -1;
+    BudgetView _budgetView;
+    EstimateExecutingView _estimateExecutingView;
+    EstimatePlaningView _estimatePlaningView;
 
     void SetupCellAttr();
     void RefreshModel();
