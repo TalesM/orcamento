@@ -196,13 +196,10 @@ void ExecutionDialog::OnbtAddClick(wxCommandEvent& event)
     std::vector<int> walletIds;
     wxArrayString walletNames;
     try {
-        auto query = "SELECT wallet_id, name"
-                     "  FROM wallet";
-        SQLite::Statement stm(_document->_model, query);
-        while(stm.executeStep()){
-            walletIds.push_back(stm.getColumn(0));
-            walletNames.push_back(wxString::FromUTF8(stm.getColumn(1)));
-        }
+        _document->look(_walletView, [&walletIds, &walletNames](int id, const std::string &name){
+            walletIds.push_back(id);
+            walletNames.push_back(wxString::FromUTF8(name.c_str()));
+        });
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }

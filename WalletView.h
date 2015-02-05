@@ -4,7 +4,7 @@
 #include "OrcaView.h"
 
 
-class WalletView : public OrcaView<std::string>
+class WalletView : public OrcaView<int, std::string>
 {
 public:
     WalletView();

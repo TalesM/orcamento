@@ -91,7 +91,7 @@ void WalletOverviewDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
     _document = std::move(database);
     lsWallets->Clear();
     try{
-        _document->look(_walletView, [this](const std::string &name){
+        _document->look(_walletView, [this](int, const std::string &name){
             lsWallets->Append(wxString::FromUTF8(name.c_str()));
         });
     }catch (const std::exception &e){
