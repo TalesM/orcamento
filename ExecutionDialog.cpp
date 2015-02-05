@@ -154,17 +154,23 @@ void ExecutionDialog::RefreshExecutions()
         gdExecutions->DeleteRows(0, gdExecutions->GetNumberRows());
     }
     try{
-        auto query = "SELECT execution_id, amount/100.0, \"date\", wallet.name, description, execution.obs"
-                     "  FROM execution JOIN wallet USING(wallet_id)"
-                     "  WHERE estimate_id = ?1";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, _estimateId);
-        for(int i = 0; stm.executeStep(); ++i){
+        _executionView.estimateId(_estimateId);
+        int i = 0;
+        _document->look(_executionView, [this, &i](int id, double amount,
+                                               const std::string &date,
+                                               const std::string &wallet,
+                                               const std::string &description,
+                                               const std::string &obs)
+        {
             gdExecutions->AppendRows();
-            for(int j = 0; j < ExecutionColumn::length; ++j){
-                gdExecutions->SetCellValue(i, j, wxString::FromUTF8(stm.getColumn(j)) );
-            }
-        }
+            gdExecutions->SetCellValue(i, ExecutionColumn::ID,          wxString::FromDouble(id) );
+            gdExecutions->SetCellValue(i, ExecutionColumn::AMOUNT,      wxString::FromDouble(amount, 2) );
+            gdExecutions->SetCellValue(i, ExecutionColumn::DATE,        wxString::FromUTF8(date.c_str()) );
+            gdExecutions->SetCellValue(i, ExecutionColumn::WALLET,      wxString::FromUTF8(wallet.c_str()) );
+            gdExecutions->SetCellValue(i, ExecutionColumn::DESCRIPTION, wxString::FromUTF8(description.c_str()) );
+            gdExecutions->SetCellValue(i, ExecutionColumn::OBS,         wxString::FromUTF8(obs.c_str()) );
+            ++i;
+        });
         RefreshCellAttr();
     }catch (const std::exception &e){
         wxMessageBox(e.what());

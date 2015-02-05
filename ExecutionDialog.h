@@ -4,6 +4,7 @@
 #include <OrcaDocument.h>
 #include <memory>
 #include "ExecutionSummaryView.h"
+#include "ExecutionView.h"
 #include "WalletView.h"
 
 #ifndef WX_PRECOMP
@@ -65,6 +66,7 @@ class ExecutionDialog: public wxDialog
 	    int _estimateId;
         std::unique_ptr<OrcaDocument> _document;
         ExecutionSummaryView _executionSummaryView;
+        ExecutionView _executionView;
         WalletView _walletView;
 
         void RefreshModel();
