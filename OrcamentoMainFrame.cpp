@@ -286,7 +286,8 @@ void OrcamentoMainFrame::RefreshEstimates()
                                           double accounted,
                                           double remaining,
                                           std::string category,
-                                          std::string obs){
+                                          std::string obs)
+        {
             gdEstimates->AppendRows();
             gdEstimates->SetCellValue(i, EstimateColumn::ID,
                                       wxString::FromDouble(id));
@@ -315,11 +316,12 @@ void OrcamentoMainFrame::RefreshEstimates()
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
+            RefreshCellAttr(false);
         } else {
             _estimateExecutingView.budgetId(budget_id);
             _document->look(_estimateExecutingView, refreshFunction);
+            RefreshCellAttr(true);
         }
-        RefreshCellAttr();
 
     } catch (const std::exception &e){
         wxMessageBox(e.what());
@@ -333,54 +335,42 @@ void OrcamentoMainFrame::RefreshStatusBar()
         return;
     }
     try{
-        auto query= "SELECT "
-                    "    budget.name,"
-                    "    SUM(estimate.amount)/100.0,"
-                    "    SUM(execution_estimate.amount)/100.0,"
-                    "    (SUM(execution_estimate.amount) - SUM(estimate.amount))/100.0"
-                    "  FROM budget"
-                    "  JOIN estimate USING(budget_id)"
-                    "  LEFT JOIN (SELECT "
-                    "      IFNULL(SUM(execution.amount), 0) AS amount,"
-                    "      estimate_id"
-                    "    FROM execution GROUP BY estimate_id"
-                    "  ) execution_estimate USING(estimate_id)"
-                    "  WHERE budget_id = ?1"
-        ;
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, budget_id);
-        if(!stm.executeStep()){
-            wxMessageBox("ERROR?");
+        _totalsView.budgetId(budget_id);
+        bool ok = false;
+        _document->look(_totalsView, [this, &ok](const std::string &budget, double estimated, double accounted, double remaining){
+            sbStatus->SetStatusText(_("Budget: ") + wxString::FromUTF8(budget.c_str()), 1);
+            sbStatus->SetStatusText(_("Estimated: ") + wxString::FromDouble(estimated, 2), 2);
+            sbStatus->SetStatusText(_("Accounted: ") + wxString::FromDouble(accounted, 2), 3);
+            sbStatus->SetStatusText(_("Difference: ") + wxString::FromDouble(remaining, 2), 4);
+            ok = true;
+        });
+        if(!ok){
+            wxMessageBox("Database inconsitence. Do you have a backup?");
         }
-        sbStatus->SetStatusText(L"Budget: " + wxString::FromUTF8(stm.getColumn(0)), 1);
-        sbStatus->SetStatusText(L"Estimated: " + wxString::FromUTF8(stm.getColumn(1)), 2);
-        sbStatus->SetStatusText(L"Accounted: " + wxString::FromUTF8(stm.getColumn(2)), 3);
-        sbStatus->SetStatusText(L"Difference: " + wxString::FromUTF8(stm.getColumn(3)), 4);
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
 }
 
 
-void OrcamentoMainFrame::RefreshCellAttr()
+void OrcamentoMainFrame::RefreshCellAttr(bool executing)
 {
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
-    SQLite::Statement choicesStm(_document->_model, "SELECT name FROM category ORDER BY category_id ASC");
-    while(choicesStm.executeStep()){
-        choices.Add(wxString::FromUTF8(choicesStm.getColumn(0)));
-    }
+    _document->look(_categoryView, [this, &choices](const std::string &name){
+        choices.Add(wxString::FromUTF8(name.c_str()));
+    });
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
 
     //Show the execution only if possible.
-    if(lbMonths->GetSelection() > _activeIndex){
-        gdEstimates->HideCol(EstimateColumn::ACCOUNTED);
-        gdEstimates->HideCol(EstimateColumn::REMAINING);
-    } else {
+    if(executing){
         gdEstimates->ShowCol(EstimateColumn::ACCOUNTED);
         gdEstimates->ShowCol(EstimateColumn::REMAINING);
+    } else {
+        gdEstimates->HideCol(EstimateColumn::ACCOUNTED);
+        gdEstimates->HideCol(EstimateColumn::REMAINING);
     }
 }
 

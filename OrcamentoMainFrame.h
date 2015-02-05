@@ -12,8 +12,10 @@
 
 #include <memory>
 #include "BudgetView.h"
+#include "CategoryView.h"
 #include "EstimateExecutingView.h"
 #include "EstimatePlaningView.h"
+#include "TotalsView.h"
 #include "OrcaDocument.h"
 //(*Headers(OrcamentoMainFrame)
 #include <wx/menu.h>
@@ -36,13 +38,15 @@ private:
     std::unique_ptr<OrcaDocument> _document;
     int _activeIndex = -1;
     BudgetView _budgetView;
+    CategoryView _categoryView;
     EstimateExecutingView _estimateExecutingView;
     EstimatePlaningView _estimatePlaningView;
+    TotalsView _totalsView;
 
     void SetupCellAttr();
     void RefreshModel();
     void RefreshEstimates();
-    void RefreshCellAttr();
+    void RefreshCellAttr(bool executing = false);
     void RefreshStatusBar();
 
     //(*Handlers(OrcamentoMainFrame)

@@ -76,6 +76,12 @@
 		<Unit filename="BudgetView.h">
 			<Option virtualFolder="model/views/" />
 		</Unit>
+		<Unit filename="CategoryView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="CategoryView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="CreateDatabaseDialog.cpp">
 			<Option virtualFolder="ui/src/" />
 		</Unit>
@@ -117,6 +123,12 @@
 			<Option virtualFolder="ui/include/" />
 		</Unit>
 		<Unit filename="README.md" />
+		<Unit filename="TotalsView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="TotalsView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="WalletDetailView.cpp">
 			<Option virtualFolder="model/views/" />
 		</Unit>
