@@ -70,6 +70,12 @@
 			<Add option="-mthreads" />
 			<Add directory="$(#sqlitecpp.lib)" />
 		</Linker>
+		<Unit filename="BudgetToCopyView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="BudgetToCopyView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="BudgetView.cpp">
 			<Option virtualFolder="model/views/" />
 		</Unit>

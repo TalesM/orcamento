@@ -17,6 +17,8 @@
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
+#include "BudgetToCopyView.h"
+
 
 //(*InternalHeaders(OrcamentoMainFrame)
 #include <wx/artprov.h>
@@ -688,14 +690,14 @@ void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& even
     }
     int increment = 0;
     try{
-        auto query ="SELECT name FROM budget WHERE budget_id > ?1 ORDER BY budget_id ASC";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, budget_id);
+        BudgetToCopyView budgetCopyView;//So rare I do not want pay the price to initialize with the object.
+        budgetCopyView.sourceBudgetId(budget_id);
         wxArrayString options;
-        while(stm.executeStep()){
-            options.push_back(wxString::FromUTF8(stm.getColumn(0)));
-        }
-        if(options.size()==0){
+        bool ok = false;
+        _document->look(budgetCopyView, [this, &options, &ok](const std::string &name){
+            options.push_back(wxString::FromUTF8(name.c_str()));
+        });
+        if(!ok){
             wxMessageBox(L"This is the last budget.");
             return;
         }
