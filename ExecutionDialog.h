@@ -3,6 +3,7 @@
 
 #include <OrcaDocument.h>
 #include <memory>
+#include "ExecutionSummaryView.h"
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(ExecutionDialog)
@@ -62,6 +63,7 @@ class ExecutionDialog: public wxDialog
 	private:
 	    int _estimateId;
         std::unique_ptr<OrcaDocument> _document;
+        ExecutionSummaryView _executionSummaryView;
 
         void RefreshModel();
         void RefreshExecutions();

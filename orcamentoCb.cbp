@@ -112,6 +112,12 @@
 		<Unit filename="ExecutionDialog.h">
 			<Option virtualFolder="ui/include/" />
 		</Unit>
+		<Unit filename="ExecutionSummaryView.cpp">
+			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="ExecutionSummaryView.h">
+			<Option virtualFolder="model/views/" />
+		</Unit>
 		<Unit filename="LICENSE.txt" />
 		<Unit filename="OrcaDocument.cpp">
 			<Option virtualFolder="model/" />

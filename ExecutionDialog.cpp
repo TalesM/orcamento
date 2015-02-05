@@ -123,26 +123,26 @@ void ExecutionDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
 
 void ExecutionDialog::RefreshModel(){
     try{
-
-        auto query = "SELECT budget.name, estimate.name, estimate.amount, "
-                     "    IFNULL(SUM(execution.amount), 0), "
-                     "    IFNULL(SUM(execution.amount), 0) - estimate.amount, "
-                     "    COUNT(execution_id)"
-                     "  FROM estimate JOIN budget USING(budget_id)"
-                     "  LEFT JOIN execution USING(estimate_id)"
-                     "  WHERE estimate_id = ?1";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, _estimateId);
-        if(!stm.executeStep()){
-            wxMessageBox("Erro desconhecido");
-        }
-        txBudget->SetValue(wxString::FromUTF8(stm.getColumn(0)));
-        txEstimateName->SetValue(wxString::FromUTF8(stm.getColumn(1)));
-        txEstimateAmount->SetValue(wxString::FromDouble(stm.getColumn(2).getDouble()/100.0, 2));
-        txAccounted->SetValue(wxString::FromDouble(stm.getColumn(3).getDouble()/100.0, 2));
-        txLeftover->SetValue(wxString::FromDouble(stm.getColumn(4).getDouble()/100.0, 2));
-        if(stm.getColumn(5).getInt() > 0){
-            RefreshExecutions();
+        _executionSummaryView.estimateId(_estimateId);
+        bool done = false;
+        _document->look(_executionSummaryView, [this, &done](const std::string &budgetName,
+                                                           const std::string &estimateName,
+                                                           double estimated, double accounted,
+                                                           double remaining, int count)
+        {
+            assert(!done);
+            done = true;
+            txBudget->SetValue(wxString::FromUTF8(budgetName.c_str()));
+            txEstimateName->SetValue(wxString::FromUTF8(estimateName.c_str()));
+            txEstimateAmount->SetValue(wxString::FromDouble(estimated, 2));
+            txAccounted->SetValue(wxString::FromDouble(accounted, 2));
+            txLeftover->SetValue(wxString::FromDouble(remaining, 2));
+            if(count > 0){
+                RefreshExecutions();
+            }
+        });
+        if(!done){
+            wxMessageBox("Database possibly corrupted, do you have a backup?");
         }
     }catch (const std::exception &e){
         wxMessageBox(e.what());
