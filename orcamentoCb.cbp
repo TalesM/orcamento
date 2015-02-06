@@ -4,7 +4,7 @@
 	<Project>
 		<Option title="OrcaMento" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="ui\;ui\res\;config\;ui\include\;ui\src\;model\;model\views\;" />
+		<Option virtualFolders="ui\;ui\res\;config\;ui\include\;ui\src\;model\;model\views\;model\actions\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/orcamento" prefix_auto="1" extension_auto="1" />
@@ -94,6 +94,9 @@
 		<Unit filename="CreateDatabaseDialog.h">
 			<Option virtualFolder="ui/include/" />
 		</Unit>
+		<Unit filename="CreateNewBudgetAction.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
 		<Unit filename="EstimateExecutingView.cpp">
 			<Option virtualFolder="model/views/" />
 		</Unit>
@@ -125,6 +128,9 @@
 			<Option virtualFolder="model/views/" />
 		</Unit>
 		<Unit filename="LICENSE.txt" />
+		<Unit filename="OrcaAction.h">
+			<Option virtualFolder="model/" />
+		</Unit>
 		<Unit filename="OrcaDocument.cpp">
 			<Option virtualFolder="model/" />
 		</Unit>
@@ -209,6 +215,15 @@
 					<wxDialog wxs="wxsmith/ExecutionDialog.wxs" src="ExecutionDialog.cpp" hdr="ExecutionDialog.h" fwddecl="0" i18n="1" name="ExecutionDialog" language="CPP" />
 				</resources>
 			</wxsmith>
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general use_at_in_tags="1" />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

@@ -5,6 +5,7 @@
 #include <memory>
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
+#include "OrcaAction.h"
 #include "OrcaView.h"
 
 /** @brief A document
@@ -20,7 +21,7 @@ public:
      */
     OrcaDocument(const std::string &path, bool erase=false);
     OrcaDocument(const wxString &path, bool erase=false):
-        OrcaDocument(static_cast<std::string>(path.ToUTF8()), erase){}
+        OrcaDocument(static_cast<std::string>(path.ToUTF8()), erase) {}
     ~OrcaDocument();
     static std::unique_ptr<OrcaDocument> create(const std::string &path, const wxDateTime &start);
     static std::unique_ptr<OrcaDocument> create(const wxString &path, const wxDateTime &start)
@@ -33,8 +34,15 @@ public:
         return load(static_cast<std::string>(path.ToUTF8()));
     }
 
+    void make(const OrcaAction &action)
+    {
+        // TODO (Tales#1#): Vararg generic call. No need to instantiate the action
+        action.doAction(_model);
+    }
+
     template<typename ...ARGS>
-    void look(OrcaView<ARGS...> &view, typename OrcaView<ARGS...>::HANDLER handler){
+    void look(OrcaView<ARGS...> &view, typename OrcaView<ARGS...>::HANDLER handler)
+    {
         view.look(_model, handler);
     }
 //private:
