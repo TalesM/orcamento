@@ -19,7 +19,8 @@
 #include "WalletOverviewDialog.h"
 #include "BudgetToCopyView.h"
 
-#include "CreateNewBudgetAction.h"
+#include "actions/CreateNewBudget.h"
+#include "actions/ExecuteNextBudget.h"
 
 
 //(*InternalHeaders(OrcamentoMainFrame)
@@ -452,12 +453,7 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!_document->_model.exec("UPDATE budget SET executing = 1"
-                             "  WHERE budget_id IN (SELECT min(budget_id)"
-                             "  FROM budget WHERE executing=0)"
-        )){
-            wxMessageBox("The total universe time expired :(");
-        }
+        _document->exec<action::ExecuteNextBudget>();
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }

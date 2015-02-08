@@ -171,6 +171,9 @@
 		<Unit filename="actions/CreateNewBudget.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
+		<Unit filename="actions/ExecuteNextBudget.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
 		<Unit filename="orcamentoCbApp.cpp">
 			<Option virtualFolder="config/" />
 		</Unit>
