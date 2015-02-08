@@ -168,6 +168,9 @@
 		<Unit filename="WalletView.h">
 			<Option virtualFolder="model/views/" />
 		</Unit>
+		<Unit filename="actions/CreateEstimate.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
 		<Unit filename="actions/CreateNewBudget.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>

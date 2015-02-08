@@ -20,6 +20,8 @@
 #include "BudgetToCopyView.h"
 
 #include "actions/CreateNewBudget.h"
+#include "actions/CreateEstimate.h"
+#include "actions/ChangeEstimate.h"
 #include "actions/ExecuteNextBudget.h"
 
 
@@ -488,13 +490,7 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
         return;
     }
     try {
-        auto query = "INSERT INTO estimate(budget_id, amount, category_id)"
-                     "  VALUES (?1, 0, (SELECT max(category_id) FROM category))";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, selection);
-        if(!stm.exec()){
-            wxMessageBox("Erro desconhecido");
-        }
+        _document->exec<action::CreateEstimate>(selection);
         gdEstimates->AppendRows();
         int newRow = gdEstimates->GetNumberRows()-1;
         gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(_document->_model.getLastInsertRowid()));
@@ -512,70 +508,37 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     }
     long id;
     if(!gdEstimates->GetCellValue(row, EstimateColumn::ID).ToCLong(&id)){
-        wxMessageBox(L"Coluna Corrompida: '"+gdEstimates->GetColLabelValue(0)+"'");
+        wxMessageBox(L"Corrupted Row: '"+gdEstimates->GetColLabelValue(0)+"'");
         return;
     }
-    auto updateField = [this, id=int(id)](std::string field, const auto &value){
-        try{
-            std::string query = "UPDATE estimate SET \""+field+"\" = ?2 WHERE estimate_id = ?1";
-            SQLite::Statement stm(_document->_model, query);
-            stm.bind(1, id);
-            stm.bind(2, value);
-            if(!stm.exec()){
-                wxMessageBox("Erro desconhecido");
-            }
-        }catch (const std::exception &e){
-            wxMessageBox(e.what());
-        }
-    };
-    switch(col){
-    case EstimateColumn::NAME:
-        updateField("name", newValue.ToUTF8());
-        break;
-    case EstimateColumn::ESTIMATED:
-        updateField("amount", int(atof(newValue)*100));
-        RefreshStatusBar();
-        break;
-    case EstimateColumn::DUE:
-        try{
+    int estimateId = int(id);
+    try{
+        switch(col){
+        case EstimateColumn::NAME:
+            _document->exec<action::ChangeEstimateName>(estimateId, std::string(newValue.ToUTF8()));
+            break;
+        case EstimateColumn::ESTIMATED:
+            _document->exec<action::ChangeEstimateAmount>(estimateId, atof(newValue));
+            RefreshStatusBar();
+            break;
+        case EstimateColumn::DUE:
             if(newValue.length()){
                 wxDateTime due{};
                 due.ParseISODate(newValue);
                 int day = due.GetDay() -1;
-                std::string query = "UPDATE estimate SET \"due\" = ?2|| ' days' WHERE estimate_id = ?1";
-                SQLite::Statement stm(_document->_model, query);
-                stm.bind(1, int(id));
-                stm.bind(2, day);
-                if(!stm.exec()){
-                    wxMessageBox("Erro desconhecido");
-                }
+                _document->exec<action::ChangeEstimateDue>(estimateId, day);
             } else {
-                std::string query = "UPDATE estimate SET \"due\" = NULL WHERE estimate_id = ?1";
-                SQLite::Statement stm(_document->_model, query);
-                stm.bind(1, int(id));
-                if(!stm.exec()){
-                    wxMessageBox("Erro desconhecido");
-                }
+                _document->exec<action::RemoveEstimateDue>(estimateId);
             }
-        }catch (const std::exception &e){
-            wxMessageBox(e.what());
+            break;
+        case EstimateColumn::CATEGORY:
+            _document->exec<action::ChangeEstimateCategory>(estimateId, std::string(newValue.ToUTF8()));
+            break;
+        default:
+            break;
         }
-        break;
-    case EstimateColumn::CATEGORY:
-        try{
-            std::string query = "UPDATE estimate SET \"category_id\" = (SELECT category_id FROM category WHERE name=?2) WHERE estimate_id = ?1";
-            SQLite::Statement stm(_document->_model, query);
-            stm.bind(1, int(id));
-            stm.bind(2, newValue.ToUTF8());
-            if(!stm.exec()){
-                wxMessageBox("Erro desconhecido");
-            }
-        }catch (const std::exception &e){
-            wxMessageBox(e.what());
-        }
-        break;
-    default:
-        break;
+    }catch (const std::exception &e){
+        wxMessageBox(e.what());
     }
 }
 
