@@ -19,6 +19,8 @@
 #include "WalletOverviewDialog.h"
 #include "BudgetToCopyView.h"
 
+#include "CreateNewBudgetAction.h"
+
 
 //(*InternalHeaders(OrcamentoMainFrame)
 #include <wx/artprov.h>
@@ -437,12 +439,7 @@ void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
         return;
     }
     try{
-        if(!_document->_model.exec("INSERT INTO budget(name, start, duration) "
-                             "  SELECT strftime('%m/%Y', start, duration), date(start, duration), duration "
-                             "    FROM budget WHERE budget_id IN (SELECT max(budget_id) FROM budget)")
-        ){
-            wxMessageBox("The total universe time expired :(");
-        }
+        _document->exec<action::CreateNewBudget>();
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }

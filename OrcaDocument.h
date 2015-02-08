@@ -34,10 +34,13 @@ public:
         return load(static_cast<std::string>(path.ToUTF8()));
     }
 
-    void make(const OrcaAction &action)
+    template<typename Action, typename ...ARGS>
+    void exec(ARGS ...args)
     {
-        // TODO (Tales#1#): Vararg generic call. No need to instantiate the action
-        action.doAction(_model);
+        static_assert(std::is_base_of<OrcaAction, Action>::value, "You must give class derived from action as base class.");
+        std::unique_ptr<OrcaAction> action = std::make_unique<Action>(args...);
+        action->doAction(_model);
+        // TODO (Tales#1#): Push
     }
 
     template<typename ...ARGS>
