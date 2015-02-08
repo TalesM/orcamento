@@ -94,9 +94,6 @@
 		<Unit filename="CreateDatabaseDialog.h">
 			<Option virtualFolder="ui/include/" />
 		</Unit>
-		<Unit filename="CreateNewBudgetAction.h">
-			<Option virtualFolder="model/actions/" />
-		</Unit>
 		<Unit filename="EstimateExecutingView.cpp">
 			<Option virtualFolder="model/views/" />
 		</Unit>
@@ -170,6 +167,9 @@
 		</Unit>
 		<Unit filename="WalletView.h">
 			<Option virtualFolder="model/views/" />
+		</Unit>
+		<Unit filename="actions/CreateNewBudget.h">
+			<Option virtualFolder="model/actions/" />
 		</Unit>
 		<Unit filename="orcamentoCbApp.cpp">
 			<Option virtualFolder="config/" />
