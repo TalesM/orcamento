@@ -6,11 +6,11 @@
 
 namespace action
 {
-class CreateEstimate : public OrcaAction
+class InsertEstimate : public OrcaAction
 {
 public:
-    CreateEstimate(int selection):_selection(selection) {}
-    virtual ~CreateEstimate() {}
+    InsertEstimate(int selection):_selection(selection) {}
+    virtual ~InsertEstimate() {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {

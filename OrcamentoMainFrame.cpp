@@ -19,9 +19,9 @@
 #include "WalletOverviewDialog.h"
 #include "BudgetToCopyView.h"
 
-#include "actions/CreateNewBudget.h"
-#include "actions/CreateEstimate.h"
-#include "actions/ChangeEstimate.h"
+#include "actions/InsertBudget.h"
+#include "actions/InsertEstimate.h"
+#include "actions/UpdateEstimate.h"
 #include "actions/ExecuteNextBudget.h"
 
 
@@ -442,7 +442,7 @@ void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
         return;
     }
     try{
-        _document->exec<action::CreateNewBudget>();
+        _document->exec<action::InsertBudget>();
     } catch (const std::exception &e){
         wxMessageBox(e.what());
     }
@@ -490,10 +490,10 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
         return;
     }
     try {
-        _document->exec<action::CreateEstimate>(selection);
+        int newEstimate = _document->exec<action::InsertEstimate>(selection);
         gdEstimates->AppendRows();
         int newRow = gdEstimates->GetNumberRows()-1;
-        gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(_document->_model.getLastInsertRowid()));
+        gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(newEstimate));
     }catch (const std::exception &e){
         wxMessageBox(e.what());
     }

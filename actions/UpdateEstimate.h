@@ -10,10 +10,10 @@ namespace action
 {
 
 template <typename VAL>
-class ChangeEstimateBase: public OrcaAction
+class UpdateEstimateBase: public OrcaAction
 {
 public:
-    ChangeEstimateBase(int estimateId, const VAL &v):
+    UpdateEstimateBase(int estimateId, const VAL &v):
         _estimateId(estimateId),
         _value(v) {}
 
@@ -33,7 +33,7 @@ private:
     VAL _value;
 };
 
-typedef ChangeEstimateBase<std::string> ChangeEstimateString;
+typedef UpdateEstimateBase<std::string> ChangeEstimateString;
 
 /**
  * @brief Changes the name.
@@ -52,14 +52,14 @@ protected:
 /**
  * @brief Changes the amount.
  */
-class ChangeEstimateAmount: public ChangeEstimateBase<int>
+class ChangeEstimateAmount: public UpdateEstimateBase<int>
 {
 public:
-    ChangeEstimateAmount(int estimateId, double v): ChangeEstimateBase<int>(estimateId, round(v*100)) {}
+    ChangeEstimateAmount(int estimateId, double v): UpdateEstimateBase<int>(estimateId, round(v*100)) {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
-        ChangeEstimateBase<int>::doAction(database, "amount");
+        UpdateEstimateBase<int>::doAction(database, "amount");
     }
 };
 
@@ -73,7 +73,7 @@ public:
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
-        ChangeEstimateString::doAction(database, "name");
+        ChangeEstimateString::doAction(database, "due");
     }
 
     static std::string to_string(int v)

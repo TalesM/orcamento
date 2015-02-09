@@ -168,13 +168,16 @@
 		<Unit filename="WalletView.h">
 			<Option virtualFolder="model/views/" />
 		</Unit>
-		<Unit filename="actions/CreateEstimate.h">
-			<Option virtualFolder="model/actions/" />
-		</Unit>
-		<Unit filename="actions/CreateNewBudget.h">
-			<Option virtualFolder="model/actions/" />
-		</Unit>
 		<Unit filename="actions/ExecuteNextBudget.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
+		<Unit filename="actions/InsertBudget.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
+		<Unit filename="actions/InsertEstimate.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
+		<Unit filename="actions/UpdateEstimate.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
 		<Unit filename="orcamentoCbApp.cpp">

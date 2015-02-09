@@ -5,11 +5,11 @@
 
 namespace action
 {
-class CreateNewBudget : public OrcaAction
+class InsertBudget : public OrcaAction
 {
 public:
-    CreateNewBudget() {}
-    virtual ~CreateNewBudget() {}
+    InsertBudget() {}
+    virtual ~InsertBudget() {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
