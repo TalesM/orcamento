@@ -133,7 +133,20 @@ private:
     std::string _name;
 };
 
+/**
+ * @brief Changes the name.
+ */
+class ChangeEstimateObs: public ChangeEstimateString
+{
+public:
+    ChangeEstimateObs(int estimateId, const std::string &v): ChangeEstimateString(estimateId, v) {}
+protected:
+    virtual void doAction(SQLite::Database &database) const override
+    {
+        ChangeEstimateString::doAction(database, "obs");
+    }
+};
+
 }
 
 #endif // _ORCAACTION_CHANGEESTIMATE_H
-

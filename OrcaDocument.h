@@ -38,7 +38,7 @@ public:
     auto exec(ARGS ...args)
     {
         static_assert(std::is_base_of<OrcaAction, Action>::value, "You must give class derived from action as base class.");
-        std::unique_ptr<OrcaAction> action = std::make_unique<Action>(args...);
+        std::unique_ptr<OrcaAction> action = std::make_unique<Action>(std::forward<ARGS>(args)...);
         action->doAction(_model);
         return _model.getLastInsertRowid();
         // TODO (Tales#1#): Push

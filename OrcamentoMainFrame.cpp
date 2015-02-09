@@ -621,11 +621,9 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
         }
         try{
             int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
-            SQLite::Statement stm(_document->_model, R"==(UPDATE "estimate" SET "obs" = ?2 WHERE "estimate_id" = ?1 )==");
-            stm.bind(1, id);
-            stm.bind(2, obsDialog.GetValue().ToUTF8());
-            stm.exec();
-            gdEstimates->SetCellValue(row, EstimateColumn::OBS, obsDialog.GetValue());
+            auto val = obsDialog.GetValue();
+            _document->exec<action::ChangeEstimateObs>(id, std::string(val.ToUTF8()));
+            gdEstimates->SetCellValue(row, EstimateColumn::OBS, val);
         }catch (const std::exception &e){
             wxMessageBox(e.what());
         }
