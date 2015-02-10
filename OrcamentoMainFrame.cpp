@@ -19,10 +19,11 @@
 #include "WalletOverviewDialog.h"
 #include "BudgetToCopyView.h"
 
+#include "actions/DeleteEstimate.h"
 #include "actions/InsertBudget.h"
 #include "actions/InsertEstimate.h"
-#include "actions/UpdateEstimate.h"
 #include "actions/ExecuteNextBudget.h"
+#include "actions/UpdateEstimate.h"
 
 
 //(*InternalHeaders(OrcamentoMainFrame)
@@ -579,9 +580,8 @@ void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
             return;
         }
         try {
-            SQLite::Statement stm(_document->_model, "DELETE FROM estimate WHERE estimate_id = ?1");
-            stm.bind(1, gdEstimates->GetCellValue(row, EstimateColumn::ID));
-            stm.exec();
+            int estimateId = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
+            _document->exec<action::DeleteEstimate>(estimateId);
             RefreshEstimates();
             RefreshStatusBar();
         } catch(std::exception &e){
