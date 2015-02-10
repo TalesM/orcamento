@@ -2,9 +2,9 @@
 
 static auto sql = R"=(
 SELECT name
-FROM budget ORDER BY budget_id
-WHERE budget_id > ?1
-ORDER BY budget_id ASC
+ FROM budget
+ WHERE budget_id > ?1
+ ORDER BY budget_id ASC
 )=";
 
 BudgetToCopyView::BudgetToCopyView():

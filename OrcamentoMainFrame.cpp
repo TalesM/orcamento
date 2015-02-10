@@ -17,8 +17,8 @@
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
-#include "BudgetToCopyView.h"
 
+#include "actions/CopySelectedEstimateTo.h"
 #include "actions/DeleteEstimate.h"
 #include "actions/InsertBudget.h"
 #include "actions/InsertEstimate.h"
@@ -644,12 +644,12 @@ void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& even
     }
     int increment = 0;
     try{
-        BudgetToCopyView budgetCopyView;//So rare I do not want pay the price to initialize with the object.
-        budgetCopyView.sourceBudgetId(budget_id);
+        _budgetCopyView.sourceBudgetId(budget_id);
         wxArrayString options;
         bool ok = false;
-        _document->look(budgetCopyView, [this, &options, &ok](const std::string &name){
+        _document->look(_budgetCopyView, [this, &options, &ok](const std::string &name){
             options.push_back(wxString::FromUTF8(name.c_str()));
+            ok = true;
         });
         if(!ok){
             wxMessageBox(L"This is the last budget.");
@@ -665,18 +665,9 @@ void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& even
     for(int row: selectedRows){
         int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
         try{
-            auto query ="INSERT OR REPLACE INTO estimate(budget_id, category_id,name, amount, due, obs)"
-                        "  SELECT budget_id + ?2, category_id, name, amount, due, obs"
-                        "    FROM estimate "
-                        "    WHERE category_id IS NOT NULL "
-                        "      AND name IS NOT NULL "
-                        "      AND estimate_id = ?1";
-            SQLite::Statement stm(_document->_model, query);
-            stm.bind(1, id);
-            stm.bind(2, increment);
-//            stm.bind(2, obsDialog.GetValue());
-            stm.exec();
+            _document->exec<action::CopySelectedEstimateTo>(id, increment);
         }catch (const std::exception &e){
+            // TODO (Tales#1#): Choose to continue or cancel.
             wxMessageBox(e.what());
         }
     }

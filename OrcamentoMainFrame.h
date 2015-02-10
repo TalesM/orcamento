@@ -11,6 +11,7 @@
 #define ORCAMENTOMAINFRAME_H
 
 #include <memory>
+#include "BudgetToCopyView.h"
 #include "BudgetView.h"
 #include "CategoryView.h"
 #include "EstimateExecutingView.h"
@@ -42,6 +43,8 @@ private:
     EstimateExecutingView _estimateExecutingView;
     EstimatePlaningView _estimatePlaningView;
     TotalsView _totalsView;
+    BudgetToCopyView _budgetCopyView;
+
 
     void SetupCellAttr();
     void RefreshModel();
