@@ -183,7 +183,13 @@
 		<Unit filename="actions/InsertEstimate.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
+		<Unit filename="actions/InsertWallet.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
 		<Unit filename="actions/UpdateEstimate.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
+		<Unit filename="actions/UpdateWallet.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
 		<Unit filename="orcamentoCbApp.cpp">
