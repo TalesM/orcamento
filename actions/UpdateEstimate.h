@@ -38,10 +38,10 @@ typedef UpdateEstimateBase<std::string> ChangeEstimateString;
 /**
  * @brief Changes the name.
  */
-class ChangeEstimateName: public ChangeEstimateString
+class UpdateEstimateName: public ChangeEstimateString
 {
 public:
-    ChangeEstimateName(int estimateId, const std::string &v): ChangeEstimateString(estimateId, v) {}
+    UpdateEstimateName(int estimateId, const std::string &v): ChangeEstimateString(estimateId, v) {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
@@ -52,10 +52,10 @@ protected:
 /**
  * @brief Changes the amount.
  */
-class ChangeEstimateAmount: public UpdateEstimateBase<int>
+class UpdateEstimateAmount: public UpdateEstimateBase<int>
 {
 public:
-    ChangeEstimateAmount(int estimateId, double v): UpdateEstimateBase<int>(estimateId, round(v*100)) {}
+    UpdateEstimateAmount(int estimateId, double v): UpdateEstimateBase<int>(estimateId, round(v*100)) {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
@@ -66,10 +66,10 @@ protected:
 /**
  * @brief Changes the due.
  */
-class ChangeEstimateDue: public ChangeEstimateString
+class UpdateEstimateDue: public ChangeEstimateString
 {
 public:
-    ChangeEstimateDue(int estimateId, int v): ChangeEstimateString(estimateId, to_string(v)) {}
+    UpdateEstimateDue(int estimateId, int v): ChangeEstimateString(estimateId, to_string(v)) {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
@@ -87,11 +87,11 @@ protected:
 /**
  * Remove due to null
  */
-class RemoveEstimateDue : public OrcaAction
+class DeleteEstimateDue : public OrcaAction
 {
 public:
-    RemoveEstimateDue(int estimateId):_estimateId(estimateId) {}
-    virtual ~RemoveEstimateDue() {}
+    DeleteEstimateDue(int estimateId):_estimateId(estimateId) {}
+    virtual ~DeleteEstimateDue() {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {

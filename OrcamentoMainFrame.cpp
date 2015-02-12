@@ -516,10 +516,10 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
     try{
         switch(col){
         case EstimateColumn::NAME:
-            _document->exec<action::ChangeEstimateName>(estimateId, std::string(newValue.ToUTF8()));
+            _document->exec<action::UpdateEstimateName>(estimateId, std::string(newValue.ToUTF8()));
             break;
         case EstimateColumn::ESTIMATED:
-            _document->exec<action::ChangeEstimateAmount>(estimateId, atof(newValue));
+            _document->exec<action::UpdateEstimateAmount>(estimateId, atof(newValue));
             RefreshStatusBar();
             break;
         case EstimateColumn::DUE:
@@ -527,13 +527,13 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
                 wxDateTime due{};
                 due.ParseISODate(newValue);
                 int day = due.GetDay() -1;
-                _document->exec<action::ChangeEstimateDue>(estimateId, day);
+                _document->exec<action::UpdateEstimateDue>(estimateId, day);
             } else {
-                _document->exec<action::RemoveEstimateDue>(estimateId);
+                _document->exec<action::DeleteEstimateDue>(estimateId);
             }
             break;
         case EstimateColumn::CATEGORY:
-            _document->exec<action::ChangeEstimateCategory>(estimateId, std::string(newValue.ToUTF8()));
+            _document->exec<action::UpdateEstimateCategory>(estimateId, std::string(newValue.ToUTF8()));
             break;
         default:
             break;
@@ -622,7 +622,7 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
         try{
             int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
             auto val = obsDialog.GetValue();
-            _document->exec<action::ChangeEstimateObs>(id, std::string(val.ToUTF8()));
+            _document->exec<action::UpdateEstimateObs>(id, std::string(val.ToUTF8()));
             gdEstimates->SetCellValue(row, EstimateColumn::OBS, val);
         }catch (const std::exception &e){
             wxMessageBox(e.what());
