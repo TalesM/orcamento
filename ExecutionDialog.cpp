@@ -4,6 +4,7 @@
 #include <vector>
 #include "actions/DeleteExecution.h"
 #include "actions/InsertExecution.h"
+#include "actions/UpdateExecution.h"
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(ExecutionDialog)
@@ -248,9 +249,10 @@ void ExecutionDialog::OngdExecutionsCellChange(wxGridEvent& event)
             wxMessageBox(e.what());
         }
     };
+    int executionId = int(id);
     switch(col){
     case ExecutionColumn::AMOUNT:
-        updateField("amount", int(atof(newValue)*100));
+        _document->exec<action::UpdateExecutionAmount>(executionId, atof(newValue));
         RefreshModel();
         break;
     case ExecutionColumn::DATE:

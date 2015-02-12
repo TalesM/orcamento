@@ -195,6 +195,9 @@
 		<Unit filename="actions/UpdateEstimate.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
+		<Unit filename="actions/UpdateExecution.h">
+			<Option virtualFolder="model/actions/" />
+		</Unit>
 		<Unit filename="actions/UpdateWallet.h">
 			<Option virtualFolder="model/actions/" />
 		</Unit>
