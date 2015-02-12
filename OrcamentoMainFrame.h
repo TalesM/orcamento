@@ -76,6 +76,8 @@ private:
     static const long ID_SPLITTERWINDOW1;
     static const long ID_MENUITEM1;
     static const long ID_MENUITEM2;
+    static const long ID_MENUITEM3;
+    static const long ID_MENUITEM4;
     static const long idMenuQuit;
     static const long ID_MENUCREATE_BUDGET;
     static const long ID_MENUEXECUTE_BUDGET;
@@ -92,6 +94,7 @@ private:
     wxSimpleHtmlListBox* lbMonths;
     wxMenuItem* mnEstimateDelete;
     wxMenuItem* MenuItem1;
+    wxMenuItem* MenuItem4;
     wxGrid* gdEstimates;
     wxMenuItem* mnNew;
     wxMenuItem* mnExecuteNextBudget;
@@ -99,6 +102,7 @@ private:
     wxMenu* mnEstimate;
     wxStatusBar* sbStatus;
     wxMenuItem* mnEstimateCopySelectedTo;
+    wxMenuItem* MenuItem3;
     wxMenu cmnEstimate;
     wxMenuItem* mnEstimateEdit;
     //*)

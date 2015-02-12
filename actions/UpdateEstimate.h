@@ -109,14 +109,14 @@ private:
 /**
  * Change category to null
  */
-class ChangeEstimateCategory : public OrcaAction
+class UpdateEstimateCategory : public OrcaAction
 {
 public:
-    ChangeEstimateCategory(int estimateId, const std::string &name):
+    UpdateEstimateCategory(int estimateId, const std::string &name):
         _estimateId(estimateId),
         _name(name)
     {}
-    virtual ~ChangeEstimateCategory() {}
+    virtual ~UpdateEstimateCategory() {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
@@ -136,10 +136,10 @@ private:
 /**
  * @brief Changes the name.
  */
-class ChangeEstimateObs: public ChangeEstimateString
+class UpdateEstimateObs: public ChangeEstimateString
 {
 public:
-    ChangeEstimateObs(int estimateId, const std::string &v): ChangeEstimateString(estimateId, v) {}
+    UpdateEstimateObs(int estimateId, const std::string &v): ChangeEstimateString(estimateId, v) {}
 protected:
     virtual void doAction(SQLite::Database &database) const override
     {
