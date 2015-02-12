@@ -47,6 +47,50 @@ protected:
     }
 };
 
+typedef UpdateExecutionBase<std::string> UpdateExecutionString;
+
+/**
+ * @brief Changes the name.
+ */
+class UpdateExecutionDescription: public UpdateExecutionString
+{
+public:
+    UpdateExecutionDescription(int executionId, const std::string &v): UpdateExecutionString(executionId, v) {}
+protected:
+    virtual void doAction(SQLite::Database &database) const override
+    {
+        UpdateExecutionString::doAction(database, "description");
+    }
+};
+
+/**
+ * @brief Changes the name.
+ */
+class UpdateExecutionObs: public UpdateExecutionString
+{
+public:
+    UpdateExecutionObs(int executionId, const std::string &v): UpdateExecutionString(executionId, v) {}
+protected:
+    virtual void doAction(SQLite::Database &database) const override
+    {
+        UpdateExecutionString::doAction(database, "obs");
+    }
+};
+
+/**
+ * @brief Changes the name.
+ */
+class UpdateExecutionDate: public UpdateExecutionString
+{
+public:
+    UpdateExecutionDate(int executionId, const std::string &v): UpdateExecutionString(executionId, v) {}
+protected:
+    virtual void doAction(SQLite::Database &database) const override
+    {
+        UpdateExecutionString::doAction(database, "date");
+    }
+};
+
 }
 
 #endif // _ORCAACTION_UPDATEEXECUTION_H
