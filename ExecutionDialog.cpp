@@ -2,6 +2,8 @@
 #include "ExecutionDialog.h"
 
 #include <vector>
+#include "actions/DeleteExecution.h"
+#include "actions/InsertExecution.h"
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(ExecutionDialog)
@@ -214,12 +216,7 @@ void ExecutionDialog::OnbtAddClick(wxCommandEvent& event)
         return;
     }
     try{
-        auto query = "INSERT INTO execution(estimate_id, wallet_id, amount, \"date\")"
-                     "  VALUES (?1, ?2, 0, date('now'))";
-        SQLite::Statement stm(_document->_model, query);
-        stm.bind(1, _estimateId);
-        stm.bind(2, walletIds[selected]);
-        stm.exec();
+        _document->exec<action::InsertExecution>(_estimateId, walletIds[selected]);
         RefreshExecutions();
     }catch (const std::exception &e){
         wxMessageBox(e.what());
@@ -292,13 +289,8 @@ void ExecutionDialog::OnbtDeleteClick(wxCommandEvent& event)
     }
     try{
         for(int row: arrSelected){
-            std::string query = "DELETE FROM execution WHERE execution_id = ?1";
             int id = atoi(gdExecutions->GetCellValue(row, ExecutionColumn::ID));
-            SQLite::Statement stm(_document->_model, query);
-            stm.bind(1, int(id));
-            if(!stm.exec()){
-                wxMessageBox("Unknown Error");
-            }
+            _document->exec<action::DeleteExecution>(id);
         }
         RefreshExecutions();
     }catch (const std::exception &e){
