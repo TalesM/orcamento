@@ -37,3 +37,20 @@ OrcaDocument::~OrcaDocument()
 {
     //Check if saved
 }
+
+void OrcaDocument::save()
+{
+    if(_transaction){
+        _transaction->commit();
+        _transaction.reset();
+    }
+}
+
+
+std::unique_ptr<SQLite::Transaction> &OrcaDocument::transaction()
+{
+    if(!_transaction){
+        _transaction = std::make_unique<SQLite::Transaction>(_model);
+    }
+    return _transaction;
+}

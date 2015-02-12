@@ -68,6 +68,8 @@ private:
     void OngdEstimatesCellLeftDClick(wxGridEvent& event);
     void OnmnEstimateDeleteSelected(wxCommandEvent& event);
     void OnmnEstimateCopySelectedToSelected(wxCommandEvent& event);
+    void OnSave(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
     //*)
 
     //(*Identifiers(OrcamentoMainFrame)
@@ -98,11 +100,11 @@ private:
     wxGrid* gdEstimates;
     wxMenuItem* mnNew;
     wxMenuItem* mnExecuteNextBudget;
+    wxMenuItem* mnSave;
     wxMenuItem* mnCreateBudget;
     wxMenu* mnEstimate;
     wxStatusBar* sbStatus;
     wxMenuItem* mnEstimateCopySelectedTo;
-    wxMenuItem* MenuItem3;
     wxMenu cmnEstimate;
     wxMenuItem* mnEstimateEdit;
     //*)

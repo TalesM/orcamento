@@ -5,6 +5,7 @@
 		<icon>orca_1.ico</icon>
 		<size>800,600</size>
 		<id_arg>0</id_arg>
+		<handler function="OnClose" entry="EVT_CLOSE" />
 		<object class="wxSplitterWindow" name="ID_SPLITTERWINDOW1" variable="SplitterWindow1" member="no">
 			<sashgravity>0.250000</sashgravity>
 			<minsize>10</minsize>
@@ -52,10 +53,12 @@
 					<bitmap stock_id="wxART_FILE_OPEN" stock_client="wxART_MENU" />
 					<handler function="OnOpen" entry="EVT_MENU" />
 				</object>
-				<object class="wxMenuItem" name="ID_MENUITEM3" variable="MenuItem3" member="yes">
+				<object class="wxMenuItem" name="ID_MENUITEM3" variable="mnSave" member="yes">
 					<label>Save</label>
 					<accel>Ctrl-S</accel>
 					<help>Commit the changed.</help>
+					<bitmap stock_id="wxART_FILE_SAVE" stock_client="wxART_MENU" />
+					<handler function="OnSave" entry="EVT_MENU" />
 				</object>
 				<object class="wxMenuItem" name="ID_MENUITEM4" variable="MenuItem4" member="yes">
 					<label>Save as...</label>

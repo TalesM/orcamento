@@ -37,12 +37,12 @@
 
 //helper functions
 enum wxbuildinfoformat {
-    short_f, long_f };
+    short_f, long_f
+};
 
 wxString wxbuildinfo(wxbuildinfoformat format)
 {
-    if (format == long_f )
-    {
+    if (format == long_f ) {
         wxString wxbuild;
 #if defined(__WXMSW__)
         wxbuild << _T("-Windows");
@@ -60,24 +60,26 @@ wxString wxbuildinfo(wxbuildinfoformat format)
     return wxVERSION_STRING;
 }
 
-inline wxString isoDate(){
+inline wxString isoDate()
+{
     wxString date(__DATE__), time(__TIME__);
     wxDateTime isoDate;
     isoDate.ParseFormat(date+" "+time, "%b %d %Y %T");
     return isoDate.FormatISOCombined();
 }
 
-namespace EstimateColumn{
-    constexpr int
-        ID          = 0,
-        NAME        = 1,
-        DUE         = 2,
-        ESTIMATED   = 3,
-        ACCOUNTED   = 4,
-        REMAINING   = 5,
-        CATEGORY    = 6,
-        OBS         = 7;
-    constexpr int length = 8;
+namespace EstimateColumn
+{
+constexpr int
+ID          = 0,
+NAME        = 1,
+DUE         = 2,
+ESTIMATED   = 3,
+ACCOUNTED   = 4,
+REMAINING   = 5,
+CATEGORY    = 6,
+OBS         = 7;
+constexpr int length = 8;
 };
 
 //(*IdInit(OrcamentoMainFrame)
@@ -122,9 +124,9 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Create(parent, wxID_ANY, _("OrcaMento"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
     {
-    	wxIcon FrameIcon;
-    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
-    	SetIcon(FrameIcon);
+        wxIcon FrameIcon;
+        FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
+        SetIcon(FrameIcon);
     }
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
     SplitterWindow1->SetMinSize(wxSize(10,10));
@@ -155,8 +157,9 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     mnOpen = new wxMenuItem(Menu1, ID_MENUITEM2, _("Open\tCtrl-O"), _("Open a database."), wxITEM_NORMAL);
     mnOpen->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_FILE_OPEN")),wxART_MENU));
     Menu1->Append(mnOpen);
-    MenuItem3 = new wxMenuItem(Menu1, ID_MENUITEM3, _("Save\tCtrl-S"), _("Commit the changed."), wxITEM_NORMAL);
-    Menu1->Append(MenuItem3);
+    mnSave = new wxMenuItem(Menu1, ID_MENUITEM3, _("Save\tCtrl-S"), _("Commit the changed."), wxITEM_NORMAL);
+    mnSave->SetBitmap(wxArtProvider::GetBitmap(wxART_MAKE_ART_ID_FROM_STR(_T("wxART_FILE_SAVE")),wxART_MENU));
+    Menu1->Append(mnSave);
     MenuItem4 = new wxMenuItem(Menu1, ID_MENUITEM4, _("Save as..."), _("Not implemented yet."), wxITEM_NORMAL);
     Menu1->Append(MenuItem4);
     MenuItem4->Enable(false);
@@ -204,6 +207,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_GDPROMISES,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&OrcamentoMainFrame::OngdEstimatesCellChange);
     Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnNew);
     Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnOpen);
+    Connect(ID_MENUITEM3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnSave);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
@@ -213,6 +217,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENU_ESTIMATE_EDIT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateEditSelected);
     Connect(ID_MENU_ESTIMATE_COPYSELECTEDTO,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected);
     Connect(ID_MENU_ESTIMATE_DELETE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnEstimateDeleteSelected);
+    Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&OrcamentoMainFrame::OnClose);
     //*)
 
     SetupCellAttr();
@@ -264,32 +269,32 @@ void OrcamentoMainFrame::RefreshModel()
     lbMonths->Clear();
     try {
         _activeIndex = -1;
-        _document->look(_budgetView, [this](std::string name, int executing, int active){
+        _document->look(_budgetView, [this](std::string name, int executing, int active) {
             wxString budgetName(wxString::FromUTF8(name.c_str()));
-            if(not executing){
+            if(not executing) {
                 budgetName = "<em>" + budgetName + "</em>";
-            } else if(active){
+            } else if(active) {
                 budgetName = "<strong>" + budgetName + "</strong>";
                 _activeIndex = lbMonths->GetCount();
             }
             lbMonths->Append(budgetName);
-            if(active){
+            if(active) {
                 lbMonths->SetSelection(lbMonths->GetCount()-1);
             }
         });
         RefreshEstimates();
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
 
 void OrcamentoMainFrame::RefreshEstimates()
 {
-    if(gdEstimates->GetNumberRows()){
+    if(gdEstimates->GetNumberRows()) {
         gdEstimates->DeleteRows(0, gdEstimates->GetNumberRows());
     }
     int budget_id = lbMonths->GetSelection() + 1;
-    if(budget_id <= 0){
+    if(budget_id <= 0) {
         return;
     }
     try {
@@ -301,8 +306,7 @@ void OrcamentoMainFrame::RefreshEstimates()
                                           double accounted,
                                           double remaining,
                                           std::string category,
-                                          std::string obs)
-        {
+        std::string obs) {
             gdEstimates->AppendRows();
             gdEstimates->SetCellValue(i, EstimateColumn::ID,
                                       wxString::FromDouble(id));
@@ -311,7 +315,8 @@ void OrcamentoMainFrame::RefreshEstimates()
             gdEstimates->SetCellValue(i, EstimateColumn::DUE,
                                       wxString::FromUTF8(due.c_str()));
             gdEstimates->SetCellValue(i, EstimateColumn::ESTIMATED,
-                                      wxString::FromDouble(estimated));            gdEstimates->SetCellValue(i, EstimateColumn::ACCOUNTED,
+                                      wxString::FromDouble(estimated));
+            gdEstimates->SetCellValue(i, EstimateColumn::ACCOUNTED,
                                       wxString::FromDouble(accounted) );
             gdEstimates->SetCellValue(i, EstimateColumn::REMAINING,
                                       wxString::FromDouble(remaining) );
@@ -320,14 +325,14 @@ void OrcamentoMainFrame::RefreshEstimates()
             gdEstimates->SetCellValue(i, EstimateColumn::OBS,
                                       wxString::FromUTF8(obs.c_str()) );
 
-            if(category == ""){
+            if(category == "") {
                 wxGridCellAttr *attrImultLine = new wxGridCellAttr();
                 attrImultLine->SetReadOnly(true);
                 gdEstimates->SetRowAttr(i, attrImultLine);
             }
             ++i;
         };
-        if(lbMonths->GetSelection() > _activeIndex){
+        if(lbMonths->GetSelection() > _activeIndex) {
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
@@ -338,7 +343,7 @@ void OrcamentoMainFrame::RefreshEstimates()
             RefreshCellAttr(true);
         }
 
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
@@ -346,23 +351,23 @@ void OrcamentoMainFrame::RefreshEstimates()
 void OrcamentoMainFrame::RefreshStatusBar()
 {
     int budget_id = lbMonths->GetSelection()+1;
-    if(budget_id < 1){
+    if(budget_id < 1) {
         return;
     }
-    try{
+    try {
         _totalsView.budgetId(budget_id);
         bool ok = false;
-        _document->look(_totalsView, [this, &ok](const std::string &budget, double estimated, double accounted, double remaining){
+        _document->look(_totalsView, [this, &ok](const std::string &budget, double estimated, double accounted, double remaining) {
             sbStatus->SetStatusText(_("Budget: ") + wxString::FromUTF8(budget.c_str()), 1);
             sbStatus->SetStatusText(_("Estimated: ") + wxString::FromDouble(estimated, 2), 2);
             sbStatus->SetStatusText(_("Accounted: ") + wxString::FromDouble(accounted, 2), 3);
             sbStatus->SetStatusText(_("Difference: ") + wxString::FromDouble(remaining, 2), 4);
             ok = true;
         });
-        if(!ok){
+        if(!ok) {
             wxMessageBox("Database inconsitence. Do you have a backup?");
         }
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
@@ -373,14 +378,14 @@ void OrcamentoMainFrame::RefreshCellAttr(bool executing)
     //Category
     wxGridCellAttr *attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
-    _document->look(_categoryView, [this, &choices](const std::string &name){
+    _document->look(_categoryView, [this, &choices](const std::string &name) {
         choices.Add(wxString::FromUTF8(name.c_str()));
     });
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
 
     //Show the execution only if possible.
-    if(executing){
+    if(executing) {
         gdEstimates->ShowCol(EstimateColumn::ACCOUNTED);
         gdEstimates->ShowCol(EstimateColumn::REMAINING);
     } else {
@@ -405,9 +410,9 @@ void OrcamentoMainFrame::OnAbout(wxCommandEvent& event)
     info.SetDescription(_("A small program to manage finances. \n"));
     info.SetCopyright(_("(C) 2014 TalesM (talesm.github.io, tales.miranda88@gmail.com)"));
     info.SetWebSite(_("https://github.com/TalesM/orcamento"));
-    	wxIcon FrameIcon;
-    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
-        info.SetIcon(FrameIcon);
+    wxIcon FrameIcon;
+    FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
+    info.SetIcon(FrameIcon);
 
     wxString licenseString = "This program is licensed by the terms of GPL 3.\nSee the included <LICENSE.txt> for more detail.";
     info.SetLicence(licenseString);
@@ -419,11 +424,11 @@ void OrcamentoMainFrame::OnNew(wxCommandEvent& event)
 {
     CreateDatabaseDialog dialog(this);
 DIALOG_SHOW: //Don't do this at home, kids.
-    if(dialog.ShowModal() != wxID_OK ){
+    if(dialog.ShowModal() != wxID_OK ) {
         return;
     }
     wxString location = dialog.getLocation();
-    if(location.Trim().length()==0){
+    if(location.Trim().length()==0) {
         wxMessageBox("Invalid Path");
         goto DIALOG_SHOW;
     }
@@ -432,10 +437,10 @@ DIALOG_SHOW: //Don't do this at home, kids.
     // Begin transaction
     wxString model;
     wxFile modelFile(L"theModel.sql");
-    if(modelFile.ReadAll(&model)){
-        try{
+    if(modelFile.ReadAll(&model)) {
+        try {
             _document = OrcaDocument::create(location, start);
-        } catch (const std::exception &e){
+        } catch (const std::exception &e) {
             wxMessageBox(e.what());
             _document = nullptr;
             goto DIALOG_SHOW;
@@ -446,12 +451,12 @@ DIALOG_SHOW: //Don't do this at home, kids.
 
 void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
 {
-    if(wxMessageBox(L"Are you sure you want to create a new Budget?", L"Create Budget", wxYES_NO|wxCENTRE) != wxYES){
+    if(wxMessageBox(L"Are you sure you want to create a new Budget?", L"Create Budget", wxYES_NO|wxCENTRE) != wxYES) {
         return;
     }
-    try{
+    try {
         _document->exec<action::InsertBudget>();
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
     RefreshModel();
@@ -459,12 +464,12 @@ void OrcamentoMainFrame::OnCreateBudget(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
 {
-    if(wxMessageBox(L"Are you sure you want to execute the next Budget?", L"Execute Budget", wxYES_NO|wxCENTRE) != wxYES){
+    if(wxMessageBox(L"Are you sure you want to execute the next Budget?", L"Execute Budget", wxYES_NO|wxCENTRE) != wxYES) {
         return;
     }
-    try{
+    try {
         _document->exec<action::ExecuteNextBudget>();
-    } catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
     RefreshModel();
@@ -473,14 +478,14 @@ void OrcamentoMainFrame::OnExecuteBudget(wxCommandEvent& event)
 void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
 {
     wxFileDialog openFileDialog(this, L"Select the file", "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN|wxFD_FILE_MUST_EXIST);
-    if(openFileDialog.ShowModal() != wxID_OK){
+    if(openFileDialog.ShowModal() != wxID_OK) {
         return;
     }
     wxString location = openFileDialog.GetPath();
     try {
         _document = OrcaDocument::load(location);
         RefreshModel();
-    }catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
@@ -494,7 +499,7 @@ void OrcamentoMainFrame::OnlbMonthsDClick(wxCommandEvent& event)
 void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
 {
     int selection = lbMonths->GetSelection() + 1;
-    if(!selection){
+    if(!selection) {
         return;
     }
     try {
@@ -502,7 +507,7 @@ void OrcamentoMainFrame::OnCreateEstimate(wxCommandEvent& event)
         gdEstimates->AppendRows();
         int newRow = gdEstimates->GetNumberRows()-1;
         gdEstimates->SetCellValue(newRow, 0, wxString::FromDouble(newEstimate));
-    }catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
@@ -511,17 +516,17 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
     wxString newValue = gdEstimates->GetCellValue(row, col);
-    if(event.GetString() == gdEstimates->GetCellValue(row, col)){//The default editor duplicate events, so this avoids the first one.
+    if(event.GetString() == gdEstimates->GetCellValue(row, col)) { //The default editor duplicate events, so this avoids the first one.
         return;
     }
     long id;
-    if(!gdEstimates->GetCellValue(row, EstimateColumn::ID).ToCLong(&id)){
+    if(!gdEstimates->GetCellValue(row, EstimateColumn::ID).ToCLong(&id)) {
         wxMessageBox(L"Corrupted Row: '"+gdEstimates->GetColLabelValue(0)+"'");
         return;
     }
     int estimateId = int(id);
-    try{
-        switch(col){
+    try {
+        switch(col) {
         case EstimateColumn::NAME:
             _document->exec<action::UpdateEstimateName>(estimateId, std::string(newValue.ToUTF8()));
             break;
@@ -530,7 +535,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
             RefreshStatusBar();
             break;
         case EstimateColumn::DUE:
-            if(newValue.length()){
+            if(newValue.length()) {
                 wxDateTime due{};
                 due.ParseISODate(newValue);
                 int day = due.GetDay() -1;
@@ -545,7 +550,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
         default:
             break;
         }
-    }catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
 }
@@ -553,7 +558,7 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
 void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 {
     int row = event.GetRow();
-    if(row < 1){
+    if(row < 1) {
         return;
     }
 
@@ -565,7 +570,7 @@ void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 
 void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 {
-    if(cmnEstimate.GetClientData()){
+    if(cmnEstimate.GetClientData()) {
         int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID)));
         executionDialog.giveDatabase(_document);
@@ -578,12 +583,12 @@ void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
 {
-    if(cmnEstimate.GetClientData()){
+    if(cmnEstimate.GetClientData()) {
         int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
         if(wxMessageBox(L"Are you sure you want to delete \""
                         +gdEstimates->GetCellValue(row, EstimateColumn::NAME)+"\"",
                         "Delete Confirmation", wxOK|wxCENTRE|wxCANCEL, this) != wxOK
-        ){
+          ) {
             return;
         }
         try {
@@ -591,7 +596,7 @@ void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
             _document->exec<action::DeleteEstimate>(estimateId);
             RefreshEstimates();
             RefreshStatusBar();
-        } catch(std::exception &e){
+        } catch(std::exception &e) {
             wxMessageBox(e.what());
         }
     } else {
@@ -610,28 +615,28 @@ void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
 void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
-    if(row <= 0){
+    if(row <= 0) {
         return;
     }
-    if(col == EstimateColumn::ACCOUNTED){
+    if(col == EstimateColumn::ACCOUNTED) {
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, 0)));
         executionDialog.giveDatabase(_document);
         executionDialog.ShowModal();
         _document = executionDialog.takeDatabase();
         RefreshEstimates();
         RefreshStatusBar();
-    } else if(col ==EstimateColumn::OBS){
+    } else if(col ==EstimateColumn::OBS) {
         wxTextEntryDialog obsDialog(this, L"Write an Observation for \""+gdEstimates->GetCellValue(row, EstimateColumn::NAME)+L"\"",
                                     L"OBS", gdEstimates->GetCellValue(row, EstimateColumn::OBS), wxTE_MULTILINE|wxTextEntryDialogStyle);
-        if(obsDialog.ShowModal() != wxID_OK){
+        if(obsDialog.ShowModal() != wxID_OK) {
             return;
         }
-        try{
+        try {
             int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
             auto val = obsDialog.GetValue();
             _document->exec<action::UpdateEstimateObs>(id, std::string(val.ToUTF8()));
             gdEstimates->SetCellValue(row, EstimateColumn::OBS, val);
-        }catch (const std::exception &e){
+        } catch (const std::exception &e) {
             wxMessageBox(e.what());
         }
     }
@@ -641,41 +646,67 @@ void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
 void OrcamentoMainFrame::OnmnEstimateCopySelectedToSelected(wxCommandEvent& event)
 {
     wxArrayInt selectedRows = gdEstimates->GetSelectedRows();
-    if(selectedRows.size()==0){
+    if(selectedRows.size()==0) {
         wxMessageBox(L"You need to select at least an entire row.");
         return;
     }
     int budget_id = lbMonths->GetSelection()+1;
-    if(budget_id <= 0){
+    if(budget_id <= 0) {
         return;
     }
     int increment = 0;
-    try{
+    try {
         _budgetCopyView.sourceBudgetId(budget_id);
         wxArrayString options;
         bool ok = false;
-        _document->look(_budgetCopyView, [this, &options, &ok](const std::string &name){
+        _document->look(_budgetCopyView, [this, &options, &ok](const std::string &name) {
             options.push_back(wxString::FromUTF8(name.c_str()));
             ok = true;
         });
-        if(!ok){
+        if(!ok) {
             wxMessageBox(L"This is the last budget.");
             return;
         }
         increment = 1 + wxGetSingleChoiceIndex(L"Select the destiny Budget", "Select Budget", options, 0, this);
-    }catch (const std::exception &e){
+    } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
-    if(increment <=0){
+    if(increment <=0) {
         return;
     }
-    for(int row: selectedRows){
+    for(int row: selectedRows) {
         int id = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
-        try{
+        try {
             _document->exec<action::CopySelectedEstimateTo>(id, increment);
-        }catch (const std::exception &e){
+        } catch (const std::exception &e) {
             // TODO (Tales#1#): Choose to continue or cancel.
             wxMessageBox(e.what());
+        }
+    }
+}
+
+void OrcamentoMainFrame::OnSave(wxCommandEvent& event)
+{
+    _document->save();
+}
+
+void OrcamentoMainFrame::OnClose(wxCloseEvent& event)
+{
+    if(!event.CanVeto() || !_document || !_document->dirt()) {
+        Destroy();
+    } else  {
+        auto ans = wxMessageBox(_("Do you want to save your budget before exit?"),
+                                _("OrcaMento"), wxYES_NO | wxCANCEL | wxCENTRE, this);
+        switch(ans){
+        case wxYES:
+            _document->save();
+            Destroy();
+            break;
+        case wxNO:
+            Destroy();
+            break;
+        case wxCANCEL:
+            break;
         }
     }
 }
