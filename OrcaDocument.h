@@ -49,7 +49,7 @@ public:
     {
         view.look(_model, handler);
     }
-//private:
+private:
     SQLite::Database _model;
 };
 
