@@ -231,6 +231,7 @@ OrcamentoMainFrame::~OrcamentoMainFrame()
 
 void OrcamentoMainFrame::SetupCellAttr()
 {
+    //Columns
     auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
     //Due
     wxGridCellAttr *attrDueCol = new wxGridCellAttr();
@@ -261,6 +262,42 @@ void OrcamentoMainFrame::SetupCellAttr()
     wxGridCellAttr *obsCol = new wxGridCellAttr();
     obsCol->SetReadOnly();
     gdEstimates->SetColAttr(EstimateColumn::OBS, obsCol);
+
+    //ROWS
+    wxColour red{0xAAAAFF}, green{0xAAFFAA}, yellow{0xAAD4D4}, blue{0xFFAAAA}, magenta{0xD4AAD4}, orange{0xAAD4FF}, white{0xFFFFFF};
+
+    attrNothing = new wxGridCellAttr();
+    attrNothing->SetReadOnly(true);
+
+    attrCredit = new wxGridCellAttr();
+    attrCredit->SetBackgroundColour(green);
+
+    attrDebit = new wxGridCellAttr();
+    attrDebit->SetBackgroundColour(magenta);
+
+    attrNeutral = new wxGridCellAttr();
+    attrNeutral->SetBackgroundColour(yellow);
+
+    attrCreditNone = new wxGridCellAttr();
+    attrCreditNone->SetBackgroundColour(white);
+
+    attrCreditPending = new wxGridCellAttr();
+    attrCreditPending->SetBackgroundColour(orange);
+
+    attrCreditReceived = new wxGridCellAttr();
+    attrCreditReceived->SetBackgroundColour(green);
+
+    attrDebitNone = new wxGridCellAttr();
+    attrDebit->IncRef();
+
+    attrDebitPending = new wxGridCellAttr();
+    attrDebitPending->SetBackgroundColour(blue);
+
+    attrDebitPaid = new wxGridCellAttr();
+    attrDebitPaid->SetBackgroundColour(magenta);
+
+    attrDebitOverpaid = new wxGridCellAttr();
+    attrDebitOverpaid->SetBackgroundColour(red);
 }
 
 
@@ -325,10 +362,12 @@ void OrcamentoMainFrame::RefreshEstimates()
             gdEstimates->SetCellValue(i, EstimateColumn::OBS,
                                       wxString::FromUTF8(obs.c_str()) );
 
+
             if(category == "") {
-                wxGridCellAttr *attrImultLine = new wxGridCellAttr();
-                attrImultLine->SetReadOnly(true);
-                gdEstimates->SetRowAttr(i, attrImultLine);
+                attrNothing->IncRef();
+                gdEstimates->SetRowAttr(i, attrNothing);
+            } else {
+                RefreshColorEstimate(i, estimated, accounted);
             }
             ++i;
         };
@@ -347,6 +386,69 @@ void OrcamentoMainFrame::RefreshEstimates()
         wxMessageBox(e.what());
     }
 }
+
+void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double accounted)
+{
+    if(estimated > 0) {
+        attrCredit->IncRef();
+        gdEstimates->SetRowAttr(i, attrCredit);
+        if(accounted >= estimated) {
+            attrCreditReceived->IncRef();
+            attrCreditReceived->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditReceived);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditReceived);
+        } else if(accounted > 0) {
+            attrCreditPending->IncRef();
+            attrCreditPending->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditPending);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditPending);
+        } else {
+            attrCreditNone->IncRef();
+            attrCreditNone->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditNone);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditNone);
+        }
+    } else if(estimated < 0) {
+        attrDebit->IncRef();
+        gdEstimates->SetRowAttr(i, attrDebit);
+        if(accounted < estimated) {
+            attrDebitOverpaid->IncRef();
+            attrDebitOverpaid->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitOverpaid);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitOverpaid);
+        } else if(accounted == estimated) {
+            attrDebitPaid->IncRef();
+            attrDebitPaid->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPaid);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitPaid);
+        } else if(accounted < 0) {
+            attrDebitPending->IncRef();
+            attrDebitPending->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPending);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitPending);
+        } else {
+            attrDebitNone->IncRef();
+            attrDebitNone->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitNone);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitNone);
+        }
+    } else {
+        attrNeutral->IncRef();
+        gdEstimates->SetRowAttr(i, attrNeutral);
+        if(accounted > 0){
+            attrCredit->IncRef();
+            attrCredit->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCredit);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCredit);
+        } else {
+            attrDebit->IncRef();
+            attrDebit->IncRef();
+            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebit);
+            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebit);
+        }
+    }
+}
+
 
 void OrcamentoMainFrame::RefreshStatusBar()
 {
@@ -530,10 +632,13 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
         case EstimateColumn::NAME:
             _document->exec<action::UpdateEstimateName>(estimateId, std::string(newValue.ToUTF8()));
             break;
-        case EstimateColumn::ESTIMATED:
-            _document->exec<action::UpdateEstimateAmount>(estimateId, atof(newValue));
+        case EstimateColumn::ESTIMATED:{
+            double newEstimated = atof(newValue);
+            _document->exec<action::UpdateEstimateAmount>(estimateId, newEstimated);
             RefreshStatusBar();
+            RefreshColorEstimate(row, newEstimated, atof(gdEstimates->GetCellValue(row, EstimateColumn::ACCOUNTED)));
             break;
+        }
         case EstimateColumn::DUE:
             if(newValue.length()) {
                 wxDateTime due{};
@@ -697,7 +802,7 @@ void OrcamentoMainFrame::OnClose(wxCloseEvent& event)
     } else  {
         auto ans = wxMessageBox(_("Do you want to save your budget before exit?"),
                                 _("OrcaMento"), wxYES_NO | wxCANCEL | wxCENTRE, this);
-        switch(ans){
+        switch(ans) {
         case wxYES:
             _document->save();
             Destroy();

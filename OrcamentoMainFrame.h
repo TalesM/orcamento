@@ -45,12 +45,27 @@ private:
     TotalsView _totalsView;
     BudgetToCopyView _budgetCopyView;
 
+    wxGridCellAttr *attrNothing;
+    ///Attribs for estimates
+    wxGridCellAttr *attrCredit;
+    wxGridCellAttr *attrDebit;
+    wxGridCellAttr *attrNeutral;
+
+    ///Attribs for execution
+    wxGridCellAttr *attrCreditNone;
+    wxGridCellAttr *attrCreditPending;
+    wxGridCellAttr *attrCreditReceived;
+    wxGridCellAttr *attrDebitNone;
+    wxGridCellAttr *attrDebitPending;
+    wxGridCellAttr *attrDebitPaid;
+    wxGridCellAttr *attrDebitOverpaid;
 
     void SetupCellAttr();
     void RefreshModel();
     void RefreshEstimates();
     void RefreshCellAttr(bool executing = false);
     void RefreshStatusBar();
+    void RefreshColorEstimate(int row, double estimated, double accounted);
 
     //(*Handlers(OrcamentoMainFrame)
     void OnQuit(wxCommandEvent& event);
