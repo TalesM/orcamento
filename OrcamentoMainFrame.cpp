@@ -124,9 +124,9 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Create(parent, wxID_ANY, _("OrcaMento"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
     SetClientSize(wxSize(800,600));
     {
-        wxIcon FrameIcon;
-        FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
-        SetIcon(FrameIcon);
+    	wxIcon FrameIcon;
+    	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
+    	SetIcon(FrameIcon);
     }
     SplitterWindow1 = new wxSplitterWindow(this, ID_SPLITTERWINDOW1, wxPoint(152,304), wxDefaultSize, wxSP_3D, _T("ID_SPLITTERWINDOW1"));
     SplitterWindow1->SetMinSize(wxSize(10,10));
@@ -391,60 +391,42 @@ void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double ac
 {
     if(estimated > 0) {
         attrCredit->IncRef();
-        gdEstimates->SetRowAttr(i, attrCredit);
+        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrCredit);
         if(accounted >= estimated) {
             attrCreditReceived->IncRef();
-            attrCreditReceived->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditReceived);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditReceived);
         } else if(accounted > 0) {
             attrCreditPending->IncRef();
-            attrCreditPending->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditPending);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditPending);
         } else {
             attrCreditNone->IncRef();
-            attrCreditNone->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditNone);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCreditNone);
         }
     } else if(estimated < 0) {
         attrDebit->IncRef();
-        gdEstimates->SetRowAttr(i, attrDebit);
+        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrDebit);
         if(accounted < estimated) {
             attrDebitOverpaid->IncRef();
-            attrDebitOverpaid->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitOverpaid);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitOverpaid);
         } else if(accounted == estimated) {
             attrDebitPaid->IncRef();
-            attrDebitPaid->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPaid);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitPaid);
         } else if(accounted < 0) {
             attrDebitPending->IncRef();
-            attrDebitPending->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPending);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitPending);
         } else {
             attrDebitNone->IncRef();
-            attrDebitNone->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitNone);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebitNone);
         }
     } else {
         attrNeutral->IncRef();
-        gdEstimates->SetRowAttr(i, attrNeutral);
+        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrNeutral);
         if(accounted > 0){
             attrCredit->IncRef();
-            attrCredit->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCredit);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrCredit);
         } else {
             attrDebit->IncRef();
-            attrDebit->IncRef();
             gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebit);
-            gdEstimates->SetAttr(i, EstimateColumn::REMAINING, attrDebit);
         }
     }
 }
