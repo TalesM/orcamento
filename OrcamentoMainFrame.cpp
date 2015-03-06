@@ -656,10 +656,6 @@ void OrcamentoMainFrame::OngdEstimatesCellChange(wxGridEvent& event)
 void OrcamentoMainFrame::OngdEstimatesCellRightClick(wxGridEvent& event)
 {
     int row = event.GetRow();
-    if(row < 1) {
-        return;
-    }
-
     wxPoint point = event.GetPosition();
     cmnEstimate.SetClientData(reinterpret_cast<void*>(row));
     PopupMenu( &cmnEstimate, gdEstimates->GetPosition() + point);
@@ -681,24 +677,20 @@ void OrcamentoMainFrame::OnmnEstimateEditSelected(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnmnEstimateDeleteSelected(wxCommandEvent& event)
 {
-    if(cmnEstimate.GetClientData()) {
-        int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
-        if(wxMessageBox(L"Are you sure you want to delete \""
-                        +gdEstimates->GetCellValue(row, EstimateColumn::NAME)+"\"",
-                        "Delete Confirmation", wxOK|wxCENTRE|wxCANCEL, this) != wxOK
-          ) {
-            return;
-        }
-        try {
-            int estimateId = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
-            _document->exec<action::DeleteEstimate>(estimateId);
-            RefreshEstimates();
-            RefreshStatusBar();
-        } catch(std::exception &e) {
-            wxMessageBox(e.what());
-        }
-    } else {
-        wxMessageBox(L"Unknown error. Event called by wrong caller.");
+    int row = reinterpret_cast<int>(cmnEstimate.GetClientData());
+    if(wxMessageBox(L"Are you sure you want to delete \""
+                    +gdEstimates->GetCellValue(row, EstimateColumn::NAME)+"\"",
+                    "Delete Confirmation", wxOK|wxCENTRE|wxCANCEL, this) != wxOK
+      ) {
+        return;
+    }
+    try {
+        int estimateId = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
+        _document->exec<action::DeleteEstimate>(estimateId);
+        RefreshEstimates();
+        RefreshStatusBar();
+    } catch(std::exception &e) {
+        wxMessageBox(e.what());
     }
 }
 
@@ -713,9 +705,6 @@ void OrcamentoMainFrame::OnWalletsOverview(wxCommandEvent& event)
 void OrcamentoMainFrame::OngdEstimatesCellLeftDClick(wxGridEvent& event)
 {
     int row = event.GetRow(), col = event.GetCol();
-    if(row <= 0) {
-        return;
-    }
     if(col == EstimateColumn::ACCOUNTED) {
         ExecutionDialog executionDialog(this, wxID_ANY, atoi(gdEstimates->GetCellValue(row, 0)));
         executionDialog.giveDatabase(_document);
