@@ -47,6 +47,13 @@ public:
         return load(static_cast<std::string>(path.ToUTF8()));
     }
 
+    static bool canConvert(int major, int minor, int patch, int variant);
+    static std::unique_ptr<OrcaDocument> convert(const wxString &path);
+    static std::unique_ptr<OrcaDocument> convert(const std::string &path)
+    {
+        return convert(wxString::FromUTF8(path.c_str()));
+    }
+
     /** @brief execute an action.
      *
      * @tparam Action the action type to be executed.

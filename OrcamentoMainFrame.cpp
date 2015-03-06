@@ -569,6 +569,17 @@ void OrcamentoMainFrame::OnOpen(wxCommandEvent& event)
     try {
         _document = OrcaDocument::load(location);
         RefreshModel();
+    } catch (const wrongver_error &e) {
+        if(OrcaDocument::canConvert(e.major, e.minor, e.patch, e.variant)){
+            try {
+                _document = OrcaDocument::convert(location);
+                RefreshModel();
+            } catch (const std::exception &e) {
+                wxMessageBox(e.what());
+            }
+        } else {
+            wxMessageBox(e.what());
+        }
     } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }

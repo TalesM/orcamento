@@ -80,7 +80,7 @@ CREATE TABLE "execution" (
 --Budget triggers
 CREATE TRIGGER "budget_insert" AFTER INSERT ON "budget" FOR EACH ROW
 BEGIN
-    SELECT CASE WHEN NOT executing = 0 AND NEW.executing = 1 THEN RAISE(FAIL, 'Can not execute before previous') END
+    SELECT CASE WHEN executing = 0 AND NEW.executing = 1 THEN RAISE(FAIL, 'Can not execute before previous') END
         FROM "budget"
         WHERE "budget_id" = NEW.budget_id-1;
 END;
