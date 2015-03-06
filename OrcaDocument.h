@@ -8,6 +8,19 @@
 #include "OrcaAction.h"
 #include "OrcaView.h"
 
+namespace fileFormat{
+constexpr int MAJOR = 0, MINOR = 2, PATCH = 0, VARIANT = 0;
+}
+
+struct wrongver_error: public std::runtime_error{
+    int major, minor, patch, variant;
+    wrongver_error(int major, int minor, int patch, int variant = 0):
+        std::runtime_error("Wrong File Format Version"),
+        major(major), minor(minor), patch(patch), variant(variant)
+    {}
+
+};
+
 /** @brief A document
  */
 class OrcaDocument

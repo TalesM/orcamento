@@ -1,9 +1,24 @@
 #include "OrcaDocument.h"
+#include <vector>
 #include <stdexcept>
 
 OrcaDocument::OrcaDocument(const std::string &path, bool erase):
     _model(path, SQLITE_OPEN_READWRITE|(erase?SQLITE_OPEN_CREATE:0))
 {
+    std::string s = _model.execAndGet("SELECT \"value\" FROM \"meta\" WHERE \"key\"='format-version'");
+    std::vector<int> vs;
+    size_t p = 0, q = 0;
+    do{
+        p = s.find('.', q);
+        vs.push_back(atoi(s.substr(q, p).c_str()));
+        q = p+1;
+    }while(p != std::string::npos);
+    if(vs.size() < 3){
+        throw std::runtime_error("String Version formated incorrectly.");
+    }
+    if(vs[0] != fileFormat::MAJOR || vs[1] != fileFormat::MINOR || vs[2] != fileFormat::PATCH || (vs.size()>3 && vs[3] < fileFormat::VARIANT)){
+        throw wrongver_error(vs[0], vs[1], vs[2], (vs.size()>3)?(vs[3]):0);
+    }
 }
 
 std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, const wxDateTime& start)
@@ -11,7 +26,7 @@ std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, cons
     auto newDocument = std::make_unique<OrcaDocument>(path, true);
     wxFile modelFile(L"theModel.sql");
     wxString model;
-    if(modelFile.ReadAll(&model)){
+    if(!modelFile.ReadAll(&model)){
         throw std::runtime_error("Can't find config file \"theModel.sql\".");
     }
     SQLite::Transaction transaction(newDocument->_model);
