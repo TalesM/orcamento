@@ -85,6 +85,15 @@
 					<label>Execute Next Budget</label>
 					<handler function="OnExecuteBudget" entry="EVT_MENU" />
 				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="ID_MENUITEM6" variable="MenuItem3" member="yes">
+					<label>Import Budget</label>
+					<help>Import to the Current Budget</help>
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEM7" variable="MenuItem5" member="yes">
+					<label>Export Budget</label>
+					<help>Exports Current Budget</help>
+				</object>
 			</object>
 			<object class="wxMenu" variable="mnEstimate" member="yes">
 				<label>Estimate</label>

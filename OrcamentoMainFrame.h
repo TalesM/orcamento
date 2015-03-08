@@ -98,6 +98,8 @@ private:
     static const long idMenuQuit;
     static const long ID_MENUCREATE_BUDGET;
     static const long ID_MENUEXECUTE_BUDGET;
+    static const long ID_MENUITEM6;
+    static const long ID_MENUITEM7;
     static const long ID_PROMISE_CREATE;
     static const long ID_MENUITEM5;
     static const long idMenuAbout;
@@ -110,6 +112,7 @@ private:
     //(*Declarations(OrcamentoMainFrame)
     wxSimpleHtmlListBox* lbMonths;
     wxMenuItem* mnEstimateDelete;
+    wxMenuItem* MenuItem5;
     wxMenuItem* MenuItem1;
     wxMenuItem* MenuItem4;
     wxGrid* gdEstimates;
@@ -120,6 +123,7 @@ private:
     wxMenu* mnEstimate;
     wxStatusBar* sbStatus;
     wxMenuItem* mnEstimateCopySelectedTo;
+    wxMenuItem* MenuItem3;
     wxMenu cmnEstimate;
     wxMenuItem* mnEstimateEdit;
     //*)
