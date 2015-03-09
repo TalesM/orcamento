@@ -62,13 +62,16 @@
 			<Add directory="$(#wx)/include" />
 			<Add directory="$(#sqlitecpp.include)" />
 			<Add directory="$(#sqlite3.include)" />
+			<Add directory="$(#csv.include)" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="$(#wx)/include" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-mthreads" />
+			<Add library="CSV" />
 			<Add directory="$(#sqlitecpp.lib)" />
+			<Add directory="$(#csv.lib)" />
 		</Linker>
 		<Unit filename="BudgetToCopyView.cpp">
 			<Option virtualFolder="model/views/" />

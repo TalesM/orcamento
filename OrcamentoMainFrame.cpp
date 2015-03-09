@@ -14,6 +14,7 @@
 #include <vector>
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
+#include "CSV.hpp"
 #include "CreateDatabaseDialog.h"
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
@@ -93,7 +94,6 @@ const long OrcamentoMainFrame::ID_MENUITEM4 = wxNewId();
 const long OrcamentoMainFrame::idMenuQuit = wxNewId();
 const long OrcamentoMainFrame::ID_MENUCREATE_BUDGET = wxNewId();
 const long OrcamentoMainFrame::ID_MENUEXECUTE_BUDGET = wxNewId();
-const long OrcamentoMainFrame::ID_MENUITEM6 = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM7 = wxNewId();
 const long OrcamentoMainFrame::ID_PROMISE_CREATE = wxNewId();
 const long OrcamentoMainFrame::ID_MENUITEM5 = wxNewId();
@@ -176,10 +176,8 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     mnExecuteNextBudget = new wxMenuItem(Menu3, ID_MENUEXECUTE_BUDGET, _("Execute Next Budget"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(mnExecuteNextBudget);
     Menu3->AppendSeparator();
-    MenuItem3 = new wxMenuItem(Menu3, ID_MENUITEM6, _("Import Budget"), _("Import to the Current Budget"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem3);
-    MenuItem5 = new wxMenuItem(Menu3, ID_MENUITEM7, _("Export Budget"), _("Exports Current Budget"), wxITEM_NORMAL);
-    Menu3->Append(MenuItem5);
+    mnExportBudget = new wxMenuItem(Menu3, ID_MENUITEM7, _("Export Budget"), _("Exports Current Budget"), wxITEM_NORMAL);
+    Menu3->Append(mnExportBudget);
     MenuBar1->Append(Menu3, _("Budget"));
     mnEstimate = new wxMenu();
     MenuItem1 = new wxMenuItem(mnEstimate, ID_PROMISE_CREATE, _("Add a Estimate\tAlt-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
@@ -218,6 +216,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent,wxWindowID id)
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnQuit);
     Connect(ID_MENUCREATE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateBudget);
     Connect(ID_MENUEXECUTE_BUDGET,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnExecuteBudget);
+    Connect(ID_MENUITEM7,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnmnExportBudgetSelected);
     Connect(ID_PROMISE_CREATE,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnCreateEstimate);
     Connect(ID_MENUITEM5,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnWalletsOverview);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&OrcamentoMainFrame::OnAbout);
@@ -804,3 +803,33 @@ void OrcamentoMainFrame::OnClose(wxCloseEvent& event)
         }
     }
 }
+
+void OrcamentoMainFrame::OnmnExportBudgetSelected(wxCommandEvent& event)
+{
+    int budget_id = lbMonths->GetSelection() + 1;
+    if(budget_id <= 0) {
+        return;
+    }
+    wxFileDialog openFileDialog(this, L"Select the location to export", "", "", "CSV(*.csv)|*.csv", wxFD_SAVE|wxFD_OVERWRITE_PROMPT);
+    if(openFileDialog.ShowModal() != wxID_OK) {
+        return;
+    }
+    wxString location = openFileDialog.GetPath();
+
+    using namespace jay::util;
+    CSVwrite writter(location.ToStdString());
+    writter.WriteUTF8BOM();
+    writter.WriteRecord({"id", "name", "estimated", "accounted", "remaining", "category", "Obs"});
+    for(int i=0; i < gdEstimates->GetRows();++i){
+        writter.WriteRecord({
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::ID).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::NAME).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::DUE).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::ESTIMATED).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::ACCOUNTED).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::CATEGORY).ToUTF8(),
+            (std::string)gdEstimates->GetCellValue(i, EstimateColumn::OBS).ToUTF8(),
+        });
+    }
+}
+
