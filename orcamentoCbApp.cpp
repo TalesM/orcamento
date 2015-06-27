@@ -11,7 +11,7 @@
 #include "orcamentoCbApp.h"
 
 //(*AppHeaders
-#include "OrcamentoMainFrame.h"
+#include "ui/OrcamentoMainFrame.h"
 #include <wx/image.h>
 //*)
 

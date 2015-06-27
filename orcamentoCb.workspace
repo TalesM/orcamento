@@ -1,6 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-<CodeBlocks_workspace_file>
-	<Workspace title="Orcamento">
-		<Project filename="orcamentoCb.cbp" />
-	</Workspace>
-</CodeBlocks_workspace_file>
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="orcamentoCb" Database="/dev/projects/orcamento/.codelite/orcamentoCb.tags">
+  <Project Name="OrcaMento" Path="OrcaMento.project" Active="Yes"/>
+  <Environment>
+    <![CDATA[]]>
+  </Environment>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="OrcaMento" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="no">
+      <Project Name="OrcaMento" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>

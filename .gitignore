@@ -1,8 +1,13 @@
+.codelite/
 bin/
+Debug/
+Release/
 obj/
 wx_pch.h.gch/
 .clang/
 compile_commands.json
+orcamentoCb.workspace.backup
+OrcaMento.txt
 *.mk
 *.orca
 *.depend
