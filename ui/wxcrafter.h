@@ -152,8 +152,8 @@ protected:
     virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnLsmonthsListbox(wxCommandEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) { event.Skip(); }
-    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) { event.Skip(); }
+    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
 
 public:
     OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OrcaMento"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800,600), long style = wxDEFAULT_FRAME_STYLE);

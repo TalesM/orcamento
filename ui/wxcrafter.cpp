@@ -379,13 +379,14 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     cmEstimatesDelete = new wxMenuItem(cmEstimate, wxID_ANY, _("Delete Estimate"), wxT(""), wxITEM_NORMAL);
     cmEstimate->Append(cmEstimatesDelete);
     
-    wxBoxSizer* szMain = new wxBoxSizer(wxHORIZONTAL);
+    wxGridBagSizer* szMain = new wxGridBagSizer(0, 0);
     this->SetSizer(szMain);
     
     wxArrayString lsMonthsArr;
     lsMonths = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsMonthsArr, wxHLB_DEFAULT_STYLE);
     
-    szMain->Add(lsMonths, 1, wxEXPAND, 0);
+    szMain->Add(lsMonths, wxGBPosition(0,0), wxGBSpan(), wxEXPAND, 0);
+    lsMonths->SetMinSize(wxSize(150,-1));
     
     gdEstimates = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxFULL_REPAINT_ON_RESIZE|wxHSCROLL|wxVSCROLL);
     gdEstimates->CreateGrid(0, 0);
@@ -396,7 +397,9 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     #endif
     gdEstimates->EnableEditing(true);
     
-    szMain->Add(gdEstimates, 3, wxEXPAND, 0);
+    szMain->Add(gdEstimates, wxGBPosition(0,1), wxGBSpan(), wxEXPAND, 0);
+    szMain->AddGrowableCol(1);
+    szMain->AddGrowableRow(0);
     
     SetName(wxT("OrcamentoMainFrameBase"));
     SetSizeHints(800,600);
@@ -422,8 +425,8 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     this->Connect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
     lsMonths->Connect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
-    gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
+    gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     
 }
 
@@ -446,7 +449,7 @@ OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
     this->Disconnect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
     lsMonths->Disconnect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
-    gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
+    gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     
 }

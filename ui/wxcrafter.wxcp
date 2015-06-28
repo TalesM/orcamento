@@ -1,7 +1,7 @@
 {
  "metadata": {
   "m_generatedFilesDir": ".",
-  "m_objCounter": 70,
+  "m_objCounter": 77,
   "m_includeFiles": [],
   "m_bitmapFunction": "wxC898CInitBitmapResources",
   "m_bitmapsFile": "wxcrafter_ui_bitmaps.cpp",
@@ -4348,7 +4348,7 @@
        "m_children": []
       }]
     }, {
-     "m_type": 4401,
+     "m_type": 4453,
      "proportion": 1,
      "border": 5,
      "gbSpan": "1,1",
@@ -4368,10 +4368,21 @@
        "m_label": "Style:",
        "m_value": ""
       }, {
-       "type": "choice",
-       "m_label": "Orientation:",
-       "m_selection": 1,
-       "m_options": ["wxVERTICAL", "wxHORIZONTAL"]
+       "type": "string",
+       "m_label": "Growable columns:",
+       "m_value": "1"
+      }, {
+       "type": "string",
+       "m_label": "Growable rows:",
+       "m_value": "0"
+      }, {
+       "type": "string",
+       "m_label": "Horizontal gap:",
+       "m_value": "0"
+      }, {
+       "type": "string",
+       "m_label": "Vertical gap:",
+       "m_value": "0"
       }],
      "m_events": [],
      "m_children": [{
@@ -4379,7 +4390,7 @@
        "proportion": 1,
        "border": 0,
        "gbSpan": "",
-       "gbPosition": "",
+       "gbPosition": "0,0",
        "m_styles": ["wxHLB_DEFAULT_STYLE"],
        "m_sizerFlags": ["wxEXPAND"],
        "m_properties": [{
@@ -4393,7 +4404,7 @@
         }, {
          "type": "string",
          "m_label": "Minimum Size:",
-         "m_value": "-1, -1"
+         "m_value": "150, -1"
         }, {
          "type": "string",
          "m_label": "Name:",
@@ -4461,7 +4472,7 @@
        "proportion": 3,
        "border": 0,
        "gbSpan": "",
-       "gbPosition": "",
+       "gbPosition": "0,1",
        "m_styles": ["wxFULL_REPAINT_ON_RESIZE", "wxHSCROLL", "wxVSCROLL"],
        "m_sizerFlags": ["wxEXPAND"],
        "m_properties": [{
@@ -4569,18 +4580,18 @@
          "m_description": "The user is about to change the data in a cell. The new cell value as string is available from GetString() event object method. This event can be vetoed if the change is not allowed. Processes a wxEVT_GRID_CELL_CHANGING event type",
          "m_noBody": false
         }, {
-         "m_eventName": "wxEVT_GRID_CELL_RIGHT_CLICK",
-         "m_eventClass": "wxGridEvent",
-         "m_eventHandler": "wxGridEventHandler",
-         "m_functionNameAndSignature": "OnGdestimatesGridCellRightClick(wxGridEvent& event)",
-         "m_description": "The user clicked a cell with the right mouse button. Processes a wxEVT_GRID_CELL_RIGHT_CLICK.",
-         "m_noBody": false
-        }, {
          "m_eventName": "wxEVT_GRID_CELL_LEFT_DCLICK",
          "m_eventClass": "wxGridEvent",
          "m_eventHandler": "wxGridEventHandler",
          "m_functionNameAndSignature": "OnGdestimatesGridCellLeftDclick(wxGridEvent& event)",
          "m_description": "The user double-clicked a cell with the left mouse button. Processes a wxEVT_GRID_CELL_LEFT_DCLICK",
+         "m_noBody": false
+        }, {
+         "m_eventName": "wxEVT_GRID_CELL_RIGHT_CLICK",
+         "m_eventClass": "wxGridEvent",
+         "m_eventHandler": "wxGridEventHandler",
+         "m_functionNameAndSignature": "OnGdestimatesGridCellRightClick(wxGridEvent& event)",
+         "m_description": "The user clicked a cell with the right mouse button. Processes a wxEVT_GRID_CELL_RIGHT_CLICK.",
          "m_noBody": false
         }],
        "m_children": []
