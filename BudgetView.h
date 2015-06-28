@@ -3,7 +3,7 @@
 
 #include "OrcaView.h"
 
-class BudgetView: public OrcaView<std::string, int, int>
+class BudgetView: public OrcaView<int, std::string, int, int>
 {
 public:
     BudgetView();

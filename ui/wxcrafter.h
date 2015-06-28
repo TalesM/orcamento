@@ -150,7 +150,7 @@ protected:
     virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnLsmonthsListboxDclick(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnLsmonthsListbox(wxCommandEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) { event.Skip(); }

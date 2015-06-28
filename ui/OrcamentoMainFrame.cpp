@@ -152,7 +152,7 @@ void OrcamentoMainFrame::RefreshModel()
     lsMonths->Clear();
     try {
         _activeIndex = -1;
-        _document->look(_budgetView, [this](std::string name, int executing, int active) {
+        _document->look(_budgetView, [this](int id, std::string name, int executing, int active) {
             wxString budgetName(wxString::FromUTF8(name.c_str()));
             if(not executing) {
                 budgetName = "<em>" + budgetName + "</em>";
@@ -160,7 +160,7 @@ void OrcamentoMainFrame::RefreshModel()
                 budgetName = "<strong>" + budgetName + "</strong>";
                 _activeIndex = lsMonths->GetCount();
             }
-            lsMonths->Append(budgetName);
+            lsMonths->Append(budgetName, reinterpret_cast<void*>(id));
             if(active) {
                 lsMonths->SetSelection(lsMonths->GetCount() - 1);
             }
@@ -176,7 +176,7 @@ void OrcamentoMainFrame::RefreshEstimates()
     if(gdEstimates->GetNumberRows()) {
         gdEstimates->DeleteRows(0, gdEstimates->GetNumberRows());
     }
-    int budget_id = lsMonths->GetSelection() + 1;
+    int budget_id = selectedBudgetId();
     if(budget_id <= 0) {
         return;
     }
@@ -270,7 +270,7 @@ void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double ac
 
 void OrcamentoMainFrame::RefreshStatusBar()
 {
-    int budget_id = lsMonths->GetSelection() + 1;
+    int budget_id = selectedBudgetId();
     if(budget_id < 1) {
         return;
     }
@@ -338,7 +338,7 @@ void OrcamentoMainFrame::OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event
 }
 void OrcamentoMainFrame::OnMnbudgetexportMenuSelected(wxCommandEvent& event)
 {
-    int budget_id = lsMonths->GetSelection() + 1;
+    int budget_id = selectedBudgetId();
     if(budget_id <= 0) {
         return;
     }
@@ -369,7 +369,7 @@ void OrcamentoMainFrame::OnMnbudgetseparatorMenuSelected(wxCommandEvent& event)
 }
 void OrcamentoMainFrame::OnMnestimateaddMenuSelected(wxCommandEvent& event)
 {
-    int selection = lsMonths->GetSelection() + 1;
+    int selection = selectedBudgetId();
     if(!selection) {
         return;
     }
@@ -573,11 +573,6 @@ void OrcamentoMainFrame::OnGdestimatesGridCellRightClick(wxGridEvent& event)
     PopupMenu( cmEstimate, gdEstimates->GetPosition() + point);
     cmEstimate->SetClientData(NULL);
 }
-void OrcamentoMainFrame::OnLsmonthsListboxDclick(wxCommandEvent& event)
-{
-    RefreshEstimates();
-    RefreshStatusBar();
-}
  
 void OrcamentoMainFrame::OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event)
 {
@@ -645,6 +640,11 @@ void OrcamentoMainFrame::OnCmestimatesexecuteMenuSelected(wxCommandEvent& event)
     executionDialog.giveDatabase(_document);
     executionDialog.ShowModal();
     _document = executionDialog.takeDatabase();
+    RefreshEstimates();
+    RefreshStatusBar();
+}
+void OrcamentoMainFrame::OnLsmonthsListbox(wxCommandEvent& event)
+{
     RefreshEstimates();
     RefreshStatusBar();
 }

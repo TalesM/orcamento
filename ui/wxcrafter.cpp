@@ -420,7 +420,7 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     this->Connect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
     this->Connect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
     this->Connect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
-    lsMonths->Connect(wxEVT_LISTBOX_DCLICK, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListboxDclick), NULL, this);
+    lsMonths->Connect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
@@ -444,7 +444,7 @@ OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
     this->Disconnect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
     this->Disconnect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
     this->Disconnect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
-    lsMonths->Disconnect(wxEVT_LISTBOX_DCLICK, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListboxDclick), NULL, this);
+    lsMonths->Disconnect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);

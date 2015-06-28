@@ -47,7 +47,12 @@ private:
     void RefreshCellAttr(bool executing = false);
     void RefreshStatusBar();
     void RefreshColorEstimate(int row, double estimated, double accounted);
+    int selectedBudgetId() const
+    {
+        return reinterpret_cast<int>(lsMonths->GetClientData(lsMonths->GetSelection()));
+    }
 protected:
+    virtual void OnLsmonthsListbox(wxCommandEvent& event);
     virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event);
     virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event);
     virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event);
@@ -55,7 +60,6 @@ protected:
     virtual void OnGdestimatesGridCellChanging(wxGridEvent& event);
     virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event);
     virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event);
-    virtual void OnLsmonthsListboxDclick(wxCommandEvent& event);
     virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event);
     virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event);
     virtual void OnMnbudgetexportMenuSelected(wxCommandEvent& event);
