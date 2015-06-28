@@ -1,5 +1,5 @@
 /***************************************************************
- * Name:      orcamentoCbApp.cpp
+ * Name:      orcamentoApp.cpp
  * Purpose:   Code for Application Class
  * Author:    TalesM (tales.miranda88@gmail.com)
  * Created:   2015-01-10
@@ -8,16 +8,16 @@
  **************************************************************/
 
 #include "wx_pch.h"
-#include "orcamentoCbApp.h"
+#include "orcamentoApp.h"
 
 //(*AppHeaders
 #include "ui/OrcamentoMainFrame.h"
 #include <wx/image.h>
 //*)
 
-IMPLEMENT_APP(orcamentoCbApp);
+IMPLEMENT_APP(orcamentoApp);
 
-bool orcamentoCbApp::OnInit()
+bool orcamentoApp::OnInit()
 {
     //(*AppInitialize
     bool wxsOK = true;

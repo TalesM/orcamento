@@ -1,5 +1,5 @@
 /***************************************************************
- * Name:      orcamentoCbApp.h
+ * Name:      orcamentoApp.h
  * Purpose:   Defines Application Class
  * Author:    TalesM (tales.miranda88@gmail.com)
  * Created:   2015-01-10
@@ -12,7 +12,7 @@
 
 #include <wx/app.h>
 
-class orcamentoCbApp : public wxApp
+class orcamentoApp : public wxApp
 {
     public:
         virtual bool OnInit();

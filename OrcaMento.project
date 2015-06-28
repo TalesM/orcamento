@@ -2,11 +2,20 @@
 <CodeLite_Project Name="OrcaMento">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00010001N0005Debug000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
     <Plugin Name="CMakePlugin">
       <![CDATA[[{
   "name": "Debug",
+  "enabled": false,
+  "buildDirectory": "build",
+  "sourceDirectory": "$(ProjectPath)",
+  "generator": "",
+  "buildType": "",
+  "arguments": [],
+  "parentProject": ""
+ }, {
+  "name": "Release",
   "enabled": false,
   "buildDirectory": "build",
   "sourceDirectory": "$(ProjectPath)",
@@ -65,8 +74,8 @@
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="config">
-    <File Name="orcamentoCbApp.cpp"/>
-    <File Name="orcamentoCbApp.h"/>
+    <File Name="orcamentoApp.cpp"/>
+    <File Name="orcamentoApp.h"/>
     <File Name="resource.rc"/>
     <File Name="theModel.sql"/>
     <File Name="wx_pch.h"/>
@@ -156,14 +165,14 @@ wx=E:\dev\lib\wxWidgets-3.0.2]]>
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="MinGW ( TDM-GCC-32 )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2 -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP " C_Options="-O2 -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP " Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-std=c++14;-O2 -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP" C_Options="-O2 -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP " Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="$(wx)/lib/gcc_dll/mswu"/>
         <IncludePath Value="$(wx)/include"/>
         <IncludePath Value="$(sqlitecpp.include)"/>
         <IncludePath Value="$(sqlite3.include)"/>
         <IncludePath Value="$(csv.include)"/>
       </Compiler>
-      <Linker Options="-s -mthreads " Required="yes">
+      <Linker Options="-mwindows;-s -mthreads" Required="yes">
         <LibraryPath Value="$(wx)/lib/gcc_dll"/>
         <LibraryPath Value="$(sqlitecpp.lib)"/>
         <LibraryPath Value="$(csv.lib)"/>
@@ -171,16 +180,15 @@ wx=E:\dev\lib\wxWidgets-3.0.2]]>
         <Library Value="SQLiteCpp"/>
         <Library Value="CSV"/>
       </Linker>
-      <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="bin/Release/orcamento" IntermediateDirectory="./Debug" Command="./orcamento" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="bin/Release" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
-      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+      <ResourceCompiler Options="$(shell wx-config --rcflags);" Required="no"/>
+      <General OutputFile="bin/Release/orcamento" IntermediateDirectory="./Release" Command="./orcamento" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="bin/Release" PauseExecWhenProcTerminates="no" IsGUIProgram="yes" IsEnabled="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[csv.include=E:\dev\lib\CSV-develop\CSV
 csv.lib=E:\dev\lib\CSV-develop\CSV
 sqlite3.include=E:\dev\lib\SQLiteCpp\sqlite3
 sqlitecpp.include=E:\dev\lib\SQLiteCpp\include
 sqlitecpp.lib=E:\dev\lib\SQLiteCpp\lib
-wx=E:\dev\lib\wxWidgets-3.0.2
-]]>
+wx=E:\dev\lib\wxWidgets-3.0.2]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
