@@ -18,8 +18,9 @@ void WalletOverviewDialog::giveDatabase(std::unique_ptr<OrcaDocument>& database)
     _document = std::move(database);
     lsWallets->Clear();
     try {
-        _document->look(_walletView,
-                        [this](int, const std::string& name) { lsWallets->Append(wxString::FromUTF8(name.c_str())); });
+        _document->look(_walletView, [this](int id, const std::string& name) { 
+            lsWallets->Append(wxString::FromUTF8(name.c_str()), reinterpret_cast<void*>(id)); 
+        });
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
     }
@@ -28,7 +29,7 @@ void WalletOverviewDialog::OnLswalletsListbox(wxCommandEvent& event)
 {
     try {
         bool retrieved = false;
-        _walletDetailView.walletId(lsWallets->GetSelection() + 1);
+        _walletDetailView.walletId(reinterpret_cast<int>(lsWallets->GetClientData(lsWallets->GetSelection())));
         _document->look(_walletDetailView,
                         [this, &retrieved](const std::string& name, const std::string& obs, bool hasExecution) {
             txName->ChangeValue(wxString::FromUTF8(name.c_str()));
@@ -48,8 +49,8 @@ void WalletOverviewDialog::OnBtaddButtonClicked(wxCommandEvent& event)
 {
     try {
         std::string name(txName->GetValue().ToUTF8()), obs(txObs->GetValue().ToUTF8());
-        _document->exec<action::InsertWallet>(name, obs);
-        lsWallets->Append(txName->GetValue());
+        int id = _document->exec<action::InsertWallet>(name, obs);
+        lsWallets->Append(txName->GetValue(), reinterpret_cast<void*>(id));
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
     }
