@@ -3,6 +3,7 @@
 #include "wxcrafter.h"
 
 #include <memory>
+#include "BudgetFilter.h"
 #include "BudgetToCopyView.h"
 #include "BudgetView.h"
 #include "CategoryView.h"
@@ -25,6 +26,7 @@ private:
     EstimatePlaningView _estimatePlaningView;
     TotalsView _totalsView;
     BudgetToCopyView _budgetCopyView;
+    BudgetFilter *dgFilter = nullptr;
 
     wxGridCellAttr *attrNothing;
     ///Attribs for estimates
@@ -52,6 +54,7 @@ private:
         return reinterpret_cast<int>(lsMonths->GetClientData(lsMonths->GetSelection()));
     }
 protected:
+    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event);
     virtual void OnLsmonthsListbox(wxCommandEvent& event);
     virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event);
     virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event);

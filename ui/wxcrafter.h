@@ -26,6 +26,13 @@
 #include <wx/menu.h>
 #include <wx/statusbr.h>
 #include <wx/panel.h>
+#include <wx/choice.h>
+#include <wx/arrstr.h>
+#include <wx/checkbox.h>
+#include <wx/spinctrl.h>
+#include <wx/checklst.h>
+#include <wx/statline.h>
+#include <wx/radiobox.h>
 
 class CreateDatabaseDialogBase : public wxDialog
 {
@@ -163,10 +170,65 @@ protected:
     virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) { event.Skip(); }
     virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
+    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
     OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OrcaMento"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800,600), long style = wxDEFAULT_FRAME_STYLE);
     virtual ~OrcamentoMainFrameBase();
+};
+
+
+class BudgetFilterBase : public wxDialog
+{
+protected:
+    wxStaticText* lbName;
+    wxTextCtrl* txName;
+    wxChoice* chName;
+    wxCheckBox* ckInvertName;
+    wxStaticText* lbDate;
+    wxStaticText* lbDateFrom;
+    wxSpinCtrl* spDateFrom;
+    wxStaticText* lbDateTo;
+    wxSpinCtrl* spDateTo;
+    wxCheckBox* ckInvertDate;
+    wxStaticText* lbEstimated;
+    wxStaticText* lbEstimatedFrom;
+    wxTextCtrl* txEstimatedFrom;
+    wxStaticText* lbEstimateTo;
+    wxTextCtrl* txEstimatedTo;
+    wxCheckBox* ckinvertEstimated;
+    wxStaticText* lbAccounted;
+    wxStaticText* lbAccountedFrom;
+    wxTextCtrl* txAccountedFrom;
+    wxStaticText* lbAccountedTo;
+    wxTextCtrl* txAccountedTo;
+    wxCheckBox* ckInvertAccounted;
+    wxStaticText* lbRemaining;
+    wxStaticText* lbRemainingFrom;
+    wxTextCtrl* txRemainingFrom;
+    wxStaticText* lbRemainingTo;
+    wxTextCtrl* txRemainingTo;
+    wxCheckBox* ckInvertRemaining;
+    wxStaticText* lbObservation;
+    wxTextCtrl* txObservation;
+    wxChoice* chObservation;
+    wxCheckBox* ckInvertObservation;
+    wxStaticText* lbCategory;
+    wxCheckListBox* lsckCategory;
+    wxCheckBox* ckInvertCategory;
+    wxStaticLine* lnTotals;
+    wxStaticText* lbTotals;
+    wxCheckBox* ckAdjustEstimates;
+    wxRadioBox* rdShow;
+    wxStaticLine* lnControls;
+    wxButton* btReset;
+    wxButton* btRefresh;
+
+protected:
+
+public:
+    BudgetFilterBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Budget Filtering"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600,500), long style = wxDEFAULT_DIALOG_STYLE);
+    virtual ~BudgetFilterBase();
 };
 
 #endif

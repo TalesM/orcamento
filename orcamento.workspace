@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="orcamento" Database="/dev/projects/orcamento/.codelite/orcamentoCb.tags">
   <Project Name="OrcaMento" Path="OrcaMento.project" Active="Yes"/>
-  <Environment>
-    <![CDATA[]]>
-  </Environment>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="no">
       <Project Name="OrcaMento" ConfigName="Debug"/>
@@ -12,4 +9,7 @@
       <Project Name="OrcaMento" ConfigName="Release"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
+  <Environment>
+    <![CDATA[]]>
+  </Environment>
 </CodeLite_Workspace>

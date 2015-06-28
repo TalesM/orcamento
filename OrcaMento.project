@@ -90,6 +90,8 @@
     <File Name="ui/WalletOverviewDialog.h"/>
     <File Name="ui/OrcamentoMainFrame.h"/>
     <File Name="ui/OrcamentoMainFrame.cpp"/>
+    <File Name="ui/BudgetFilter.h"/>
+    <File Name="ui/BudgetFilter.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="wxcrafter">
     <VirtualDirectory Name="resources">
@@ -188,7 +190,8 @@ csv.lib=E:\dev\lib\CSV-develop\CSV
 sqlite3.include=E:\dev\lib\SQLiteCpp\sqlite3
 sqlitecpp.include=E:\dev\lib\SQLiteCpp\include
 sqlitecpp.lib=E:\dev\lib\SQLiteCpp\lib
-wx=E:\dev\lib\wxWidgets-3.0.2]]>
+wx=E:\dev\lib\wxWidgets-3.0.2
+WXCFG=gcc_dll/mswud]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>

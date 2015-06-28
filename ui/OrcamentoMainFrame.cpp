@@ -4,9 +4,9 @@
 #include <wx/msgdlg.h>
 #include <wx/aboutdlg.h>
 #include "CSV.hpp"
-#include "ui/CreateDatabaseDialog.h"
-#include "ui/ExecutionDialog.h"
-#include "ui/WalletOverviewDialog.h"
+#include "CreateDatabaseDialog.h"
+#include "ExecutionDialog.h"
+#include "WalletOverviewDialog.h"
 
 #include "actions/CopySelectedEstimateTo.h"
 #include "actions/DeleteEstimate.h"
@@ -648,4 +648,11 @@ void OrcamentoMainFrame::OnLsmonthsListbox(wxCommandEvent& event)
 {
     RefreshEstimates();
     RefreshTotals();
+}
+void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
+{
+    if(!dgFilter){
+        dgFilter = new BudgetFilter(this);
+    }
+    dgFilter->Show();
 }

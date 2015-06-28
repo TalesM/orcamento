@@ -477,6 +477,7 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     gdEstimates->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
     gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
+    byFilterTotals->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
     
 }
 
@@ -501,5 +502,273 @@ OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
     gdEstimates->Disconnect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
     gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
+    byFilterTotals->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
     
+}
+
+BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
+    : wxDialog(parent, id, title, pos, size, style)
+{
+    if ( !bBitmapLoaded ) {
+        // We need to initialise the default bitmap handler
+        wxXmlResource::Get()->AddHandler(new wxBitmapXmlHandler);
+        wxC898CInitBitmapResources();
+        bBitmapLoaded = true;
+    }
+    
+    wxGridBagSizer* szMain = new wxGridBagSizer(0, 0);
+    this->SetSizer(szMain);
+    
+    lbName = new wxStaticText(this, wxID_ANY, _("Name:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbName, wxGBPosition(0,0), wxGBSpan(1,1), wxALL, 5);
+    
+    txName = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txName->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txName, wxGBPosition(0,1), wxGBSpan(1,3), wxALL|wxEXPAND, 5);
+    
+    wxArrayString chNameArr;
+    chNameArr.Add(wxT("Contains"));
+    chNameArr.Add(wxT("Starts With"));
+    chNameArr.Add(wxT("Ends With"));
+    chNameArr.Add(wxT("Exactly Equal"));
+    chName = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), chNameArr, 0);
+    chName->SetSelection(0);
+    
+    szMain->Add(chName, wxGBPosition(0,4), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    ckInvertName = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertName->SetValue(false);
+    
+    szMain->Add(ckInvertName, wxGBPosition(0,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbDate = new wxStaticText(this, wxID_ANY, _("Date:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbDate, wxGBPosition(1,0), wxGBSpan(1,1), wxALL, 5);
+    
+    lbDateFrom = new wxStaticText(this, wxID_ANY, _("From day"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbDateFrom, wxGBPosition(1,1), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    spDateFrom = new wxSpinCtrl(this, wxID_ANY, wxT("1"), wxDefaultPosition, wxSize(-1,-1), wxSP_ARROW_KEYS);
+    spDateFrom->SetRange(1, 31);
+    spDateFrom->SetValue(1);
+    
+    szMain->Add(spDateFrom, wxGBPosition(1,2), wxGBSpan(1,1), wxALL, 5);
+    
+    lbDateTo = new wxStaticText(this, wxID_ANY, _("To day"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbDateTo, wxGBPosition(1,3), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    spDateTo = new wxSpinCtrl(this, wxID_ANY, wxT("31"), wxDefaultPosition, wxSize(-1,-1), wxSP_ARROW_KEYS);
+    spDateTo->SetRange(1, 31);
+    spDateTo->SetValue(31);
+    
+    szMain->Add(spDateTo, wxGBPosition(1,4), wxGBSpan(1,1), wxALL, 5);
+    
+    ckInvertDate = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertDate->SetValue(false);
+    
+    szMain->Add(ckInvertDate, wxGBPosition(1,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbEstimated = new wxStaticText(this, wxID_ANY, _("Estimated:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbEstimated, wxGBPosition(2,0), wxGBSpan(1,1), wxALL, 5);
+    
+    lbEstimatedFrom = new wxStaticText(this, wxID_ANY, _("From"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbEstimatedFrom, wxGBPosition(2,1), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txEstimatedFrom = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txEstimatedFrom->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txEstimatedFrom, wxGBPosition(2,2), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    lbEstimateTo = new wxStaticText(this, wxID_ANY, _("To"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbEstimateTo, wxGBPosition(2,3), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txEstimatedTo = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txEstimatedTo->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txEstimatedTo, wxGBPosition(2,4), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    ckinvertEstimated = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckinvertEstimated->SetValue(false);
+    
+    szMain->Add(ckinvertEstimated, wxGBPosition(2,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbAccounted = new wxStaticText(this, wxID_ANY, _("Accounted:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbAccounted, wxGBPosition(3,0), wxGBSpan(1,1), wxALL, 5);
+    
+    lbAccountedFrom = new wxStaticText(this, wxID_ANY, _("From"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbAccountedFrom, wxGBPosition(3,1), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txAccountedFrom = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txAccountedFrom->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txAccountedFrom, wxGBPosition(3,2), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    lbAccountedTo = new wxStaticText(this, wxID_ANY, _("To"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbAccountedTo, wxGBPosition(3,3), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txAccountedTo = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txAccountedTo->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txAccountedTo, wxGBPosition(3,4), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    ckInvertAccounted = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertAccounted->SetValue(false);
+    
+    szMain->Add(ckInvertAccounted, wxGBPosition(3,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbRemaining = new wxStaticText(this, wxID_ANY, _("Remaining:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbRemaining, wxGBPosition(4,0), wxGBSpan(1,1), wxALL, 5);
+    
+    lbRemainingFrom = new wxStaticText(this, wxID_ANY, _("From"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbRemainingFrom, wxGBPosition(4,1), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txRemainingFrom = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txRemainingFrom->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txRemainingFrom, wxGBPosition(4,2), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    lbRemainingTo = new wxStaticText(this, wxID_ANY, _("To"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbRemainingTo, wxGBPosition(4,3), wxGBSpan(1,1), wxALL|wxALIGN_CENTER|wxALIGN_RIGHT, 5);
+    
+    txRemainingTo = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txRemainingTo->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txRemainingTo, wxGBPosition(4,4), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    ckInvertRemaining = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertRemaining->SetValue(false);
+    
+    szMain->Add(ckInvertRemaining, wxGBPosition(4,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbObservation = new wxStaticText(this, wxID_ANY, _("Observation:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbObservation, wxGBPosition(5,0), wxGBSpan(1,1), wxALL, 5);
+    
+    txObservation = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 3000
+    txObservation->SetHint(wxT(""));
+    #endif
+    
+    szMain->Add(txObservation, wxGBPosition(5,1), wxGBSpan(1,3), wxALL|wxEXPAND, 5);
+    
+    wxArrayString chObservationArr;
+    chObservationArr.Add(wxT("Contains"));
+    chObservationArr.Add(wxT("Starts With"));
+    chObservationArr.Add(wxT("Ends With"));
+    chObservationArr.Add(wxT("Exactly Equal"));
+    chObservation = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), chObservationArr, 0);
+    chObservation->SetSelection(0);
+    
+    szMain->Add(chObservation, wxGBPosition(5,4), wxGBSpan(1,1), wxALL|wxEXPAND, 5);
+    
+    ckInvertObservation = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertObservation->SetValue(false);
+    
+    szMain->Add(ckInvertObservation, wxGBPosition(5,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lbCategory = new wxStaticText(this, wxID_ANY, _("Category:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbCategory, wxGBPosition(6,0), wxGBSpan(1,1), wxALL, 5);
+    
+    wxArrayString lsckCategoryArr;
+    lsckCategoryArr.Add(_("Cat1"));
+    lsckCategoryArr.Add(_("Cat2"));
+    lsckCategoryArr.Add(_("3"));
+    lsckCategoryArr.Add(_("4"));
+    lsckCategoryArr.Add(_("5"));
+    lsckCategoryArr.Add(_("6"));
+    lsckCategoryArr.Add(_("7"));
+    lsckCategory = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsckCategoryArr, wxLB_ALWAYS_SB|wxLB_HSCROLL|wxLB_SINGLE);
+    
+    szMain->Add(lsckCategory, wxGBPosition(6,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
+    
+    ckInvertCategory = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertCategory->SetValue(false);
+    
+    szMain->Add(ckInvertCategory, wxGBPosition(6,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    lnTotals = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
+    
+    szMain->Add(lnTotals, wxGBPosition(7,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
+    
+    lbTotals = new wxStaticText(this, wxID_ANY, _("Totals Options"), wxDefaultPosition, wxSize(-1,-1), 0);
+    wxFont lbTotalsFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
+    lbTotalsFont.SetUnderlined(true);
+    lbTotalsFont.SetWeight(wxFONTWEIGHT_BOLD);
+    lbTotals->SetFont(lbTotalsFont);
+    
+    szMain->Add(lbTotals, wxGBPosition(8,0), wxGBSpan(1,1), wxALL, 5);
+    
+    ckAdjustEstimates = new wxCheckBox(this, wxID_ANY, _("Adjusts estimates to Accounted"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckAdjustEstimates->SetValue(true);
+    ckAdjustEstimates->SetToolTip(_("Adjust estimates to the accounted when it overflows"));
+    
+    szMain->Add(ckAdjustEstimates, wxGBPosition(9,0), wxGBSpan(1,3), wxALL, 5);
+    
+    wxArrayString rdShowArr;
+    rdShowArr.Add(_("Both"));
+    rdShowArr.Add(_("Only Debts"));
+    rdShowArr.Add(_("Only Credits"));
+    rdShow = new wxRadioBox(this, wxID_ANY, _("Shows..."), wxDefaultPosition, wxSize(-1,-1), rdShowArr, 1, wxRA_SPECIFY_ROWS);
+    rdShow->SetSelection(0);
+    
+    szMain->Add(rdShow, wxGBPosition(8,3), wxGBSpan(2,3), wxALL|wxEXPAND, 5);
+    
+    lnControls = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
+    
+    szMain->Add(lnControls, wxGBPosition(11,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
+    
+    wxBoxSizer* szControls = new wxBoxSizer(wxHORIZONTAL);
+    
+    szMain->Add(szControls, wxGBPosition(12,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
+    
+    szControls->Add(0, 0, 1, wxALL, 5);
+    
+    szControls->Add(0, 0, 1, wxALL, 5);
+    
+    btReset = new wxButton(this, wxID_ANY, _("Reset"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szControls->Add(btReset, 1, wxALL|wxEXPAND, 5);
+    
+    btRefresh = new wxButton(this, wxID_ANY, _("Refresh"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szControls->Add(btRefresh, 1, wxALL|wxEXPAND, 5);
+    
+    SetName(wxT("BudgetFilterBase"));
+    SetSizeHints(600,500);
+    if ( GetSizer() ) {
+         GetSizer()->Fit(this);
+    }
+    CentreOnParent(wxBOTH);
+}
+
+BudgetFilterBase::~BudgetFilterBase()
+{
 }
