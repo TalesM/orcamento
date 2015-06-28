@@ -25,6 +25,7 @@
 #include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
+#include <wx/panel.h>
 
 class CreateDatabaseDialogBase : public wxDialog
 {
@@ -132,6 +133,14 @@ protected:
     wxMenuItem* cmEstimatesDelete;
     wxSimpleHtmlListBox* lsMonths;
     wxGrid* gdEstimates;
+    wxPanel* pnTotals;
+    wxStaticText* lbTotalEstimated;
+    wxTextCtrl* txTotalEstimated;
+    wxStaticText* lbTotalAccounted;
+    wxTextCtrl* txTotalAccounted;
+    wxStaticText* lbTotalRemaining;
+    wxTextCtrl* txTotalRemaining;
+    wxButton* byFilterTotals;
 
 protected:
     virtual void OnCloseWindow(wxCloseEvent& event) { event.Skip(); }

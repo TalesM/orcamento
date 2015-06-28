@@ -163,6 +163,7 @@ void OrcamentoMainFrame::RefreshModel()
             lsMonths->Append(budgetName, reinterpret_cast<void*>(id));
             if(active) {
                 lsMonths->SetSelection(lsMonths->GetCount() - 1);
+                RefreshTotals();
             }
         });
         RefreshEstimates();
@@ -268,7 +269,7 @@ void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double ac
     }
 }
 
-void OrcamentoMainFrame::RefreshStatusBar()
+void OrcamentoMainFrame::RefreshTotals()
 {
     int budget_id = selectedBudgetId();
     if(budget_id < 1) {
@@ -279,10 +280,10 @@ void OrcamentoMainFrame::RefreshStatusBar()
         bool ok = false;
         _document->look(_totalsView,
                         [this, &ok](const std::string& budget, double estimated, double accounted, double remaining) {
-            sbStatus->SetStatusText(_("Budget: ") + wxString::FromUTF8(budget.c_str()), 1);
-            sbStatus->SetStatusText(_("Estimated: ") + wxString::FromDouble(estimated, 2), 2);
-            sbStatus->SetStatusText(_("Accounted: ") + wxString::FromDouble(accounted, 2), 3);
-            sbStatus->SetStatusText(_("Difference: ") + wxString::FromDouble(remaining, 2), 4);
+//            sbStatus->SetStatusText(_("Budget: ") + wxString::FromUTF8(budget.c_str()), 1);
+            txTotalEstimated->SetValue( wxString::FromDouble(estimated, 2));
+            txTotalAccounted->SetValue(wxString::FromDouble(accounted, 2));
+            txTotalRemaining->SetValue(wxString::FromDouble(remaining, 2));
             ok = true;
         });
         if(!ok) {
@@ -515,7 +516,7 @@ void OrcamentoMainFrame::OnGdestimatesGridCellChanging(wxGridEvent& event)
         case EstimateColumn::ESTIMATED:{
             double newEstimated = atof(newValue);
             _document->exec<action::UpdateEstimateAmount>(estimateId, newEstimated);
-            RefreshStatusBar();
+            RefreshTotals();
             RefreshColorEstimate(row, newEstimated, atof(gdEstimates->GetCellValue(row, EstimateColumn::ACCOUNTED)));
             break;
         }
@@ -548,7 +549,7 @@ void OrcamentoMainFrame::OnGdestimatesGridCellLeftDclick(wxGridEvent& event)
         executionDialog.ShowModal();
         _document = executionDialog.takeDatabase();
         RefreshEstimates();
-        RefreshStatusBar();
+        RefreshTotals();
     } else if(col ==EstimateColumn::OBS) {
         wxTextEntryDialog obsDialog(this, L"Write an Observation for \""+gdEstimates->GetCellValue(row, EstimateColumn::NAME)+L"\"",
                                     L"OBS", gdEstimates->GetCellValue(row, EstimateColumn::OBS), wxTE_MULTILINE|wxTextEntryDialogStyle);
@@ -628,7 +629,7 @@ void OrcamentoMainFrame::OnCmestimatesdeleteMenuSelected(wxCommandEvent& event)
         int estimateId = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
         _document->exec<action::DeleteEstimate>(estimateId);
         RefreshEstimates();
-        RefreshStatusBar();
+        RefreshTotals();
     } catch(std::exception &e) {
         wxMessageBox(e.what());
     }
@@ -641,10 +642,10 @@ void OrcamentoMainFrame::OnCmestimatesexecuteMenuSelected(wxCommandEvent& event)
     executionDialog.ShowModal();
     _document = executionDialog.takeDatabase();
     RefreshEstimates();
-    RefreshStatusBar();
+    RefreshTotals();
 }
 void OrcamentoMainFrame::OnLsmonthsListbox(wxCommandEvent& event)
 {
     RefreshEstimates();
-    RefreshStatusBar();
+    RefreshTotals();
 }

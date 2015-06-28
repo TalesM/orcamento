@@ -45,7 +45,7 @@ private:
     void RefreshModel();
     void RefreshEstimates();
     void RefreshCellAttr(bool executing = false);
-    void RefreshStatusBar();
+    void RefreshTotals();
     void RefreshColorEstimate(int row, double estimated, double accounted);
     int selectedBudgetId() const
     {

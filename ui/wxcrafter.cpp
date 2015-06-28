@@ -385,7 +385,7 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     wxArrayString lsMonthsArr;
     lsMonths = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsMonthsArr, wxHLB_DEFAULT_STYLE);
     
-    szMain->Add(lsMonths, wxGBPosition(0,0), wxGBSpan(), wxEXPAND, 0);
+    szMain->Add(lsMonths, wxGBPosition(0,0), wxGBSpan(2,1), wxEXPAND, 0);
     lsMonths->SetMinSize(wxSize(150,-1));
     
     gdEstimates = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxFULL_REPAINT_ON_RESIZE|wxHSCROLL|wxVSCROLL);
@@ -397,7 +397,57 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     #endif
     gdEstimates->EnableEditing(true);
     
-    szMain->Add(gdEstimates, wxGBPosition(0,1), wxGBSpan(), wxEXPAND, 0);
+    szMain->Add(gdEstimates, wxGBPosition(0,1), wxGBSpan(1,1), wxEXPAND, 0);
+    
+    pnTotals = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxTAB_TRAVERSAL);
+    
+    szMain->Add(pnTotals, wxGBPosition(1,1), wxGBSpan(1,1), wxALL|wxEXPAND, 0);
+    
+    wxFlexGridSizer* szTotals = new wxFlexGridSizer(1, 7, 0, 0);
+    szTotals->SetFlexibleDirection( wxBOTH );
+    szTotals->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    pnTotals->SetSizer(szTotals);
+    
+    lbTotalEstimated = new wxStaticText(pnTotals, wxID_ANY, _("Estimated:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalEstimated = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalEstimated->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    lbTotalAccounted = new wxStaticText(pnTotals, wxID_ANY, _("Accounted:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalAccounted = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalAccounted->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    lbTotalRemaining = new wxStaticText(pnTotals, wxID_ANY, _("Remaining:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalRemaining = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalRemaining->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    byFilterTotals = new wxButton(pnTotals, wxID_ANY, _("Filter"), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 2904
+    byFilterTotals->SetBitmap(wxArtProvider::GetBitmap(wxART_LIST_VIEW, wxART_BUTTON, wxSize(24, 24)), wxLEFT);
+    byFilterTotals->SetBitmapMargins(2,2);
+    #endif
+    
+    szTotals->Add(byFilterTotals, 0, wxALL, 5);
     szMain->AddGrowableCol(1);
     szMain->AddGrowableRow(0);
     
