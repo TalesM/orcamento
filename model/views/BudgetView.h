@@ -1,7 +1,7 @@
 #ifndef _ORCA_BUDGETVIEW_H_
 #define _ORCA_BUDGETVIEW_H_
 
-#include "OrcaView.h"
+#include "../OrcaView.h"
 
 class BudgetView: public OrcaView<int, std::string, int, int>
 {

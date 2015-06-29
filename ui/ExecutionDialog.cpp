@@ -1,8 +1,8 @@
 #include "ExecutionDialog.h"
 #include <vector>
-#include "actions/DeleteExecution.h"
-#include "actions/InsertExecution.h"
-#include "actions/UpdateExecution.h"
+#include "model/actions/DeleteExecution.h"
+#include "model/actions/InsertExecution.h"
+#include "model/actions/UpdateExecution.h"
 
 namespace ExecutionColumn
 {

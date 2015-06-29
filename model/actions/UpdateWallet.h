@@ -1,7 +1,7 @@
 #ifndef _ORCAACTION_UPDATEWALLET_H
 #define _ORCAACTION_UPDATEWALLET_H
 
-#include "OrcaAction.h"
+#include "../OrcaAction.h"
 
 namespace action
 {

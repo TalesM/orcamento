@@ -2,9 +2,9 @@
 #define WALLETOVERVIEWDIALOG_H
 #include <memory>
 #include "wxcrafter.h"
-#include "OrcaDocument.h"
-#include "WalletView.h"
-#include "WalletDetailView.h"
+#include "model/OrcaDocument.h"
+#include "model/views/WalletView.h"
+#include "model/views/WalletDetailView.h"
 
 class WalletOverviewDialog : public WalletOverviewDialogBase
 {

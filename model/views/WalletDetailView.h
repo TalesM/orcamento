@@ -1,7 +1,7 @@
 #ifndef _ORCA_WALLETDETAILVIEW_H
 #define _ORCA_WALLETDETAILVIEW_H
 
-#include <OrcaView.h>
+#include "../OrcaView.h"
 
 
 class WalletDetailView : public OrcaView<std::string, std::string, int>

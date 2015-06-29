@@ -1,21 +1,23 @@
-#ifndef _ORCA_ESTIMATEPLANINGVIEW_H
-#define _ORCA_ESTIMATEPLANINGVIEW_H
+#ifndef _ORCA_ESTIMATEEXECUTINGVIEW_H
+#define _ORCA_ESTIMATEEXECUTINGVIEW_H
 
-#include "OrcaView.h"
+#include "../OrcaView.h"
 
 
-class EstimatePlaningView : public OrcaView<
+class EstimateExecutingView : public OrcaView<
     int,            //estimate_id
     std::string,    //estimate.name
     std::string,    //Due date
     double,         //estimated/100
+    double,         //accounted/100
+    double,         //remaining/100
     std::string,    //category.name
     std::string     //estimate.obs
     >
 {
 public:
-    EstimatePlaningView();
-    virtual ~EstimatePlaningView(){}
+    EstimateExecutingView();
+    virtual ~EstimateExecutingView() {}
 
     int budgetId() const {
         return _budgetId;
@@ -30,4 +32,4 @@ private:
     void setup(SQLite::Statement &stm) override;
 };
 
-#endif // _ORCA_ESTIMATEPLANINGVIEW_H
+#endif // _ORCA_ESTIMATEEXECUTINGVIEW_H

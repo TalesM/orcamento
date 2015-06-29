@@ -1,7 +1,7 @@
 #ifndef _ORCA_TOTALSVIEW_H
 #define _ORCA_TOTALSVIEW_H
 
-#include "OrcaView.h"
+#include "../OrcaView.h"
 
 
 class TotalsView : public OrcaView<

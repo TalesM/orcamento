@@ -4,13 +4,13 @@
 
 #include <memory>
 #include "BudgetFilter.h"
-#include "BudgetToCopyView.h"
-#include "BudgetView.h"
-#include "CategoryView.h"
-#include "EstimateExecutingView.h"
-#include "EstimatePlaningView.h"
-#include "TotalsView.h"
-#include "OrcaDocument.h"
+#include "model/OrcaDocument.h"
+#include "model/views/BudgetToCopyView.h"
+#include "model/views/BudgetView.h"
+#include "model/views/CategoryView.h"
+#include "model/views/EstimateExecutingView.h"
+#include "model/views/EstimatePlaningView.h"
+#include "model/views/TotalsView.h"
 
 class OrcamentoMainFrame : public OrcamentoMainFrameBase
 {

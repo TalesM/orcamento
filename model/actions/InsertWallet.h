@@ -1,7 +1,7 @@
 #ifndef _ORCAACTION_INSERTWALLET_H
 #define _ORCAACTION_INSERTWALLET_H
 
-#include "OrcaAction.h"
+#include "../OrcaAction.h"
 
 namespace action
 {

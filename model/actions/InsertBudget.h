@@ -1,7 +1,7 @@
 #ifndef _ORCAACTION_CREATENEWBUDGET_H
 #define _ORCAACTION_CREATENEWBUDGET_H
 
-#include "OrcaAction.h"
+#include "../OrcaAction.h"
 
 namespace action
 {

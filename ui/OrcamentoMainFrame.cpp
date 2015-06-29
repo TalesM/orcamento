@@ -8,12 +8,12 @@
 #include "ExecutionDialog.h"
 #include "WalletOverviewDialog.h"
 
-#include "actions/CopySelectedEstimateTo.h"
-#include "actions/DeleteEstimate.h"
-#include "actions/InsertBudget.h"
-#include "actions/InsertEstimate.h"
-#include "actions/ExecuteNextBudget.h"
-#include "actions/UpdateEstimate.h"
+#include "model/actions/CopySelectedEstimateTo.h"
+#include "model/actions/DeleteEstimate.h"
+#include "model/actions/InsertBudget.h"
+#include "model/actions/InsertEstimate.h"
+#include "model/actions/ExecuteNextBudget.h"
+#include "model/actions/UpdateEstimate.h"
 
 // helper functions
 enum wxbuildinfoformat { short_f, long_f };

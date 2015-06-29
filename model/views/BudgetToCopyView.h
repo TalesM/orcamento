@@ -1,7 +1,7 @@
 #ifndef _ORCA_BUDGETTOCOPYVIEW_H
 #define _ORCA_BUDGETTOCOPYVIEW_H
 
-#include "OrcaView.h"
+#include "../OrcaView.h"
 
 
 class BudgetToCopyView : public OrcaView<std::string>

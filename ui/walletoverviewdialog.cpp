@@ -1,8 +1,8 @@
 #include "WalletOverviewDialog.h"
 #include <algorithm>
 #include "WalletOverviewDialog.h"
-#include "actions/InsertWallet.h"
-#include "actions/UpdateWallet.h"
+#include "model/actions/InsertWallet.h"
+#include "model/actions/UpdateWallet.h"
 
 WalletOverviewDialog::WalletOverviewDialog(wxWindow* parent)
     : WalletOverviewDialogBase(parent)

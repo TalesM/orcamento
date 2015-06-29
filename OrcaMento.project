@@ -33,46 +33,47 @@
     <File Name="README.md"/>
   </VirtualDirectory>
   <VirtualDirectory Name="model">
-    <File Name="OrcaAction.h"/>
-    <File Name="OrcaDocument.cpp"/>
-    <File Name="OrcaDocument.h"/>
-    <File Name="OrcaView.h"/>
+    <File Name="model/OrcaAction.h"/>
+    <File Name="model/OrcaDocument.cpp"/>
+    <File Name="model/OrcaDocument.h"/>
+    <File Name="model/OrcaView.h"/>
     <VirtualDirectory Name="views">
-      <File Name="TotalsView.cpp"/>
-      <File Name="TotalsView.h"/>
-      <File Name="WalletDetailView.cpp"/>
-      <File Name="WalletDetailView.h"/>
-      <File Name="WalletView.cpp"/>
-      <File Name="WalletView.h"/>
-      <File Name="BudgetToCopyView.cpp"/>
-      <File Name="BudgetToCopyView.h"/>
-      <File Name="BudgetView.cpp"/>
-      <File Name="BudgetView.h"/>
-      <File Name="CategoryView.cpp"/>
-      <File Name="CategoryView.h"/>
-      <File Name="EstimateExecutingView.cpp"/>
-      <File Name="EstimateExecutingView.h"/>
-      <File Name="EstimatePlaningView.cpp"/>
-      <File Name="EstimatePlaningView.h"/>
-      <File Name="ExecutionSummaryView.cpp"/>
-      <File Name="ExecutionSummaryView.h"/>
-      <File Name="ExecutionView.cpp"/>
-      <File Name="ExecutionView.h"/>
+      <File Name="model/views/TotalsView.cpp"/>
+      <File Name="model/views/TotalsView.h"/>
+      <File Name="model/views/WalletDetailView.cpp"/>
+      <File Name="model/views/WalletDetailView.h"/>
+      <File Name="model/views/WalletView.cpp"/>
+      <File Name="model/views/WalletView.h"/>
+      <File Name="model/views/BudgetToCopyView.cpp"/>
+      <File Name="model/views/BudgetToCopyView.h"/>
+      <File Name="model/views/BudgetToCopyView.h"/>
+      <File Name="model/views/BudgetView.cpp"/>
+      <File Name="model/views/BudgetView.h"/>
+      <File Name="model/views/CategoryView.cpp"/>
+      <File Name="model/views/CategoryView.h"/>
+      <File Name="model/views/EstimateExecutingView.cpp"/>
+      <File Name="model/views/EstimateExecutingView.h"/>
+      <File Name="model/views/EstimatePlaningView.cpp"/>
+      <File Name="model/views/EstimatePlaningView.h"/>
+      <File Name="model/views/ExecutionSummaryView.cpp"/>
+      <File Name="model/views/ExecutionSummaryView.h"/>
+      <File Name="model/views/ExecutionView.cpp"/>
+      <File Name="model/views/ExecutionView.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="actions">
-      <File Name="actions/CopySelectedEstimateTo.h"/>
-      <File Name="actions/DeleteEstimate.h"/>
-      <File Name="actions/DeleteExecution.h"/>
-      <File Name="actions/ExecuteNextBudget.h"/>
-      <File Name="actions/InsertBudget.h"/>
-      <File Name="actions/InsertEstimate.h"/>
-      <File Name="actions/InsertExecution.h"/>
-      <File Name="actions/InsertWallet.h"/>
-      <File Name="actions/UpdateEstimate.h"/>
-      <File Name="actions/UpdateExecution.h"/>
-      <File Name="actions/UpdateWallet.h"/>
+      <File Name="model/actions/CopySelectedEstimateTo.h"/>
+      <File Name="model/actions/DeleteEstimate.h"/>
+      <File Name="model/actions/DeleteExecution.h"/>
+      <File Name="model/actions/ExecuteNextBudget.h"/>
+      <File Name="model/actions/InsertBudget.h"/>
+      <File Name="model/actions/InsertEstimate.h"/>
+      <File Name="model/actions/InsertExecution.h"/>
+      <File Name="model/actions/InsertWallet.h"/>
+      <File Name="model/actions/UpdateEstimate.h"/>
+      <File Name="model/actions/UpdateExecution.h"/>
+      <File Name="model/actions/UpdateWallet.h"/>
     </VirtualDirectory>
-    <File Name="SearchOption.h"/>
+    <File Name="model/SearchOption.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="config">
     <File Name="orcamentoApp.cpp"/>
@@ -120,6 +121,7 @@
         <IncludePath Value="$(sqlitecpp.include)"/>
         <IncludePath Value="$(sqlite3.include)"/>
         <IncludePath Value="$(csv.include)"/>
+        <IncludePath Value="./"/>
       </Compiler>
       <Linker Options="-mthreads " Required="yes">
         <LibraryPath Value="$(wx)/lib/gcc_dll"/>
@@ -174,6 +176,7 @@ wx=E:\dev\lib\wxWidgets-3.0.2]]>
         <IncludePath Value="$(sqlitecpp.include)"/>
         <IncludePath Value="$(sqlite3.include)"/>
         <IncludePath Value="$(csv.include)"/>
+        <IncludePath Value="./"/>
       </Compiler>
       <Linker Options="-mwindows;-s -mthreads" Required="yes">
         <LibraryPath Value="$(wx)/lib/gcc_dll"/>

@@ -1,7 +1,7 @@
 #ifndef _ORCA_EXECUTIONSUMMARYVIEW_H
 #define _ORCA_EXECUTIONSUMMARYVIEW_H
 
-#include "OrcaView.h"
+#include "../OrcaView.h"
 
 class ExecutionSummaryView : public OrcaView<
     std::string,    // budgetName

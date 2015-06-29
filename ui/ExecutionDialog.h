@@ -1,11 +1,11 @@
 #ifndef EXECUTIONDIALOG_H
 #define EXECUTIONDIALOG_H
 #include "wxcrafter.h"
-#include <OrcaDocument.h>
+#include <model/OrcaDocument.h>
 #include <memory>
-#include "ExecutionSummaryView.h"
-#include "ExecutionView.h"
-#include "WalletView.h"
+#include "model/views/ExecutionSummaryView.h"
+#include "model/views/ExecutionView.h"
+#include "model/views/WalletView.h"
 
 
 class ExecutionDialog : public ExecutionDialogBase
