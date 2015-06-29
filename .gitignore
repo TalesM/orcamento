@@ -1,4 +1,6 @@
 .codelite/
+.build-debug/
+.build-release/
 bin/
 Debug/
 Release/
@@ -6,6 +8,7 @@ obj/
 wx_pch.h.gch/
 .clang/
 compile_commands.json
+model.txt
 orcamentoCb.workspace.backup
 OrcaMento.txt
 *.mk

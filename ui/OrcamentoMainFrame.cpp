@@ -426,7 +426,11 @@ void OrcamentoMainFrame::OnMnfileopenMenuSelected(wxCommandEvent& event)
     } catch(const wrongver_error& e) {
         if(OrcaDocument::canConvert(e.major, e.minor, e.patch, e.variant)) {
             try {
-                _document = OrcaDocument::convert(location);
+                wxString backupLocation = location + ".old";
+                if(rename(location, backupLocation)!=0){
+                    std::runtime_error("Can not backup.");
+                }
+                _document = OrcaDocument::convert(backupLocation, location);
                 RefreshModel();
             } catch(const std::exception& e) {
                 wxMessageBox(e.what());

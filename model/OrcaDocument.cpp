@@ -61,28 +61,26 @@ bool OrcaDocument::canConvert(int major, int minor, int patch, int variant)
     return (major == 0 && minor == 1);
 }
 
-std::unique_ptr<OrcaDocument> OrcaDocument::convert(const wxString &path)
+std::unique_ptr<OrcaDocument> OrcaDocument::convert(const std::string &opath, const std::string &npath)
 {
-    std::string npath(path.ToUTF8());
-    std::string opath = npath + ".old";
-    if(rename(path, path+_(".old"))!=0){
-        std::runtime_error("Can not rename.");
-    }
+//    std::string npath(path.ToUTF8());
+//    std::string opath = npath + ".old";
+//    if(rename(path, path+_(".old"))!=0){
+//        std::runtime_error("Can not rename.");
+//    }
     auto newDocument = std::make_unique<OrcaDocument>(npath, true);
     wxString model = readModel();
     newDocument->_model.exec(model.ToUTF8());
     newDocument->_model.exec("ATTACH DATABASE '"+opath+"' AS oldData");
 //    SQLite::Transaction transaction(newDocument->_model);
     const char conversor[] =
-R"=(
-REPLACE INTO main.wallet SELECT * FROM oldData.wallet;
-REPLACE INTO main.budget SELECT * FROM oldData.budget;
-REPLACE INTO main.category SELECT * FROM oldData.category;
-INSERT INTO main.estimate SELECT * FROM oldData.estimate WHERE category_id IS NOT NULL;
-INSERT INTO main.execution SELECT * FROM oldData.execution WHERE estimate_id IN (
-    SELECT estimate_id FROM oldData.estimate WHERE category_id IS NOT NULL
-);
-)=";
+"REPLACE INTO main.wallet SELECT * FROM oldData.wallet;"
+"REPLACE INTO main.budget SELECT * FROM oldData.budget;"
+"REPLACE INTO main.category SELECT * FROM oldData.category;"
+"INSERT INTO main.estimate SELECT * FROM oldData.estimate WHERE category_id IS NOT NULL;"
+"INSERT INTO main.execution SELECT * FROM oldData.execution WHERE estimate_id IN ("
+"    SELECT estimate_id FROM oldData.estimate WHERE category_id IS NOT NULL"
+");";
     newDocument->_model.exec(conversor);
     // Commit transaction
 //    transaction.commit();

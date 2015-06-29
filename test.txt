@@ -1,1 +1,1 @@
-./Release/test_catch.cpp.o ./Release/model_testSearchOption.cpp.o   
+./Debug/test_catch.cpp.o ./Debug/model_testSearchOption.cpp.o   

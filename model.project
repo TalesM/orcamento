@@ -28,8 +28,52 @@
   </Plugins>
   <Description/>
   <Dependencies/>
-  <VirtualDirectory Name="src"/>
-  <VirtualDirectory Name="include"/>
+  <VirtualDirectory Name="src">
+    <File Name="model/OrcaDocument.cpp"/>
+    <VirtualDirectory Name="views">
+      <File Name="model/views/ExecutionView.cpp"/>
+      <File Name="model/views/ExecutionSummaryView.cpp"/>
+      <File Name="model/views/EstimatePlaningView.cpp"/>
+      <File Name="model/views/CategoryView.cpp"/>
+      <File Name="model/views/BudgetView.cpp"/>
+      <File Name="model/views/BudgetToCopyView.cpp"/>
+      <File Name="model/views/EstimateExecutingView.cpp"/>
+      <File Name="model/views/TotalsView.cpp"/>
+      <File Name="model/views/WalletDetailView.cpp"/>
+      <File Name="model/views/WalletView.cpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <File Name="model/OrcaAction.h"/>
+    <File Name="model/OrcaDocument.h"/>
+    <File Name="model/OrcaView.h"/>
+    <File Name="model/SearchOption.h"/>
+    <VirtualDirectory Name="views">
+      <File Name="model/views/BudgetToCopyView.h"/>
+      <File Name="model/views/BudgetView.h"/>
+      <File Name="model/views/CategoryView.h"/>
+      <File Name="model/views/EstimateExecutingView.h"/>
+      <File Name="model/views/EstimatePlaningView.h"/>
+      <File Name="model/views/ExecutionSummaryView.h"/>
+      <File Name="model/views/ExecutionView.h"/>
+      <File Name="model/views/TotalsView.h"/>
+      <File Name="model/views/WalletDetailView.h"/>
+      <File Name="model/views/WalletView.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="actions">
+      <File Name="model/actions/CopySelectedEstimateTo.h"/>
+      <File Name="model/actions/DeleteEstimate.h"/>
+      <File Name="model/actions/DeleteExecution.h"/>
+      <File Name="model/actions/ExecuteNextBudget.h"/>
+      <File Name="model/actions/InsertBudget.h"/>
+      <File Name="model/actions/InsertEstimate.h"/>
+      <File Name="model/actions/InsertExecution.h"/>
+      <File Name="model/actions/InsertWallet.h"/>
+      <File Name="model/actions/UpdateEstimate.h"/>
+      <File Name="model/actions/UpdateExecution.h"/>
+      <File Name="model/actions/UpdateWallet.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -41,10 +85,14 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="MinGW ( TDM-GCC-32 )" DebuggerType="GNU gdb debugger" Type="Static Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-std=c++14;/Zi" C_Options="/Zi" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0"/>
+      <Compiler Options="-g;-O0;-std=c++14;-Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="$(sqlitecpp.include)"/>
+        <IncludePath Value="$(sqlite3.include)"/>
+        <IncludePath Value="$(csv.include)"/>
+      </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).lib" IntermediateDirectory="Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName).a" IntermediateDirectory="Debug" Command="" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>

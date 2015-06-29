@@ -33,27 +33,33 @@ public:
      *
      */
     OrcaDocument(const std::string &path, bool erase=false);
+#ifdef ORCA_WX
     OrcaDocument(const wxString &path, bool erase=false):
         OrcaDocument(static_cast<std::string>(path.ToUTF8()), erase) {}
+#endif
     ~OrcaDocument();
     static std::unique_ptr<OrcaDocument> create(const std::string &path, const wxDateTime &start);
+#ifdef ORCA_WX
     static std::unique_ptr<OrcaDocument> create(const wxString &path, const wxDateTime &start)
     {
         return create(static_cast<std::string>(path.ToUTF8()), start);
     }
+#endif
     static std::unique_ptr<OrcaDocument> load(const std::string &path);
+#ifdef ORCA_WX
     static std::unique_ptr<OrcaDocument> load(const wxString &path)
     {
         return load(static_cast<std::string>(path.ToUTF8()));
     }
+#endif
 
     static bool canConvert(int major, int minor, int patch, int variant);
-    static std::unique_ptr<OrcaDocument> convert(const wxString &path);
-    static std::unique_ptr<OrcaDocument> convert(const std::string &path)
-    {
-        return convert(wxString::FromUTF8(path.c_str()));
+    static std::unique_ptr<OrcaDocument> convert(const std::string &oldPath, const std::string &newPath);
+#ifdef ORCA_WX
+    static std::unique_ptr<OrcaDocument> convert(const wxString &oldPath, const wxString &newPath){
+        return convert(oldPath.ToUTF8(), newPath.ToUTF8());
     }
-
+#endif
     /** @brief execute an action.
      *
      * @tparam Action the action type to be executed.
