@@ -38,11 +38,11 @@ public:
         OrcaDocument(static_cast<std::string>(path.ToUTF8()), erase) {}
 #endif
     ~OrcaDocument();
-    static std::unique_ptr<OrcaDocument> create(const std::string &path, const wxDateTime &start);
+    static std::unique_ptr<OrcaDocument> create(const std::string &path, const std::string &start);
 #ifdef ORCA_WX
     static std::unique_ptr<OrcaDocument> create(const wxString &path, const wxDateTime &start)
     {
-        return create(static_cast<std::string>(path.ToUTF8()), start);
+        return create(static_cast<std::string>(path.ToUTF8()), static_cast<std::string>(start.FormatISODate().ToUTF8()));
     }
 #endif
     static std::unique_ptr<OrcaDocument> load(const std::string &path);

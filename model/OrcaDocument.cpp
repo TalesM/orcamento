@@ -1,7 +1,10 @@
 #include "OrcaDocument.h"
 #include <cstdio>
-#include <vector>
+#include <cstdlib>
+#include <fstream>
 #include <stdexcept>
+#include <streambuf>
+#include <vector>
 
 OrcaDocument::OrcaDocument(const std::string &path, bool erase):
     _model(path, SQLITE_OPEN_READWRITE|(erase?SQLITE_OPEN_CREATE:0))
@@ -25,26 +28,24 @@ OrcaDocument::OrcaDocument(const std::string &path, bool erase):
     }
 }
 
-static wxString readModel(){
-    wxFile modelFile(L"theModel.sql");
-    wxString model;
-    if(!modelFile.ReadAll(&model)){
-        throw std::runtime_error("Can't find config file \"theModel.sql\".");
-    }
-    return model;
+static std::string readModel(){
+    std::ifstream t("theModel.sql");
+    bool b = t.bad();
+    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+    return str;
 }
 
-std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, const wxDateTime& start)
+std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, const std::string& start)
 {
     auto newDocument = std::make_unique<OrcaDocument>(path, true);
-    wxString model = readModel();
+    std::string model = readModel();
     SQLite::Transaction transaction(newDocument->_model);
-    newDocument->_model.exec(model.ToUTF8());
+    newDocument->_model.exec(model);
 
     auto query = "INSERT INTO budget(name, start, duration)"
                  "  VALUES (strftime('%m/%Y', ?1), date(?1, 'start of month'), '1 months')";
     SQLite::Statement stm(newDocument->_model, query);
-    stm.bind(1, start.FormatISODate().ToUTF8());
+    stm.bind(1, start);
     stm.exec();
 
     // Commit transaction
@@ -69,8 +70,7 @@ std::unique_ptr<OrcaDocument> OrcaDocument::convert(const std::string &opath, co
 //        std::runtime_error("Can not rename.");
 //    }
     auto newDocument = std::make_unique<OrcaDocument>(npath, true);
-    wxString model = readModel();
-    newDocument->_model.exec(model.ToUTF8());
+    newDocument->_model.exec(readModel());
     newDocument->_model.exec("ATTACH DATABASE '"+opath+"' AS oldData");
 //    SQLite::Transaction transaction(newDocument->_model);
     const char conversor[] =

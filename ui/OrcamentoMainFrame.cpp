@@ -166,6 +166,9 @@ void OrcamentoMainFrame::RefreshModel()
                 RefreshTotals();
             }
         });
+        if(!lsMonths->GetSelectedCount()){
+            lsMonths->SetSelection(lsMonths->GetCount()-1);
+        }
         RefreshEstimates();
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
@@ -397,19 +400,14 @@ DIALOG_SHOW: //Don't do this at home, kids.
     }
     wxDateTime start  = dialog.getStart();
 
-    // Begin transaction
-    wxString model;
-    wxFile modelFile(L"theModel.sql");
-    if(modelFile.ReadAll(&model)) {
-        try {
-            _document = OrcaDocument::create(location, start);
-        } catch (const std::exception &e) {
-            wxMessageBox(e.what());
-            _document = nullptr;
-            goto DIALOG_SHOW;
-        }
-        RefreshModel();
+    try {
+        _document = OrcaDocument::create(location, start);
+    } catch (const std::exception &e) {
+        wxMessageBox(e.what());
+        _document = nullptr;
+        goto DIALOG_SHOW;
     }
+    RefreshModel();
 }
 
 void OrcamentoMainFrame::OnMnfileopenMenuSelected(wxCommandEvent& event)
