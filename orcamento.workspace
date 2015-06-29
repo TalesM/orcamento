@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="orcamento" Database="/dev/projects/orcamento/.codelite/orcamentoCb.tags">
   <Project Name="OrcaMento" Path="OrcaMento.project" Active="Yes"/>
-  <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
-      <Project Name="OrcaMento" ConfigName="Debug"/>
-    </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
-      <Project Name="OrcaMento" ConfigName="Release"/>
-    </WorkspaceConfiguration>
-  </BuildMatrix>
   <Environment>
     <![CDATA[]]>
   </Environment>
+  <Project Name="test" Path="test.project" Active="No"/>
+  <Project Name="model" Path="model.project"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="no">
+      <Project Name="OrcaMento" ConfigName="Debug"/>
+      <Project Name="test" ConfigName="Debug"/>
+      <Project Name="model" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="Release" Selected="yes">
+      <Project Name="OrcaMento" ConfigName="Release"/>
+      <Project Name="test" ConfigName="Release"/>
+      <Project Name="model" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
 </CodeLite_Workspace>

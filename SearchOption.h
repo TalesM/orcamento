@@ -1,9 +1,10 @@
 #ifndef _ORCA_SEARCHOPTION_H
 #define _ORCA_SEARCHOPTION_H
 
+#include <cassert>
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
 
 enum class Operation{
     NONE,
