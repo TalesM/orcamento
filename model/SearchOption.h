@@ -36,18 +36,36 @@ class SearchOption: public std::enable_shared_from_this<SearchOption>{
 public:
     SearchOption(const std::string &field);
     SearchOption(const std::string &field, Operation op, const std::string &value);
-    SearchOption(std::shared_ptr<SearchOption> prev, Operation op, std::shared_ptr<SearchOption> next);
+    SearchOption(std::shared_ptr<const SearchOption> prev, Operation op, std::shared_ptr<const SearchOption> next);
     ~SearchOption();
     
-    std::shared_ptr<SearchOption> equal(const std::string &s) const;
-    std::shared_ptr<SearchOption> less(const std::string &s) const;
-    std::shared_ptr<SearchOption> lessEqual(const std::string &s) const;
-    std::shared_ptr<SearchOption> different(const std::string &s) const;
-    std::shared_ptr<SearchOption> more(const std::string &s) const;
-    std::shared_ptr<SearchOption> moreEqual(const std::string &s) const;
-    std::shared_ptr<SearchOption> contains(const std::string &s) const;
-    std::shared_ptr<SearchOption> prefix(const std::string &s) const;
-    std::shared_ptr<SearchOption> suffix(const std::string &s) const;
+    std::shared_ptr<SearchOption> equal(const std::string &s) const{
+        return operate(Operation::EQUAL, s);
+    }
+    std::shared_ptr<SearchOption> less(const std::string &s) const{
+        return operate(Operation::LESS, s);
+    }
+    std::shared_ptr<SearchOption> lessEqual(const std::string &s) const{
+        return operate(Operation::LESS_EQUAL, s);
+    }
+    std::shared_ptr<SearchOption> different(const std::string &s) const{
+        return operate(Operation::DIFFERENT, s);
+    }
+    std::shared_ptr<SearchOption> more(const std::string &s) const{
+        return operate(Operation::MORE, s);
+    }
+    std::shared_ptr<SearchOption> moreEqual(const std::string &s) const{
+        return operate(Operation::MORE_EQUAL, s);
+    }
+    std::shared_ptr<SearchOption> contains(const std::string &s) const{
+        return operate(Operation::CONTAINS, s);
+    }
+    std::shared_ptr<SearchOption> prefix(const std::string &s) const{
+        return operate(Operation::PREFIX, s);
+    }
+    std::shared_ptr<SearchOption> suffix(const std::string &s) const{
+        return operate(Operation::SUFFIX, s);
+    }
     
     std::shared_ptr<SearchOption> and_(std::shared_ptr<SearchOption>) const;
     std::shared_ptr<SearchOption> or_(std::shared_ptr<SearchOption>) const;
@@ -68,29 +86,36 @@ public:
         return _field;
     }
     
-    const std::shared_ptr<SearchOption> &prev() const {
+    const std::shared_ptr<const SearchOption> &prev() const {
         assert(_operation == Operation::AND || _operation == Operation::OR);
         return _prev;
     }
-    const std::shared_ptr<SearchOption> &next() const {
+    const std::shared_ptr<const SearchOption> &next() const {
         assert(_operation == Operation::AND || _operation == Operation::OR);
         return _next;
     }
     ///@}
 private:
+    std::shared_ptr<SearchOption> operate(Operation op, const std::string &s) const;
+
     union {
         std::string _field;
-        std::shared_ptr<SearchOption> _prev;
+        std::shared_ptr<const SearchOption> _prev;
     };
     union {
         std::string _value;
-        std::shared_ptr<SearchOption> _next;
+        std::shared_ptr<const SearchOption> _next;
     };
     Operation _operation = Operation::NONE;
     
     friend std::shared_ptr<SearchOption> search(const std::string &field);
 };
 
+/**
+ * @brief Starts a search by the given field
+ * @param field The field's name
+ * @return the search object to be compound or passed to the view.
+ */
 inline std::shared_ptr<SearchOption> search(const std::string &field){
     return std::make_shared<SearchOption>(field);
 }
