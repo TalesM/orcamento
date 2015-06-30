@@ -32,8 +32,11 @@ enum class Conector{
  * @file SearchOption.h
  * @brief Create search options for numerics and string components...
  */
-class SearchOption: std::enable_shared_from_this<SearchOption>{
+class SearchOption: public std::enable_shared_from_this<SearchOption>{
 public:
+    SearchOption(const std::string &field);
+    SearchOption(const std::string &field, Operation op, const std::string &value);
+    SearchOption(std::shared_ptr<SearchOption> prev, Operation op, std::shared_ptr<SearchOption> next);
     ~SearchOption();
     
     std::shared_ptr<SearchOption> equal(const std::string &s) const;
@@ -61,7 +64,7 @@ public:
         return _field;
     }
     const std::string &value() const{
-        assert(_operation != Operation::AND && _operation != Operation::OR);
+        assert(_operation != Operation::AND && _operation != Operation::OR && _operation != Operation::NONE);
         return _field;
     }
     
@@ -75,9 +78,6 @@ public:
     }
     ///@}
 private:
-    SearchOption(const std::string &field);
-    SearchOption(const std::string &field, const std::string &value);
-    SearchOption(std::shared_ptr<SearchOption> _prev,std::shared_ptr<SearchOption> _next);
     union {
         std::string _field;
         std::shared_ptr<SearchOption> _prev;
@@ -91,7 +91,9 @@ private:
     friend std::shared_ptr<SearchOption> search(const std::string &field);
 };
 
-inline std::shared_ptr<SearchOption> search(const std::string &field);
+inline std::shared_ptr<SearchOption> search(const std::string &field){
+    return std::make_shared<SearchOption>(field);
+}
 //    
 inline std::shared_ptr<SearchOption> operator &&(std::shared_ptr<SearchOption> lhs, std::shared_ptr<SearchOption> rhs){
     return lhs->and_(rhs);

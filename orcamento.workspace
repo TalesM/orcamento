@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Workspace Name="orcamento" Database="/dev/projects/orcamento/.codelite/orcamentoCb.tags">
-  <Project Name="OrcaMento" Path="OrcaMento.project" Active="Yes"/>
+  <Project Name="OrcaMento" Path="OrcaMento.project" Active="No"/>
   <Environment>
     <![CDATA[]]>
   </Environment>
-  <Project Name="test" Path="test.project" Active="No"/>
+  <Project Name="test" Path="test.project" Active="Yes"/>
   <Project Name="model" Path="model.project" Active="No"/>
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">

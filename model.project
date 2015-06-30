@@ -42,6 +42,7 @@
       <File Name="model/views/WalletDetailView.cpp"/>
       <File Name="model/views/WalletView.cpp"/>
     </VirtualDirectory>
+    <File Name="model/SearchOption.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="model/OrcaAction.h"/>
