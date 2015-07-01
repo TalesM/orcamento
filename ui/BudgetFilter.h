@@ -2,7 +2,7 @@
 #define BUDGETFILTER_H
 
 #include "wxcrafter.h"
-#include "model/SearchOption.h"
+#include "model/Search.h"
 #include <functional>
 #include <vector>
 

@@ -1,5 +1,5 @@
 #include "../catch.hpp"
-#include "model/SearchOption.h"
+#include "model/Search.h"
 using namespace std;
 
 TEST_CASE("SearchOption", "[model]"){

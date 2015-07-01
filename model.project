@@ -42,13 +42,12 @@
       <File Name="model/views/WalletDetailView.cpp"/>
       <File Name="model/views/WalletView.cpp"/>
     </VirtualDirectory>
-    <File Name="model/SearchOption.cpp"/>
+    <File Name="model/Search.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="model/OrcaAction.h"/>
     <File Name="model/OrcaDocument.h"/>
     <File Name="model/OrcaView.h"/>
-    <File Name="model/SearchOption.h"/>
     <VirtualDirectory Name="views">
       <File Name="model/views/BudgetToCopyView.h"/>
       <File Name="model/views/BudgetView.h"/>
@@ -74,6 +73,7 @@
       <File Name="model/actions/UpdateExecution.h"/>
       <File Name="model/actions/UpdateWallet.h"/>
     </VirtualDirectory>
+    <File Name="model/Search.h"/>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>

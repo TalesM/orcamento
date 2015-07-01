@@ -2,7 +2,7 @@
 #define _ORCA_ESTIMATEEXECUTINGVIEW_H
 
 #include "../OrcaView.h"
-#include "../SearchOption.h"
+#include "../Search.h"
 
 class EstimateExecutingView : public OrcaView<
     int,            //estimate_id
