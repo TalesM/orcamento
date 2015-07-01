@@ -4,7 +4,9 @@
 #include <cassert>
 #include <memory>
 #include <sstream>
+#include <set>
 #include <string>
+#include <vector>
 
 enum class Operation{
     NONE,
@@ -20,6 +22,12 @@ enum class Operation{
 
     AND,
     OR,
+};
+
+struct SearchQuery{
+    std::string query;
+    std::vector<std::string> sValues;
+    std::vector<int> iValues;
 };
 
 /**
@@ -123,13 +131,20 @@ inline Search search(const std::string &field){
  * @tparam CALLABLE Any type that may be called.
  */
 template<typename CALLABLE>
-inline auto linearize(const std::shared_ptr<const SearchRaw> &origin, CALLABLE callableVisitor) -> decltype(callableVisitor(std::string(), Operation::NONE, std::string())){
+inline auto linearize(const Search &origin, CALLABLE callableVisitor) -> decltype(callableVisitor(std::string(), Operation::NONE, std::string())){
     auto operation = origin->operation();
     if(operation != Operation::AND && operation != Operation::OR){
         return callableVisitor(origin->field(), operation, origin->value());
     }
     return callableVisitor(linearize(origin->prev(), callableVisitor), operation, linearize(origin->next(), callableVisitor));
 }
+
+/**
+ * @brief Transform a search in a query and variables
+ * @param origin The search
+ * @return A structure containing the query and necessary variables to bind.
+ */
+SearchQuery sqlize(const Search &origin, std::set<std::string> integers={});
 
 //    
 inline Search operator &&(Search lhs, Search rhs){

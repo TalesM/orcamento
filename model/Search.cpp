@@ -49,3 +49,47 @@ std::shared_ptr<const SearchRaw> SearchRaw::operate(Operation op, const std::str
     }
     return and_(v);
 }
+
+SearchQuery sqlize(const Search &origin, std::set<std::string> integers){
+    SearchQuery q{};
+    static const char *values[] = {
+        " AND RAISE(FAIL, 'xxx')",
+        "=",
+        "<",
+        "<=",
+        "<>",
+        ">",
+        ">=",
+        "LIKE",
+        "LIKE",
+        "LIKE",
+        "AND",
+        "OR",
+    };
+    q.query = linearize(origin, [&q, &integers](const string &a, Operation op, const string &b){
+        if(op == Operation::OR || op == Operation::AND){
+            return "("+a+" "+values[int(op)]+" "+b+")";
+        }
+        if(op == Operation::CONTAINS){
+            q.sValues.push_back("%"+b+"%");
+        }else if(op == Operation::PREFIX){
+            q.sValues.push_back(b+"%");
+        }else if(op == Operation::SUFFIX){
+            q.sValues.push_back("%"+b);
+        }else if(!integers.count(a)){
+            q.sValues.push_back(b);
+        } else {
+            int i;
+            stringstream ss(b), tt;
+            ss >> i;
+            q.iValues.push_back(i);
+            tt << q.iValues.size();
+            return "\""+a+"\" "+values[int(op)]+" :i_"+tt.str();
+        }
+        stringstream ss;
+        ss << q.sValues.size();
+        return "\""+a+"\" "+values[int(op)]+" :s_"+ss.str();
+    });
+    return q;
+
+}

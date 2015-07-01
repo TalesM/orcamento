@@ -36,4 +36,14 @@ TEST_CASE("SearchOption", "[model]"){
     }; 
     CHECK(linearize(search("teste")->equal("x"), linearizator) == string("teste x EQUAL"));
     CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
+    
+    SearchQuery sq = sqlize(search("teste")->equal("x"));
+    CHECK(sq.query == "\"teste\" = :s_1");
+    CHECK(sq.sValues.at(0) == "x");
+    sq = sqlize(search("teste")->equal("x")->contains("x"));
+    CHECK(sq.query == "(\"teste\" = :s_2 AND \"teste\" LIKE :s_1)");//TODO: REPLACE for a regex.
+    CHECK(sq.sValues.at(0) == "%x%");
+    CHECK(sq.sValues.at(1) == "x");
+    sq = sqlize(search("teste")->equal("x"), {"teste"});
+    CHECK(sq.query == "\"teste\" = :i_1");
 }
