@@ -83,7 +83,7 @@ public:
     }
     const std::string &value() const{
         assert(_operation != Operation::AND && _operation != Operation::OR && _operation != Operation::NONE);
-        return _field;
+        return _value;
     }
     
     const std::shared_ptr<const SearchOption> &prev() const {
@@ -119,6 +119,16 @@ private:
 inline std::shared_ptr<SearchOption> search(const std::string &field){
     return std::make_shared<SearchOption>(field);
 }
+
+template<typename CALLABLE>
+inline auto linearize(const std::shared_ptr<const SearchOption> &origin, CALLABLE callableVisitor) -> decltype(callableVisitor(std::string(), Operation::NONE, std::string())){
+    auto operation = origin->operation();
+    if(operation != Operation::AND && operation != Operation::OR){
+        return callableVisitor(origin->field(), operation, origin->value());
+    }
+    return callableVisitor(linearize(origin->prev(), callableVisitor), operation, linearize(origin->next(), callableVisitor));
+}
+
 //    
 inline std::shared_ptr<SearchOption> operator &&(std::shared_ptr<SearchOption> lhs, std::shared_ptr<SearchOption> rhs){
     return lhs->and_(rhs);

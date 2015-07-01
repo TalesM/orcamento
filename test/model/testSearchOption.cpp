@@ -1,6 +1,6 @@
 #include "../catch.hpp"
 #include "model/SearchOption.h"
-
+using namespace std;
 
 TEST_CASE("SearchOption", "[model]"){
     REQUIRE(search("teste")->operation() == Operation::NONE);
@@ -17,4 +17,23 @@ TEST_CASE("SearchOption", "[model]"){
     CHECK((search("teste")->suffix("x") && search("teste")->prefix("y"))->operation() == Operation::AND);
     CHECK((search("teste")->suffix("x") || search("teste")->prefix("y"))->operation() == Operation::OR);
 
+    const char *values[] = {
+        "NONE",
+        "EQUAL",
+        "LESS",
+        "LESS_EQUAL",
+        "DIFFERENT",
+        "MORE",
+        "MORE_EQUAL",
+        "CONTAINS",
+        "PREFIX",
+        "SUFFIX",
+        "AND",
+        "OR",
+    };
+    auto linearizator = [values](string a, Operation o, string b)-> string {
+        return a + " " + b + " " + values[int(o)];
+    }; 
+    CHECK(linearize(search("teste")->equal("x"), linearizator) == string("teste x EQUAL"));
+    CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
 }
