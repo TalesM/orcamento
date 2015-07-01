@@ -32,16 +32,16 @@ SearchRaw::~SearchRaw()
     }
 }
 
-std::shared_ptr<SearchRaw> SearchRaw::and_(std::shared_ptr<const SearchRaw> rhs) const
+std::shared_ptr<const SearchRaw> SearchRaw::and_(std::shared_ptr<const SearchRaw> rhs) const
 {
     return make_shared<SearchRaw>(shared_from_this(), Operation::AND, rhs);
 }
-std::shared_ptr<SearchRaw> SearchRaw::or_(std::shared_ptr<const SearchRaw> rhs) const
+std::shared_ptr<const SearchRaw> SearchRaw::or_(std::shared_ptr<const SearchRaw> rhs) const
 {
     return make_shared<SearchRaw>(shared_from_this(), Operation::OR, rhs);
 }
 
-std::shared_ptr<SearchRaw> SearchRaw::operate(Operation op, const std::string& s) const
+std::shared_ptr<const SearchRaw> SearchRaw::operate(Operation op, const std::string& s) const
 {
     auto v = make_shared<SearchRaw>(_field, op, s);
     if(_operation == Operation::NONE){

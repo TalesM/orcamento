@@ -36,7 +36,4 @@ TEST_CASE("SearchOption", "[model]"){
     }; 
     CHECK(linearize(search("teste")->equal("x"), linearizator) == string("teste x EQUAL"));
     CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
-    
-//    SearchOptions {};
-//    CHECK(toSql(search("teste")->equal("x"), ));
 }

@@ -22,7 +22,6 @@ enum class Operation{
     OR,
 };
 
-
 /**
  * @class SearchOption
  * @author Tales
@@ -37,36 +36,36 @@ public:
     SearchRaw(std::shared_ptr<const SearchRaw> prev, Operation op, std::shared_ptr<const SearchRaw> next);
     ~SearchRaw();
     
-    std::shared_ptr<SearchRaw> equal(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> equal(const std::string &s) const{
         return operate(Operation::EQUAL, s);
     }
-    std::shared_ptr<SearchRaw> less(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> less(const std::string &s) const{
         return operate(Operation::LESS, s);
     }
-    std::shared_ptr<SearchRaw> lessEqual(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> lessEqual(const std::string &s) const{
         return operate(Operation::LESS_EQUAL, s);
     }
-    std::shared_ptr<SearchRaw> different(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> different(const std::string &s) const{
         return operate(Operation::DIFFERENT, s);
     }
-    std::shared_ptr<SearchRaw> more(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> more(const std::string &s) const{
         return operate(Operation::MORE, s);
     }
-    std::shared_ptr<SearchRaw> moreEqual(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> moreEqual(const std::string &s) const{
         return operate(Operation::MORE_EQUAL, s);
     }
-    std::shared_ptr<SearchRaw> contains(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> contains(const std::string &s) const{
         return operate(Operation::CONTAINS, s);
     }
-    std::shared_ptr<SearchRaw> prefix(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> prefix(const std::string &s) const{
         return operate(Operation::PREFIX, s);
     }
-    std::shared_ptr<SearchRaw> suffix(const std::string &s) const{
+    std::shared_ptr<const SearchRaw> suffix(const std::string &s) const{
         return operate(Operation::SUFFIX, s);
     }
     
-    std::shared_ptr<SearchRaw> and_(std::shared_ptr<const SearchRaw>) const;
-    std::shared_ptr<SearchRaw> or_(std::shared_ptr<const SearchRaw>) const;
+    std::shared_ptr<const SearchRaw> and_(std::shared_ptr<const SearchRaw>) const;
+    std::shared_ptr<const SearchRaw> or_(std::shared_ptr<const SearchRaw>) const;
     
     
     ///@name getters
@@ -94,7 +93,7 @@ public:
     }
     ///@}
 private:
-    std::shared_ptr<SearchRaw> operate(Operation op, const std::string &s) const;
+    std::shared_ptr<const SearchRaw> operate(Operation op, const std::string &s) const;
 
     union {
         std::string _field;
@@ -117,6 +116,12 @@ inline Search search(const std::string &field){
     return std::make_shared<SearchRaw>(field);
 }
 
+/**
+ * @brief Linearizes a search by a custom algorithm
+ * @param origin the base search node
+ * @param callableVisitor Any callable object.
+ * @tparam CALLABLE Any type that may be called.
+ */
 template<typename CALLABLE>
 inline auto linearize(const std::shared_ptr<const SearchRaw> &origin, CALLABLE callableVisitor) -> decltype(callableVisitor(std::string(), Operation::NONE, std::string())){
     auto operation = origin->operation();
