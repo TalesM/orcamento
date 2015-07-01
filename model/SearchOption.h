@@ -22,8 +22,6 @@ enum class Operation{
     OR,
 };
 
-enum class Conector{
-};
 
 /**
  * @class SearchOption
@@ -67,8 +65,8 @@ public:
         return operate(Operation::SUFFIX, s);
     }
     
-    std::shared_ptr<SearchOption> and_(std::shared_ptr<SearchOption>) const;
-    std::shared_ptr<SearchOption> or_(std::shared_ptr<SearchOption>) const;
+    std::shared_ptr<SearchOption> and_(std::shared_ptr<const SearchOption>) const;
+    std::shared_ptr<SearchOption> or_(std::shared_ptr<const SearchOption>) const;
     
     
     ///@name getters
@@ -107,16 +105,15 @@ private:
         std::shared_ptr<const SearchOption> _next;
     };
     Operation _operation = Operation::NONE;
-    
-    friend std::shared_ptr<SearchOption> search(const std::string &field);
 };
 
+typedef std::shared_ptr<const SearchOption> Search;
 /**
  * @brief Starts a search by the given field
  * @param field The field's name
  * @return the search object to be compound or passed to the view.
  */
-inline std::shared_ptr<SearchOption> search(const std::string &field){
+inline Search search(const std::string &field){
     return std::make_shared<SearchOption>(field);
 }
 
@@ -130,10 +127,10 @@ inline auto linearize(const std::shared_ptr<const SearchOption> &origin, CALLABL
 }
 
 //    
-inline std::shared_ptr<SearchOption> operator &&(std::shared_ptr<SearchOption> lhs, std::shared_ptr<SearchOption> rhs){
+inline Search operator &&(Search lhs, Search rhs){
     return lhs->and_(rhs);
 }
-inline std::shared_ptr<SearchOption> operator ||(std::shared_ptr<SearchOption> lhs, std::shared_ptr<SearchOption> rhs){
+inline Search operator ||(Search lhs, Search rhs){
     return lhs->or_(rhs);
 }
 
@@ -145,27 +142,27 @@ std::string convertToString(VALUE v){
 }
 
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator ==(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator ==(Search lhs, VALUE v){
     return lhs->equal(convertToString(v));
 }
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator <(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator <(Search lhs, VALUE v){
     return lhs->less(convertToString(v));
 }
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator <=(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator <=(Search lhs, VALUE v){
     return lhs->lessEqual(convertToString(v));
 }
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator !=(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator !=(Search lhs, VALUE v){
     return lhs->different(convertToString(v));
 }
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator >(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator >(Search lhs, VALUE v){
     return lhs->more(convertToString(v));
 }
 template <typename VALUE>
-std::shared_ptr<SearchOption> operator >=(std::shared_ptr<SearchOption> lhs, VALUE v){
+Search operator >=(Search lhs, VALUE v){
     return lhs->moreEqual(convertToString(v));
 }
 

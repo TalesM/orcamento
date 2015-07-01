@@ -767,8 +767,13 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+    // Connect events
+    btRefresh->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtrefreshButtonClicked), NULL, this);
+    
 }
 
 BudgetFilterBase::~BudgetFilterBase()
 {
+    btRefresh->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtrefreshButtonClicked), NULL, this);
+    
 }

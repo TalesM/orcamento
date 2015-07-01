@@ -225,6 +225,7 @@ protected:
     wxButton* btRefresh;
 
 protected:
+    virtual void OnBtrefreshButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
     BudgetFilterBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Budget Filtering"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600,500), long style = wxDEFAULT_DIALOG_STYLE);

@@ -32,11 +32,11 @@ SearchOption::~SearchOption()
     }
 }
 
-std::shared_ptr<SearchOption> SearchOption::and_(std::shared_ptr<SearchOption> rhs) const
+std::shared_ptr<SearchOption> SearchOption::and_(std::shared_ptr<const SearchOption> rhs) const
 {
     return make_shared<SearchOption>(shared_from_this(), Operation::AND, rhs);
 }
-std::shared_ptr<SearchOption> SearchOption::or_(std::shared_ptr<SearchOption> rhs) const
+std::shared_ptr<SearchOption> SearchOption::or_(std::shared_ptr<const SearchOption> rhs) const
 {
     return make_shared<SearchOption>(shared_from_this(), Operation::OR, rhs);
 }
