@@ -32,7 +32,7 @@
     <File Name="test/catch.hpp"/>
     <File Name="test/catch.cpp"/>
     <VirtualDirectory Name="model">
-      <File Name="test/model/testSearchOption.cpp"/>
+      <File Name="test/model/testSearch.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Dependencies Name="Debug">
