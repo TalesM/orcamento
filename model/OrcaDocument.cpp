@@ -30,7 +30,6 @@ OrcaDocument::OrcaDocument(const std::string &path, bool erase):
 
 static std::string readModel(){
     std::ifstream t("theModel.sql");
-    bool b = t.bad();
     std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
     return str;
 }

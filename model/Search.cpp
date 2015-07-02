@@ -50,7 +50,7 @@ std::shared_ptr<const SearchRaw> SearchRaw::operate(Operation op, const std::str
     return and_(v);
 }
 
-SearchQuery sqlize(const Search &origin, std::set<std::string> integers){
+SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description){
     SearchQuery q{};
     static const char *values[] = {
         " AND RAISE(FAIL, 'xxx')",
@@ -66,29 +66,38 @@ SearchQuery sqlize(const Search &origin, std::set<std::string> integers){
         "AND",
         "OR",
     };
-    q.query = linearize(origin, [&q, &integers](const string &a, Operation op, const string &b){
+    q.query = linearize(origin, [&q, &description](const string &a, Operation op, const string &b) -> string{
         if(op == Operation::OR || op == Operation::AND){
+            if(a==""){
+                return b;
+            }
             return "("+a+" "+values[int(op)]+" "+b+")";
         }
+        if(!description.count(a)){
+            return "";
+        }
+        auto &fieldDescription = *description.lower_bound(a);
         if(op == Operation::CONTAINS){
             q.sValues.push_back("%"+b+"%");
         }else if(op == Operation::PREFIX){
             q.sValues.push_back(b+"%");
         }else if(op == Operation::SUFFIX){
             q.sValues.push_back("%"+b);
-        }else if(!integers.count(a)){
-            q.sValues.push_back(b);
-        } else {
-            int i;
-            stringstream ss(b), tt;
-            ss >> i;
-            q.iValues.push_back(i);
-            tt << q.iValues.size();
-            return "\""+a+"\" "+values[int(op)]+" :i_"+tt.str();
+        }else {
+            if(fieldDescription.type == FieldDescriptor::INT){
+                int i;
+                stringstream ss(b), tt;
+                ss >> i;
+                q.iValues.push_back(i);
+                tt << q.iValues.size();
+                return fieldDescription.fieldSql+" "+values[int(op)]+" :i_"+tt.str();
+            } else { //if integer
+                q.sValues.push_back(b);
+            }
         }
         stringstream ss;
         ss << q.sValues.size();
-        return "\""+a+"\" "+values[int(op)]+" :s_"+ss.str();
+        return fieldDescription.fieldSql+" "+values[int(op)]+" :s_"+ss.str();
     });
     return q;
 

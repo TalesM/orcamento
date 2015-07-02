@@ -38,12 +38,28 @@ TEST_CASE("SearchOption", "[model]"){
     CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
     
     SearchQuery sq = sqlize(search("teste")->equal("x"));
-    CHECK(sq.query == "\"teste\" = :s_1");
-    CHECK(sq.sValues.at(0) == "x");
-    sq = sqlize(search("teste")->equal("x")->contains("x"));
-    CHECK(sq.query == "(\"teste\" = :s_2 AND \"teste\" LIKE :s_1)");//TODO: REPLACE for a regex.
+    CHECK(sq.query == "");
+    CHECK(sq.sValues.size() == 0);
+    
+    sq = sqlize(search("teste")->equal("x"), {{"teste"}});
+    REQUIRE(sq.query == "teste = :s_1");
+    REQUIRE(sq.sValues.size() == 1);
+    CHECK(sq.sValues[0] == "x");
+    
+    sq = sqlize(search("teste")->equal("5"), {{"teste", FieldDescriptor::INT}});
+    CHECK(sq.query == "teste = :i_1");
+    REQUIRE(sq.iValues.size() == 1);
+    CHECK(sq.iValues[0] == 5);
+    
+    sq = sqlize(search("teste")->equal("x")->contains("x"), {{"teste"}});
+    REQUIRE(sq.query == "(teste = :s_2 AND teste LIKE :s_1)");//TODO: REPLACE for a regex.
+    REQUIRE(sq.sValues.size() == 2);
     CHECK(sq.sValues.at(0) == "%x%");
     CHECK(sq.sValues.at(1) == "x");
-    sq = sqlize(search("teste")->equal("x"), {"teste"});
-    CHECK(sq.query == "\"teste\" = :i_1");
+    
+    sq = sqlize(search("teste")->equal("x"), {{"teste", "t.name"}});
+    REQUIRE(sq.query == "t.name = :s_1");
+    
+    sq = sqlize(search("teste")->equal("5"), {{"teste", "t.name", FieldDescriptor::INT}});
+    REQUIRE(sq.query == "t.name = :i_1");
 }

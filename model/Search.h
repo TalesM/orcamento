@@ -30,6 +30,27 @@ struct SearchQuery{
     std::vector<int> iValues;
 };
 
+struct FieldDescriptor{
+    std::string fieldNick;
+    std::string fieldSql;
+    enum Type {
+        STRING,
+        INT,
+    }type;
+    
+    FieldDescriptor(const std::string &nick, Type type = STRING): 
+        fieldNick(nick), fieldSql(nick), type(type){}
+    FieldDescriptor(const std::string &nick, const std::string &sql, Type type = STRING): 
+        fieldNick(nick), fieldSql(sql), type(type){}
+    
+    bool operator <(const std::string &o) const {
+        return fieldNick < o;
+    }
+    bool operator <(const FieldDescriptor &o) const {
+        return fieldNick < o.fieldNick;
+    }
+};
+
 /**
  * @class SearchOption
  * @author Tales
@@ -144,7 +165,7 @@ inline auto linearize(const Search &origin, CALLABLE callableVisitor) -> decltyp
  * @param origin The search
  * @return A structure containing the query and necessary variables to bind.
  */
-SearchQuery sqlize(const Search &origin, std::set<std::string> integers={});
+SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description={});
 
 //    
 inline Search operator &&(Search lhs, Search rhs){

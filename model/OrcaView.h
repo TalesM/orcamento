@@ -46,6 +46,14 @@ public:
     }
 
 protected:
+    void query(const std::string &s){
+        _sql = s;
+    }
+    
+    std::string query() const {
+        return _sql;
+    }
+
     /**
      * @brief Use this to bind your stuff.
      */
