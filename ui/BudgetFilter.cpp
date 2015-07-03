@@ -14,7 +14,11 @@ BudgetFilter::~BudgetFilter()
 
 void BudgetFilter::OnBtrefreshButtonClicked(wxCommandEvent& event)
 {
-    _search = search("estimate.name")->contains(std::string(txName->GetValue().ToUTF8()));
+    if(txName->GetValue().size()){
+        _search = search("name")->contains(std::string(txName->GetValue().ToUTF8()));
+    } else {
+        _search = nullptr;
+    }
     for(auto &&listener: _searchListener){
         listener(_search);
     }

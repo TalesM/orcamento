@@ -5,6 +5,7 @@
 #include <memory>
 #include "BudgetFilter.h"
 #include "model/OrcaDocument.h"
+#include "model/Search.h"
 #include "model/views/BudgetToCopyView.h"
 #include "model/views/BudgetView.h"
 #include "model/views/CategoryView.h"
@@ -19,6 +20,7 @@ public:
     virtual ~OrcamentoMainFrame();
 private:
     std::unique_ptr<OrcaDocument> _document;
+    Search _search;
     int _activeIndex = -1;
     BudgetView _budgetView;
     CategoryView _categoryView;
@@ -54,7 +56,7 @@ private:
         return reinterpret_cast<int>(lsMonths->GetClientData(lsMonths->GetSelection()));
     }
 protected:
-    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event);
+    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) override;
     virtual void OnLsmonthsListbox(wxCommandEvent& event);
     virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event);
     virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event);

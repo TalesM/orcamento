@@ -12,7 +12,9 @@ JOIN (
             THEN execution_estimate.amount
             ELSE estimate.amount
         END AS estimated,
-        execution_estimate.amount AS accounted, budget_id
+        execution_estimate.amount AS accounted, 
+        budget_id,
+        estimate.name AS name
     FROM estimate
         LEFT JOIN (
             SELECT
@@ -32,5 +34,19 @@ TotalsView::TotalsView():
 void TotalsView::setup(SQLite::Statement& stm)
 {
     stm.bind(1, _budgetId);
+    for(size_t i = 0; i < _params.sValues.size(); ++i){
+        std::stringstream ss;
+        ss << ":s_" << (i+1);
+        stm.bind(ss.str(), _params.sValues[i]);
+    }
+}
+void TotalsView::search(const Search& search)
+{
+    if(!search){
+        _params = SearchQuery{};
+        return query(sql);
+    }
+    _params = sqlize(search, {{"name", "fixed_estimate.name"}});
+    query(std::string(sql) + " AND " + _params.query);
 }
 

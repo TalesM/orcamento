@@ -2,7 +2,7 @@
 #define _ORCA_TOTALSVIEW_H
 
 #include "../OrcaView.h"
-
+#include "../Search.h"
 
 class TotalsView : public OrcaView<
     std::string,//Budget Name
@@ -22,8 +22,11 @@ public:
     void budgetId(int value){
         _budgetId = value;
     }
+    
+    void search(const Search &s);
 private:
     int _budgetId;
+    SearchQuery _params;
 
     void setup(SQLite::Statement &stm) override;
 };

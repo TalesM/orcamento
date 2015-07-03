@@ -280,6 +280,9 @@ void OrcamentoMainFrame::RefreshTotals()
     }
     try {
         _totalsView.budgetId(budget_id);
+        if(_search){
+            _totalsView.search(_search);
+        }
         bool ok = false;
         _document->look(_totalsView,
                         [this, &ok](const std::string& budget, double estimated, double accounted, double remaining) {
@@ -655,6 +658,10 @@ void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
 {
     if(!dgFilter){
         dgFilter = new BudgetFilter(this);
+        dgFilter->addSearchListerner([this](const Search &s){
+            _search = s;
+            RefreshTotals();
+        });
     }
     dgFilter->Show();
 }
