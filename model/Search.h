@@ -154,6 +154,9 @@ inline Search search(const std::string &field){
 template<typename CALLABLE>
 inline auto linearize(const Search &origin, CALLABLE callableVisitor) -> decltype(callableVisitor(std::string(), Operation::NONE, std::string())){
     auto operation = origin->operation();
+    if(operation == Operation::NONE){
+        return callableVisitor(origin->field(), operation);
+    }
     if(operation != Operation::AND && operation != Operation::OR){
         return callableVisitor(origin->field(), operation, origin->value());
     }
@@ -180,6 +183,10 @@ std::string convertToString(VALUE v){
     std::stringstream ss;
     ss << v;
     return ss.str();
+}
+
+inline bool operator ==(Search lhs, Search rhs){
+    return lhs.get()==rhs.get();
 }
 
 template <typename VALUE>

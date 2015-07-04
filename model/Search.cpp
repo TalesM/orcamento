@@ -66,7 +66,7 @@ SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &descri
         "AND",
         "OR",
     };
-    q.query = linearize(origin, [&q, &description](const string &a, Operation op, const string &b) -> string{
+    q.query = linearize(origin, [&q, &description](const string &a, Operation op, const string &b="") -> string{
         if(op == Operation::OR || op == Operation::AND){
             if(a==""){
                 return b;

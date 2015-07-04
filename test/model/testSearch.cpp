@@ -31,9 +31,10 @@ TEST_CASE("SearchOption", "[model]"){
         "AND",
         "OR",
     };
-    auto linearizator = [values](string a, Operation o, string b)-> string {
-        return a + " " + b + " " + values[int(o)];
+    auto linearizator = [values](string a, Operation o, string b="")-> string {
+        return a + " " + (b.size()?b + " ":"") + values[int(o)];
     }; 
+    CHECK(linearize(search("teste"), linearizator) == "teste NONE");
     CHECK(linearize(search("teste")->equal("x"), linearizator) == string("teste x EQUAL"));
     CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
     
