@@ -14,7 +14,8 @@ JOIN (
         END AS estimated,
         execution_estimate.amount AS accounted, 
         budget_id,
-        estimate.name AS name
+        estimate.name AS name,
+        estimate.obs AS obs
     FROM estimate
         LEFT JOIN (
             SELECT
@@ -46,7 +47,10 @@ void TotalsView::search(const Search& search)
         _params = SearchQuery{};
         return query(sql);
     }
-    _params = sqlize(search, {{"name", "fixed_estimate.name"}});
+    _params = sqlize(search, { 
+        { "name", "fixed_estimate.name" },
+        { "obs", "fixed_estimate.obs" },
+    });
     query(std::string(sql) + " AND " + _params.query);
 }
 
