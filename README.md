@@ -34,8 +34,7 @@ Features
 	easy to port to Linux or Mac now.
 - For developers thinking about working on contributing, I am using [c++11][] 
 	features and even some [c++14][] that [gcc 4.9.2][gcc492] supports, so the code is actual and
-	should not be difficult pick up. Some messy code was made to enable the
-	quick release of v0.1, but I intend to clean it until v0.2.
+	should not be difficult pick up.
 
 Limitations
 -----------
@@ -48,9 +47,9 @@ Limitations
 	error message and revert the operation. It is robust as you can continue
 	working without restart the program but I know it is really bad UX and I
 	will punish myself in honour to front-end gods.
-- Lack of a explicit save feature. All your changes are saved automatically
+- ~~Lack of a explicit save feature. All your changes are saved automatically
 	(and, in general, immediately) and the user have no feedback or control.
-	I plan to solve this ASAP as it may scare people.
+	I plan to solve this ASAP as it may scare people.~~<ins>Solved on v0.2!</ins>
 	
 Goals
 -----
