@@ -163,7 +163,6 @@ void OrcamentoMainFrame::RefreshModel()
             lsMonths->Append(budgetName, reinterpret_cast<void*>(id));
             if(active) {
                 lsMonths->SetSelection(lsMonths->GetCount() - 1);
-                RefreshTotals();
             }
         });
         if(!lsMonths->GetSelectedCount()){
@@ -215,14 +214,16 @@ void OrcamentoMainFrame::RefreshEstimates()
         if(lsMonths->GetSelection() > _activeIndex) {
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
+            _estimatePlaningView.search(_search);
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
             RefreshCellAttr(false);
         } else {
             _estimateExecutingView.budgetId(budget_id);
+            _estimateExecutingView.search(_search);
             _document->look(_estimateExecutingView, refreshFunction);
             RefreshCellAttr(true);
         }
-
+        RefreshTotals();
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
     }
@@ -552,7 +553,6 @@ void OrcamentoMainFrame::OnGdestimatesGridCellLeftDclick(wxGridEvent& event)
         executionDialog.ShowModal();
         _document = executionDialog.takeDatabase();
         RefreshEstimates();
-        RefreshTotals();
     } else if(col ==EstimateColumn::OBS) {
         wxTextEntryDialog obsDialog(this, L"Write an Observation for \""+gdEstimates->GetCellValue(row, EstimateColumn::NAME)+L"\"",
                                     L"OBS", gdEstimates->GetCellValue(row, EstimateColumn::OBS), wxTE_MULTILINE|wxTextEntryDialogStyle);
@@ -632,7 +632,6 @@ void OrcamentoMainFrame::OnCmestimatesdeleteMenuSelected(wxCommandEvent& event)
         int estimateId = atoi(gdEstimates->GetCellValue(row, EstimateColumn::ID));
         _document->exec<action::DeleteEstimate>(estimateId);
         RefreshEstimates();
-        RefreshTotals();
     } catch(std::exception &e) {
         wxMessageBox(e.what());
     }
@@ -645,12 +644,10 @@ void OrcamentoMainFrame::OnCmestimatesexecuteMenuSelected(wxCommandEvent& event)
     executionDialog.ShowModal();
     _document = executionDialog.takeDatabase();
     RefreshEstimates();
-    RefreshTotals();
 }
 void OrcamentoMainFrame::OnLsmonthsListbox(wxCommandEvent& event)
 {
     RefreshEstimates();
-    RefreshTotals();
 }
 void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
 {
@@ -658,7 +655,7 @@ void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
         dgFilter = new BudgetFilter(this);
         dgFilter->addSearchListerner([this](const Search &s){
             _search = s;
-            RefreshTotals();
+            RefreshEstimates();
         });
     }
     dgFilter->Show();

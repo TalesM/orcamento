@@ -1,25 +1,57 @@
 #include "EstimateExecutingView.h"
 
 static auto sql = R"=(
-SELECT estimate_id, prom.name, DATE(bud.start, prom.due),
-    prom.amount/100.0, SUM(exc.amount)/100.0,
-    (IFNULL(SUM(exc.amount), 0)-prom.amount)/100.0,
-    cat.name, prom.obs
-  FROM budget bud
-  JOIN estimate prom USING(budget_id)
-  LEFT JOIN category cat USING(category_id)
-  LEFT JOIN execution exc USING(estimate_id)
-  WHERE budget_id = ?1
-  GROUP BY estimate_id
-  ORDER BY category_id, prom.name;
+SELECT 
+    estim.estimate_id,
+    estim.name AS name,
+    DATE(bud.start, estim.due) AS due,
+    estim.amount/100 AS estimated,
+    exc.amount/100 AS accounted, 
+    (IFNULL(exc.amount, 0)-estim.amount)/100 AS remaining,
+    cat.name AS category, 
+    estim.obs AS obs
+FROM budget bud
+    JOIN estimate estim USING(budget_id)
+    LEFT JOIN category cat USING(category_id)
+    LEFT JOIN (
+        SELECT
+            IFNULL(SUM(execution.amount), 0) AS amount, estimate_id
+        FROM execution GROUP BY estimate_id
+    ) AS exc USING(estimate_id)
+    WHERE budget_id = ?1
 )=";
 
 EstimateExecutingView::EstimateExecutingView():
-    OrcaView(sql)
+    OrcaView(std::string(sql)+"\nORDER BY category_id, estim.name")
 {
     //ctor
 }
 void EstimateExecutingView::setup(SQLite::Statement& stm)
 {
     stm.bind(1, _budgetId);
+    for(size_t i = 0; i < _params.sValues.size(); ++i){
+        std::stringstream ss;
+        ss << ":s_" << (i+1);
+        stm.bind(ss.str(), _params.sValues[i]);
+    }
+    for(size_t i = 0; i < _params.iValues.size(); ++i){
+        std::stringstream ss;
+        ss << ":i_" << (i+1);
+        stm.bind(ss.str(), _params.iValues[i]);
+    }
+}
+void EstimateExecutingView::search(const Search& search)
+{
+    if(!search){
+        _params = SearchQuery{};
+        return query(sql + std::string("\nORDER BY category_id, estim.name"));
+    }
+    _params = sqlize(search, { 
+        { "name", "estim.name" },
+        { "obs", "estim.obs" },
+        { "estimated", "estim.amount", FieldDescriptor::INT },
+        { "accounted", "exc.amount", FieldDescriptor::INT },
+        { "remaining", "((estim.amount-exc.amount))", FieldDescriptor::INT },
+    });
+    query(std::string(sql) + " AND " + _params.query + "\nORDER BY category_id, estim.name");
 }

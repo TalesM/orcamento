@@ -21,4 +21,7 @@ void EstimatePlaningView::setup(SQLite::Statement& stm)
 {
     stm.bind(1, _budgetId);
 }
+void EstimatePlaningView::search(const Search& s)
+{
+}
 

@@ -2,7 +2,7 @@
 #define _ORCA_ESTIMATEPLANINGVIEW_H
 
 #include "../OrcaView.h"
-
+#include "../Search.h"
 
 class EstimatePlaningView : public OrcaView<
     int,            //estimate_id
@@ -24,8 +24,10 @@ public:
     void budgetId(int value){
         _budgetId = value;
     }
+    void search(const Search &s);
 private:
     int _budgetId;
+    SearchQuery _params;
 
     void setup(SQLite::Statement &stm) override;
 };

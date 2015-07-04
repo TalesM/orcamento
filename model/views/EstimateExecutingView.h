@@ -26,8 +26,11 @@ public:
     void budgetId(int value){
         _budgetId = value;
     }
+    
+    void search(const Search &s);
 private:
     int _budgetId;
+    SearchQuery _params;
 
     void setup(SQLite::Statement &stm) override;
 };
