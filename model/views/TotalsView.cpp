@@ -40,6 +40,11 @@ void TotalsView::setup(SQLite::Statement& stm)
         ss << ":s_" << (i+1);
         stm.bind(ss.str(), _params.sValues[i]);
     }
+    for(size_t i = 0; i < _params.iValues.size(); ++i){
+        std::stringstream ss;
+        ss << ":i_" << (i+1);
+        stm.bind(ss.str(), _params.iValues[i]);
+    }
 }
 void TotalsView::search(const Search& search)
 {
@@ -50,6 +55,9 @@ void TotalsView::search(const Search& search)
     _params = sqlize(search, { 
         { "name", "fixed_estimate.name" },
         { "obs", "fixed_estimate.obs" },
+        { "estimated", "(fixed_estimate.estimated)", FieldDescriptor::INT },
+        { "accounted", "(fixed_estimate.accounted)", FieldDescriptor::INT },
+        { "remaining", "((fixed_estimate.estimated-fixed_estimate.accounted))", FieldDescriptor::INT },
     });
     query(std::string(sql) + " AND " + _params.query);
 }
