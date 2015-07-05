@@ -1,7 +1,7 @@
 {
  "metadata": {
   "m_generatedFilesDir": ".",
-  "m_objCounter": 181,
+  "m_objCounter": 186,
   "m_includeFiles": [],
   "m_bitmapFunction": "wxC898CInitBitmapResources",
   "m_bitmapsFile": "wxcrafter_ui_bitmaps.cpp",
@@ -5327,7 +5327,7 @@
     }, {
      "type": "font",
      "m_label": "Font:",
-     "m_value": ""
+     "m_value": "8,normal, normal, swiss, 0, Segoe UI"
     }, {
      "type": "bool",
      "m_label": "Hidden",
@@ -7968,7 +7968,7 @@
         }, {
          "type": "string",
          "m_label": "Name:",
-         "m_value": "lbCategory"
+         "m_value": "lbCategories"
         }, {
          "type": "multi-string",
          "m_label": "Tooltip:",
@@ -8012,7 +8012,7 @@
         }, {
          "type": "multi-string",
          "m_label": "Label:",
-         "m_value": "Category:"
+         "m_value": "Categories:"
         }, {
          "type": "string",
          "m_label": "Wrap:",
@@ -8035,7 +8035,7 @@
         }, {
          "type": "string",
          "m_label": "Size:",
-         "m_value": "-1,-1"
+         "m_value": "-1, 70"
         }, {
          "type": "string",
          "m_label": "Minimum Size:",
@@ -8043,7 +8043,7 @@
         }, {
          "type": "string",
          "m_label": "Name:",
-         "m_value": "lsckCategory"
+         "m_value": "lsckCategories"
         }, {
          "type": "multi-string",
          "m_label": "Tooltip:",
@@ -8087,7 +8087,7 @@
         }, {
          "type": "multi-string",
          "m_label": "Choices:",
-         "m_value": "Cat1;Cat2;3;4;5;6;7"
+         "m_value": "All;Income;Habitation;Transport;Food;Personal Care;Entertainment;Comestimates;Economy and Investments;Taxes;Gifts;Extras"
         }],
        "m_events": [],
        "m_children": []
@@ -8114,7 +8114,7 @@
         }, {
          "type": "string",
          "m_label": "Name:",
-         "m_value": "ckInvertCategory"
+         "m_value": "ckInvertCategories"
         }, {
          "type": "multi-string",
          "m_label": "Tooltip:",
@@ -8467,6 +8467,227 @@
        "m_events": [],
        "m_children": []
       }, {
+       "m_type": 4405,
+       "proportion": 0,
+       "border": 5,
+       "gbSpan": "1,1",
+       "gbPosition": "10,0",
+       "m_styles": [],
+       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM"],
+       "m_properties": [{
+         "type": "winid",
+         "m_label": "ID:",
+         "m_winid": "wxID_ANY"
+        }, {
+         "type": "string",
+         "m_label": "Size:",
+         "m_value": "-1,-1"
+        }, {
+         "type": "string",
+         "m_label": "Minimum Size:",
+         "m_value": "-1,-1"
+        }, {
+         "type": "string",
+         "m_label": "Name:",
+         "m_value": "lbWallets"
+        }, {
+         "type": "multi-string",
+         "m_label": "Tooltip:",
+         "m_value": ""
+        }, {
+         "type": "colour",
+         "m_label": "Bg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "colour",
+         "m_label": "Fg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "font",
+         "m_label": "Font:",
+         "m_value": ""
+        }, {
+         "type": "bool",
+         "m_label": "Hidden",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Disabled",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Focused",
+         "m_value": false
+        }, {
+         "type": "string",
+         "m_label": "Class Name:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Include File:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Style:",
+         "m_value": ""
+        }, {
+         "type": "multi-string",
+         "m_label": "Label:",
+         "m_value": "Wallets:"
+        }, {
+         "type": "string",
+         "m_label": "Wrap:",
+         "m_value": "-1"
+        }],
+       "m_events": [],
+       "m_children": []
+      }, {
+       "m_type": 4425,
+       "proportion": 1,
+       "border": 5,
+       "gbSpan": "1,4",
+       "gbPosition": "10,1",
+       "m_styles": ["wxLB_ALWAYS_SB", "wxLB_HSCROLL", "wxLB_SINGLE"],
+       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND"],
+       "m_properties": [{
+         "type": "winid",
+         "m_label": "ID:",
+         "m_winid": "wxID_ANY"
+        }, {
+         "type": "string",
+         "m_label": "Size:",
+         "m_value": "-1, 70"
+        }, {
+         "type": "string",
+         "m_label": "Minimum Size:",
+         "m_value": "-1,-1"
+        }, {
+         "type": "string",
+         "m_label": "Name:",
+         "m_value": "lsckWallets"
+        }, {
+         "type": "multi-string",
+         "m_label": "Tooltip:",
+         "m_value": ""
+        }, {
+         "type": "colour",
+         "m_label": "Bg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "colour",
+         "m_label": "Fg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "font",
+         "m_label": "Font:",
+         "m_value": ""
+        }, {
+         "type": "bool",
+         "m_label": "Hidden",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Disabled",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Focused",
+         "m_value": false
+        }, {
+         "type": "string",
+         "m_label": "Class Name:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Include File:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Style:",
+         "m_value": ""
+        }, {
+         "type": "multi-string",
+         "m_label": "Choices:",
+         "m_value": "All;Pocket;Bank"
+        }],
+       "m_events": [],
+       "m_children": []
+      }, {
+       "m_type": 4415,
+       "proportion": 0,
+       "border": 5,
+       "gbSpan": "1,1",
+       "gbPosition": "10,5",
+       "m_styles": [],
+       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxALIGN_CENTER_VERTICAL"],
+       "m_properties": [{
+         "type": "winid",
+         "m_label": "ID:",
+         "m_winid": "wxID_ANY"
+        }, {
+         "type": "string",
+         "m_label": "Size:",
+         "m_value": "-1,-1"
+        }, {
+         "type": "string",
+         "m_label": "Minimum Size:",
+         "m_value": "-1,-1"
+        }, {
+         "type": "string",
+         "m_label": "Name:",
+         "m_value": "ckInvertWallets"
+        }, {
+         "type": "multi-string",
+         "m_label": "Tooltip:",
+         "m_value": ""
+        }, {
+         "type": "colour",
+         "m_label": "Bg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "colour",
+         "m_label": "Fg Colour:",
+         "colour": "<Default>"
+        }, {
+         "type": "font",
+         "m_label": "Font:",
+         "m_value": ""
+        }, {
+         "type": "bool",
+         "m_label": "Hidden",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Disabled",
+         "m_value": false
+        }, {
+         "type": "bool",
+         "m_label": "Focused",
+         "m_value": false
+        }, {
+         "type": "string",
+         "m_label": "Class Name:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Include File:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Style:",
+         "m_value": ""
+        }, {
+         "type": "string",
+         "m_label": "Label:",
+         "m_value": "Invert"
+        }, {
+         "type": "bool",
+         "m_label": "Value:",
+         "m_value": false
+        }],
+       "m_events": [],
+       "m_children": []
+      }, {
        "m_type": 4418,
        "proportion": 0,
        "border": 5,
@@ -8572,25 +8793,6 @@
            "type": "string",
            "m_label": "Name:",
            "m_value": "Spacer158"
-          }, {
-           "type": "string",
-           "m_label": "Size:",
-           "m_value": "0,0"
-          }],
-         "m_events": [],
-         "m_children": []
-        }, {
-         "m_type": 4454,
-         "proportion": 1,
-         "border": 5,
-         "gbSpan": "1,1",
-         "gbPosition": "0,0",
-         "m_styles": [],
-         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM"],
-         "m_properties": [{
-           "type": "string",
-           "m_label": "Name:",
-           "m_value": "Spacer160"
           }, {
            "type": "string",
            "m_label": "Size:",
@@ -8777,6 +8979,101 @@
            "m_eventClass": "wxCommandEvent",
            "m_eventHandler": "wxCommandEventHandler",
            "m_functionNameAndSignature": "OnBtrefreshButtonClicked(wxCommandEvent& event)",
+           "m_description": "Process a wxEVT_COMMAND_BUTTON_CLICKED event, when the button is clicked.",
+           "m_noBody": false
+          }],
+         "m_children": []
+        }, {
+         "m_type": 4400,
+         "proportion": 1,
+         "border": 5,
+         "gbSpan": "1,1",
+         "gbPosition": "0,0",
+         "m_styles": [],
+         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND"],
+         "m_properties": [{
+           "type": "winid",
+           "m_label": "ID:",
+           "m_winid": "wxID_ANY"
+          }, {
+           "type": "string",
+           "m_label": "Size:",
+           "m_value": "-1,-1"
+          }, {
+           "type": "string",
+           "m_label": "Minimum Size:",
+           "m_value": "-1,-1"
+          }, {
+           "type": "string",
+           "m_label": "Name:",
+           "m_value": "btClose"
+          }, {
+           "type": "multi-string",
+           "m_label": "Tooltip:",
+           "m_value": ""
+          }, {
+           "type": "colour",
+           "m_label": "Bg Colour:",
+           "colour": "<Default>"
+          }, {
+           "type": "colour",
+           "m_label": "Fg Colour:",
+           "colour": "<Default>"
+          }, {
+           "type": "font",
+           "m_label": "Font:",
+           "m_value": ""
+          }, {
+           "type": "bool",
+           "m_label": "Hidden",
+           "m_value": false
+          }, {
+           "type": "bool",
+           "m_label": "Disabled",
+           "m_value": false
+          }, {
+           "type": "bool",
+           "m_label": "Focused",
+           "m_value": false
+          }, {
+           "type": "string",
+           "m_label": "Class Name:",
+           "m_value": ""
+          }, {
+           "type": "string",
+           "m_label": "Include File:",
+           "m_value": ""
+          }, {
+           "type": "string",
+           "m_label": "Style:",
+           "m_value": ""
+          }, {
+           "type": "string",
+           "m_label": "Label:",
+           "m_value": "Close and Refresh"
+          }, {
+           "type": "bool",
+           "m_label": "Default Button",
+           "m_value": false
+          }, {
+           "type": "bitmapPicker",
+           "m_label": "Bitmap File:",
+           "m_path": ""
+          }, {
+           "type": "choice",
+           "m_label": "Direction",
+           "m_selection": 0,
+           "m_options": ["wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM"]
+          }, {
+           "type": "string",
+           "m_label": "Margins:",
+           "m_value": "2,2"
+          }],
+         "m_events": [{
+           "m_eventName": "wxEVT_COMMAND_BUTTON_CLICKED",
+           "m_eventClass": "wxCommandEvent",
+           "m_eventHandler": "wxCommandEventHandler",
+           "m_functionNameAndSignature": "OnBtcloseButtonClicked(wxCommandEvent& event)",
            "m_description": "Process a wxEVT_COMMAND_BUTTON_CLICKED event, when the button is clicked.",
            "m_noBody": false
           }],

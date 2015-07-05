@@ -213,19 +213,24 @@ protected:
     wxTextCtrl* txObservation;
     wxChoice* chObservation;
     wxCheckBox* ckInvertObservation;
-    wxStaticText* lbCategory;
-    wxCheckListBox* lsckCategory;
-    wxCheckBox* ckInvertCategory;
+    wxStaticText* lbCategories;
+    wxCheckListBox* lsckCategories;
+    wxCheckBox* ckInvertCategories;
     wxStaticLine* lnTotals;
     wxStaticText* lbTotals;
     wxCheckBox* ckAdjustEstimates;
     wxRadioBox* rdShow;
+    wxStaticText* lbWallets;
+    wxCheckListBox* lsckWallets;
+    wxCheckBox* ckInvertWallets;
     wxStaticLine* lnControls;
     wxButton* btReset;
     wxButton* btRefresh;
+    wxButton* btClose;
 
 protected:
     virtual void OnBtrefreshButtonClicked(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnBtcloseButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
     BudgetFilterBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Budget Filtering"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600,500), long style = wxDEFAULT_DIALOG_STYLE);

@@ -49,9 +49,13 @@ void EstimateExecutingView::search(const Search& search)
     _params = sqlize(search, { 
         { "name", "estim.name" },
         { "obs", "estim.obs" },
-        { "estimated", "estim.amount", FieldDescriptor::INT },
-        { "accounted", "exc.amount", FieldDescriptor::INT },
-        { "remaining", "((estim.amount-exc.amount))", FieldDescriptor::INT },
+        { "estimated", "estim.amount", FieldDescriptor::MONEY },
+        { "accounted", "exc.amount", FieldDescriptor::MONEY },
+        { "remaining", "(exec.amount-estim.amount)", FieldDescriptor::MONEY },
+        { "due", "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)", FieldDescriptor::INT },
     });
+    if(!_params.query.size()){
+        return query(sql + std::string("\nORDER BY category_id, estim.name"));
+    }
     query(std::string(sql) + " AND " + _params.query + "\nORDER BY category_id, estim.name");
 }

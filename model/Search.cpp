@@ -91,7 +91,14 @@ SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &descri
                 q.iValues.push_back(i);
                 tt << q.iValues.size();
                 return fieldDescription.fieldSql+" "+values[int(op)]+" :i_"+tt.str();
-            } else { //if integer
+            } else if(fieldDescription.type == FieldDescriptor::MONEY){ 
+                double d;
+                stringstream ss(b), tt;
+                ss >> d;
+                q.iValues.push_back(int(d*100));
+                tt << q.iValues.size();
+                return fieldDescription.fieldSql+" "+values[int(op)]+" :i_"+tt.str();
+            } else { //if fieldDescription.type == FieldDescriptor::STRING
                 q.sValues.push_back(b);
             }
         }

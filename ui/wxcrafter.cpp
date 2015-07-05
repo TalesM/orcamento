@@ -693,26 +693,31 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     
     szMain->Add(ckInvertObservation, wxGBPosition(5,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
     
-    lbCategory = new wxStaticText(this, wxID_ANY, _("Category:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    lbCategories = new wxStaticText(this, wxID_ANY, _("Categories:"), wxDefaultPosition, wxSize(-1,-1), 0);
     
-    szMain->Add(lbCategory, wxGBPosition(6,0), wxGBSpan(1,1), wxALL, 5);
+    szMain->Add(lbCategories, wxGBPosition(6,0), wxGBSpan(1,1), wxALL, 5);
     
-    wxArrayString lsckCategoryArr;
-    lsckCategoryArr.Add(_("Cat1"));
-    lsckCategoryArr.Add(_("Cat2"));
-    lsckCategoryArr.Add(_("3"));
-    lsckCategoryArr.Add(_("4"));
-    lsckCategoryArr.Add(_("5"));
-    lsckCategoryArr.Add(_("6"));
-    lsckCategoryArr.Add(_("7"));
-    lsckCategory = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsckCategoryArr, wxLB_ALWAYS_SB|wxLB_HSCROLL|wxLB_SINGLE);
+    wxArrayString lsckCategoriesArr;
+    lsckCategoriesArr.Add(_("All"));
+    lsckCategoriesArr.Add(_("Income"));
+    lsckCategoriesArr.Add(_("Habitation"));
+    lsckCategoriesArr.Add(_("Transport"));
+    lsckCategoriesArr.Add(_("Food"));
+    lsckCategoriesArr.Add(_("Personal Care"));
+    lsckCategoriesArr.Add(_("Entertainment"));
+    lsckCategoriesArr.Add(_("Comestimates"));
+    lsckCategoriesArr.Add(_("Economy and Investments"));
+    lsckCategoriesArr.Add(_("Taxes"));
+    lsckCategoriesArr.Add(_("Gifts"));
+    lsckCategoriesArr.Add(_("Extras"));
+    lsckCategories = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 70), lsckCategoriesArr, wxLB_ALWAYS_SB|wxLB_HSCROLL|wxLB_SINGLE);
     
-    szMain->Add(lsckCategory, wxGBPosition(6,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
+    szMain->Add(lsckCategories, wxGBPosition(6,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
     
-    ckInvertCategory = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
-    ckInvertCategory->SetValue(false);
+    ckInvertCategories = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertCategories->SetValue(false);
     
-    szMain->Add(ckInvertCategory, wxGBPosition(6,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    szMain->Add(ckInvertCategories, wxGBPosition(6,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
     
     lnTotals = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
     
@@ -741,6 +746,23 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     
     szMain->Add(rdShow, wxGBPosition(8,3), wxGBSpan(2,3), wxALL|wxEXPAND, 5);
     
+    lbWallets = new wxStaticText(this, wxID_ANY, _("Wallets:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szMain->Add(lbWallets, wxGBPosition(10,0), wxGBSpan(1,1), wxALL, 5);
+    
+    wxArrayString lsckWalletsArr;
+    lsckWalletsArr.Add(_("All"));
+    lsckWalletsArr.Add(_("Pocket"));
+    lsckWalletsArr.Add(_("Bank"));
+    lsckWallets = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 70), lsckWalletsArr, wxLB_ALWAYS_SB|wxLB_HSCROLL|wxLB_SINGLE);
+    
+    szMain->Add(lsckWallets, wxGBPosition(10,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
+    
+    ckInvertWallets = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
+    ckInvertWallets->SetValue(false);
+    
+    szMain->Add(ckInvertWallets, wxGBPosition(10,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    
     lnControls = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
     
     szMain->Add(lnControls, wxGBPosition(11,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
@@ -748,8 +770,6 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     wxBoxSizer* szControls = new wxBoxSizer(wxHORIZONTAL);
     
     szMain->Add(szControls, wxGBPosition(12,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
-    
-    szControls->Add(0, 0, 1, wxALL, 5);
     
     szControls->Add(0, 0, 1, wxALL, 5);
     
@@ -761,6 +781,10 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     
     szControls->Add(btRefresh, 1, wxALL|wxEXPAND, 5);
     
+    btClose = new wxButton(this, wxID_ANY, _("Close and Refresh"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szControls->Add(btClose, 1, wxALL|wxEXPAND, 5);
+    
     SetName(wxT("BudgetFilterBase"));
     SetSizeHints(600,500);
     if ( GetSizer() ) {
@@ -769,11 +793,13 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     CentreOnParent(wxBOTH);
     // Connect events
     btRefresh->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtrefreshButtonClicked), NULL, this);
+    btClose->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtcloseButtonClicked), NULL, this);
     
 }
 
 BudgetFilterBase::~BudgetFilterBase()
 {
     btRefresh->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtrefreshButtonClicked), NULL, this);
+    btClose->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtcloseButtonClicked), NULL, this);
     
 }

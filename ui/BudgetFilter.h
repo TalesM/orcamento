@@ -21,6 +21,7 @@ private:
     Search _search;
     std::vector<SearchListener> _searchListener;
 protected:
+    virtual void OnBtcloseButtonClicked(wxCommandEvent& event);
     virtual void OnBtrefreshButtonClicked(wxCommandEvent& event);
 };
 #endif // BUDGETFILTER_H

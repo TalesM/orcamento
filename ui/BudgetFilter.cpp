@@ -6,6 +6,7 @@ using namespace std;
 BudgetFilter::BudgetFilter(wxWindow* parent)
     : BudgetFilterBase(parent)
 {
+    SetLayoutAdaptationMode(wxDIALOG_ADAPTATION_MODE_ENABLED);
 }
 
 BudgetFilter::~BudgetFilter()
@@ -42,15 +43,29 @@ void BudgetFilter::OnBtrefreshButtonClicked(wxCommandEvent& event)
             throw std::runtime_error("Unknown Value");
         }
     };
+    auto moneyParse = [&and_](const std::string &field, wxTextCtrl *minValue, wxTextCtrl *maxValue, bool invert = false){
+        auto min = string(minValue->GetValue());
+        auto max = string(maxValue->GetValue());
+        auto s = search("estimated");
+        if(min.size() > 0){
+            and_(s >= std::string(min));
+        }
+        if(max.size() > 0){
+            and_(s <= std::string(max));
+        }
+    };
 
     //Making the search
     textParse("name", txName, chName);
     textParse("obs", txObservation, chObservation);
-    if(txEstimatedFrom->GetValue().size()){
-        and_(search("estimated") >= std::string(txEstimatedFrom->GetValue()));
+    moneyParse("estimated", txEstimatedFrom, txEstimatedTo);
+    moneyParse("accounted", txAccountedFrom, txAccountedTo);
+    moneyParse("remaining", txRemainingFrom, txRemainingTo);
+    if(spDateFrom->GetValue() > 1){
+        and_(search("due") >= spDateFrom->GetValue());
     }
-    if(txEstimatedTo->GetValue().size()){
-        and_(search("estimated") <= std::string(txEstimatedTo->GetValue()));
+    if(spDateTo->GetValue() < 31){
+        and_(search("due") <= spDateTo->GetValue());
     }
     
     
@@ -60,4 +75,9 @@ void BudgetFilter::OnBtrefreshButtonClicked(wxCommandEvent& event)
     for(auto&& listener : _searchListener) {
         listener(_search);
     }
+}
+void BudgetFilter::OnBtcloseButtonClicked(wxCommandEvent& event)
+{
+    OnBtrefreshButtonClicked(event);
+    Close();
 }

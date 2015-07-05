@@ -36,6 +36,7 @@ struct FieldDescriptor{
     enum Type {
         STRING,
         INT,
+        MONEY, ///< Convert to int *100
     }type;
     
     FieldDescriptor(const std::string &nick, Type type = STRING): 

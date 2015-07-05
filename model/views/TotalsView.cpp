@@ -15,7 +15,9 @@ JOIN (
         execution_estimate.amount AS accounted, 
         budget_id,
         estimate.name AS name,
-        estimate.obs AS obs
+        estimate.obs AS obs,
+        estimate.due AS due,
+        estimate.category_id
     FROM estimate
         LEFT JOIN (
             SELECT
@@ -55,10 +57,15 @@ void TotalsView::search(const Search& search)
     _params = sqlize(search, { 
         { "name", "fixed_estimate.name" },
         { "obs", "fixed_estimate.obs" },
-        { "estimated", "(fixed_estimate.estimated)", FieldDescriptor::INT },
-        { "accounted", "(fixed_estimate.accounted)", FieldDescriptor::INT },
-        { "remaining", "((fixed_estimate.estimated-fixed_estimate.accounted))", FieldDescriptor::INT },
+        { "estimated", "(fixed_estimate.estimated)", FieldDescriptor::MONEY },
+        { "accounted", "(fixed_estimate.accounted)", FieldDescriptor::MONEY },
+        { "remaining", "((fixed_estimate.accounted-fixed_estimate.estimated))", FieldDescriptor::MONEY },
+        { "due", "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)", FieldDescriptor::INT },
+        { "category", "category_id", FieldDescriptor::INT },
     });
+    if(!_params.query.size()){
+        return query(sql + std::string("\nORDER BY category_id, estim.name"));
+    }
     query(std::string(sql) + " AND " + _params.query);
 }
 
