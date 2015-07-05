@@ -719,36 +719,9 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     
     szMain->Add(ckInvertCategories, wxGBPosition(6,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
     
-    lnTotals = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
-    
-    szMain->Add(lnTotals, wxGBPosition(7,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
-    
-    lbTotals = new wxStaticText(this, wxID_ANY, _("Totals Options"), wxDefaultPosition, wxSize(-1,-1), 0);
-    wxFont lbTotalsFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-    lbTotalsFont.SetUnderlined(true);
-    lbTotalsFont.SetWeight(wxFONTWEIGHT_BOLD);
-    lbTotals->SetFont(lbTotalsFont);
-    
-    szMain->Add(lbTotals, wxGBPosition(8,0), wxGBSpan(1,1), wxALL, 5);
-    
-    ckAdjustEstimates = new wxCheckBox(this, wxID_ANY, _("Adjusts estimates to Accounted"), wxDefaultPosition, wxSize(-1,-1), 0);
-    ckAdjustEstimates->SetValue(true);
-    ckAdjustEstimates->SetToolTip(_("Adjust estimates to the accounted when it overflows"));
-    
-    szMain->Add(ckAdjustEstimates, wxGBPosition(9,0), wxGBSpan(1,3), wxALL, 5);
-    
-    wxArrayString rdShowArr;
-    rdShowArr.Add(_("Both"));
-    rdShowArr.Add(_("Only Debts"));
-    rdShowArr.Add(_("Only Credits"));
-    rdShow = new wxRadioBox(this, wxID_ANY, _("Shows..."), wxDefaultPosition, wxSize(-1,-1), rdShowArr, 1, wxRA_SPECIFY_ROWS);
-    rdShow->SetSelection(0);
-    
-    szMain->Add(rdShow, wxGBPosition(8,3), wxGBSpan(2,3), wxALL|wxEXPAND, 5);
-    
     lbWallets = new wxStaticText(this, wxID_ANY, _("Wallets:"), wxDefaultPosition, wxSize(-1,-1), 0);
     
-    szMain->Add(lbWallets, wxGBPosition(10,0), wxGBSpan(1,1), wxALL, 5);
+    szMain->Add(lbWallets, wxGBPosition(7,0), wxGBSpan(1,1), wxALL, 5);
     
     wxArrayString lsckWalletsArr;
     lsckWalletsArr.Add(_("All"));
@@ -756,20 +729,20 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     lsckWalletsArr.Add(_("Bank"));
     lsckWallets = new wxCheckListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1, 70), lsckWalletsArr, wxLB_ALWAYS_SB|wxLB_HSCROLL|wxLB_SINGLE);
     
-    szMain->Add(lsckWallets, wxGBPosition(10,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
+    szMain->Add(lsckWallets, wxGBPosition(7,1), wxGBSpan(1,4), wxALL|wxEXPAND, 5);
     
     ckInvertWallets = new wxCheckBox(this, wxID_ANY, _("Invert"), wxDefaultPosition, wxSize(-1,-1), 0);
     ckInvertWallets->SetValue(false);
     
-    szMain->Add(ckInvertWallets, wxGBPosition(10,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
+    szMain->Add(ckInvertWallets, wxGBPosition(7,5), wxGBSpan(1,1), wxALL|wxALIGN_CENTER_VERTICAL, 5);
     
     lnControls = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxLI_HORIZONTAL);
     
-    szMain->Add(lnControls, wxGBPosition(11,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
+    szMain->Add(lnControls, wxGBPosition(8,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
     
     wxBoxSizer* szControls = new wxBoxSizer(wxHORIZONTAL);
     
-    szMain->Add(szControls, wxGBPosition(12,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
+    szMain->Add(szControls, wxGBPosition(9,0), wxGBSpan(1,6), wxALL|wxEXPAND, 5);
     
     szControls->Add(0, 0, 1, wxALL, 5);
     

@@ -32,7 +32,6 @@
 #include <wx/spinctrl.h>
 #include <wx/checklst.h>
 #include <wx/statline.h>
-#include <wx/radiobox.h>
 
 class CreateDatabaseDialogBase : public wxDialog
 {
@@ -216,10 +215,6 @@ protected:
     wxStaticText* lbCategories;
     wxCheckListBox* lsckCategories;
     wxCheckBox* ckInvertCategories;
-    wxStaticLine* lnTotals;
-    wxStaticText* lbTotals;
-    wxCheckBox* ckAdjustEstimates;
-    wxRadioBox* rdShow;
     wxStaticText* lbWallets;
     wxCheckListBox* lsckWallets;
     wxCheckBox* ckInvertWallets;
