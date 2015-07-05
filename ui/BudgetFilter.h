@@ -6,6 +6,8 @@
 #include <functional>
 #include <vector>
 
+class OrcaDocument;
+
 class BudgetFilter : public BudgetFilterBase
 {
 public:
@@ -16,6 +18,8 @@ public:
     void addSearchListerner(const SearchListener &searchListener){
         _searchListener.push_back(searchListener);
     }
+    
+    void refreshFields(OrcaDocument &doc);
     
 private:
     Search _search;

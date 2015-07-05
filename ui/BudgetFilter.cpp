@@ -1,5 +1,8 @@
 #include "BudgetFilter.h"
 #include <string>
+#include "model/OrcaDocument.h"
+#include "model/views/CategoryView.h"
+#include "model/views/WalletView.h"
 
 using namespace std;
 
@@ -12,6 +15,23 @@ BudgetFilter::BudgetFilter(wxWindow* parent)
 BudgetFilter::~BudgetFilter()
 {
 }
+
+
+void BudgetFilter::refreshFields(OrcaDocument &doc)
+{
+    lsckCategories->Clear();
+    CategoryView categoryView;
+    doc.look(categoryView, [this](const std::string name){
+        lsckCategories->Append(wxString::FromUTF8(name.c_str()));
+    });
+    
+    lsckWallets->Clear();
+    WalletView walletView;
+    doc.look(walletView, [this](int id, const std::string name){
+        lsckWallets->Append(wxString::FromUTF8(name.c_str()), reinterpret_cast<void*>(id));
+    });
+}
+
 
 void BudgetFilter::OnBtrefreshButtonClicked(wxCommandEvent& event)
 {

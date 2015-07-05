@@ -658,5 +658,6 @@ void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
             RefreshEstimates();
         });
     }
+    dgFilter->refreshFields(*_document);
     dgFilter->Show();
 }
