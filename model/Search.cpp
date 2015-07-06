@@ -19,10 +19,18 @@ SearchRaw::SearchRaw(std::shared_ptr<const SearchRaw> prev, Operation op, std::s
     assert(_operation == Operation::AND || _operation == Operation::OR);
 }
 
+SearchRaw::SearchRaw(std::shared_ptr<const SearchRaw> prev, Operation op):
+    _prev(prev), _operation(op)
+{
+    assert(_operation == Operation::NOT);
+}
+
 SearchRaw::~SearchRaw()
 {
     if(_operation == Operation::NONE){
         _field.~string();
+    } else if(_operation == Operation::NOT){
+        _prev.~shared_ptr<const SearchRaw>();
     } else if(_operation == Operation::AND || _operation == Operation::OR){
         _prev.~shared_ptr<const SearchRaw>();
         _next.~shared_ptr<const SearchRaw>();
@@ -49,6 +57,12 @@ std::shared_ptr<const SearchRaw> SearchRaw::or_(std::shared_ptr<const SearchRaw>
         return shared_from_this();
     }
     return make_shared<SearchRaw>(shared_from_this(), Operation::OR, rhs);
+}
+std::shared_ptr<const SearchRaw> SearchRaw::not_() const{
+    if(this->_operation == Operation::NONE){
+        return shared_from_this();
+    }
+    return make_shared<SearchRaw>(shared_from_this(), Operation::NOT);
 }
 
 std::shared_ptr<const SearchRaw> SearchRaw::operate(Operation op, const std::string& s) const
@@ -84,6 +98,12 @@ SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &descri
                 return a;
             }
             return "("+a+" "+values[int(op)]+" "+b+")";
+        }
+        if(op == Operation::NOT){
+            if(a==""){
+                return "";
+            }
+            return "NOT("+a+")";
         }
         if(!description.count(a)){
             return "";

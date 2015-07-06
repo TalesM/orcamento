@@ -22,6 +22,7 @@ enum class Operation{
 
     AND,
     OR,
+    NOT,
 };
 
 struct SearchQuery{
@@ -64,6 +65,7 @@ public:
     SearchRaw(const std::string &field);
     SearchRaw(const std::string &field, Operation op, const std::string &value);
     SearchRaw(std::shared_ptr<const SearchRaw> prev, Operation op, std::shared_ptr<const SearchRaw> next);
+    SearchRaw(std::shared_ptr<const SearchRaw> prev, Operation op);
     ~SearchRaw();
     
     std::shared_ptr<const SearchRaw> equal(const std::string &s) const{
@@ -96,6 +98,7 @@ public:
     
     std::shared_ptr<const SearchRaw> and_(std::shared_ptr<const SearchRaw>) const;
     std::shared_ptr<const SearchRaw> or_(std::shared_ptr<const SearchRaw>) const;
+    std::shared_ptr<const SearchRaw> not_() const;
     
     
     ///@name getters
@@ -105,16 +108,16 @@ public:
     }
     
     const std::string &field() const{
-        assert(_operation != Operation::AND && _operation != Operation::OR);
+        assert(_operation != Operation::AND && _operation != Operation::OR && _operation != Operation::NOT);
         return _field;
     }
     const std::string &value() const{
-        assert(_operation != Operation::AND && _operation != Operation::OR && _operation != Operation::NONE);
+        assert(_operation != Operation::AND && _operation != Operation::OR && _operation != Operation::NOT && _operation != Operation::NONE);
         return _value;
     }
     
     const std::shared_ptr<const SearchRaw> &prev() const {
-        assert(_operation == Operation::AND || _operation == Operation::OR);
+        assert(_operation == Operation::AND || _operation == Operation::OR || _operation == Operation::NOT);
         return _prev;
     }
     const std::shared_ptr<const SearchRaw> &next() const {
@@ -158,10 +161,13 @@ inline auto linearize(const Search &origin, CALLABLE callableVisitor) -> decltyp
     if(operation == Operation::NONE){
         return callableVisitor(origin->field(), operation);
     }
-    if(operation != Operation::AND && operation != Operation::OR){
-        return callableVisitor(origin->field(), operation, origin->value());
+    if(operation == Operation::NOT){
+        return callableVisitor(linearize(origin->prev(), callableVisitor), operation);
     }
-    return callableVisitor(linearize(origin->prev(), callableVisitor), operation, linearize(origin->next(), callableVisitor));
+    if(operation == Operation::AND || operation == Operation::OR){
+        return callableVisitor(linearize(origin->prev(), callableVisitor), operation, linearize(origin->next(), callableVisitor));
+    }
+    return callableVisitor(origin->field(), operation, origin->value());
 }
 
 /**

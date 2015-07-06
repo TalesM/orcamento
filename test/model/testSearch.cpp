@@ -16,6 +16,7 @@ TEST_CASE("SearchOption", "[model]"){
     
     CHECK((search("teste")->suffix("x") && search("teste")->prefix("y"))->operation() == Operation::AND);
     CHECK((search("teste")->suffix("x") || search("teste")->prefix("y"))->operation() == Operation::OR);
+    CHECK((search("teste")->suffix("x")->not_())->operation() == Operation::NOT);
 
     const char *values[] = {
         "NONE",
@@ -30,6 +31,7 @@ TEST_CASE("SearchOption", "[model]"){
         "SUFFIX",
         "AND",
         "OR",
+        "NOT",
     };
     auto linearizator = [values](string a, Operation o, string b="")-> string {
         return a + " " + (b.size()?b + " ":"") + values[int(o)];
@@ -37,6 +39,7 @@ TEST_CASE("SearchOption", "[model]"){
     CHECK(linearize(search("teste"), linearizator) == "teste NONE");
     CHECK(linearize(search("teste")->equal("x"), linearizator) == string("teste x EQUAL"));
     CHECK(linearize(search("teste")->equal("x")->contains("y"), linearizator) == string("teste x EQUAL teste y CONTAINS AND"));
+    CHECK(linearize(search("teste")->equal("x")->contains("y")->not_(), linearizator) == string("teste x EQUAL teste y CONTAINS AND NOT"));
     
     SearchQuery sq = sqlize(search("teste")->equal("x"));
     CHECK(sq.query == "");
@@ -63,4 +66,7 @@ TEST_CASE("SearchOption", "[model]"){
     
     sq = sqlize(search("teste")->equal("5"), {{"teste", "t.name", FieldDescriptor::INT}});
     REQUIRE(sq.query == "t.name = :i_1");
+    
+    sq = sqlize(search("teste")->equal("5")->not_(), {{"teste", "t.name", FieldDescriptor::INT}});
+    REQUIRE(sq.query == "NOT(t.name = :i_1)");
 }
