@@ -169,7 +169,7 @@ inline auto linearize(const Search &origin, CALLABLE callableVisitor) -> decltyp
  * @param origin The search
  * @return A structure containing the query and necessary variables to bind.
  */
-SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description={});
+SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description={}, std::pair<int, int> initial={0,0});
 
 //    
 inline Search operator &&(Search lhs, Search rhs){

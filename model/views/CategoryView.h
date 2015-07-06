@@ -4,7 +4,7 @@
 #include "../OrcaView.h"
 
 
-class CategoryView : public OrcaView<std::string>
+class CategoryView : public OrcaView<int, std::string>
 {
 public:
     CategoryView();

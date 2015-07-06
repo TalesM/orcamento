@@ -26,7 +26,8 @@ public:
     void search(const Search &s);
 private:
     int _budgetId;
-    SearchQuery _params;
+    std::vector<std::string> _sValues;
+    std::vector<int> _iValues;
 
     void setup(SQLite::Statement &stm) override;
 };

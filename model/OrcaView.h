@@ -38,10 +38,14 @@ public:
 
     void look(SQLite::Database &model, HANDLER handler)
     {
-        SQLite::Statement stm(model, _sql);
-        setup(stm);
-        while(stm.executeStep()){
-            exec(stm, handler);
+        try{
+            SQLite::Statement stm(model, _sql);
+            setup(stm);
+            while(stm.executeStep()){
+                exec(stm, handler);
+            }
+        } catch(SQLite::Exception &e){
+            throw std::runtime_error("Error Executing: \n\'"+_sql+"\':\n\n"+e.what());
         }
     }
 

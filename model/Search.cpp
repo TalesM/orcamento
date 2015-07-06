@@ -34,10 +34,20 @@ SearchRaw::~SearchRaw()
 
 std::shared_ptr<const SearchRaw> SearchRaw::and_(std::shared_ptr<const SearchRaw> rhs) const
 {
+    if(this->_operation == Operation::NONE){
+        return rhs;
+    } else if(rhs->_operation == Operation::NONE) {
+        return shared_from_this();
+    }
     return make_shared<SearchRaw>(shared_from_this(), Operation::AND, rhs);
 }
 std::shared_ptr<const SearchRaw> SearchRaw::or_(std::shared_ptr<const SearchRaw> rhs) const
 {
+    if(this->_operation == Operation::NONE){
+        return rhs;
+    } else if(rhs->_operation == Operation::NONE) {
+        return shared_from_this();
+    }
     return make_shared<SearchRaw>(shared_from_this(), Operation::OR, rhs);
 }
 
@@ -50,7 +60,7 @@ std::shared_ptr<const SearchRaw> SearchRaw::operate(Operation op, const std::str
     return and_(v);
 }
 
-SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description){
+SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &description, std::pair<int, int> initial){
     SearchQuery q{};
     static const char *values[] = {
         " AND RAISE(FAIL, 'xxx')",
@@ -66,10 +76,12 @@ SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &descri
         "AND",
         "OR",
     };
-    q.query = linearize(origin, [&q, &description](const string &a, Operation op, const string &b="") -> string{
+    q.query = linearize(origin, [&q, &description, &initial](const string &a, Operation op, const string &b="") -> string{
         if(op == Operation::OR || op == Operation::AND){
             if(a==""){
                 return b;
+            } else if(b == ""){
+                return a;
             }
             return "("+a+" "+values[int(op)]+" "+b+")";
         }
@@ -89,21 +101,21 @@ SearchQuery sqlize(const Search &origin, const std::set<FieldDescriptor> &descri
                 stringstream ss(b), tt;
                 ss >> i;
                 q.iValues.push_back(i);
-                tt << q.iValues.size();
+                tt << q.iValues.size()+initial.second;
                 return fieldDescription.fieldSql+" "+values[int(op)]+" :i_"+tt.str();
             } else if(fieldDescription.type == FieldDescriptor::MONEY){ 
                 double d;
                 stringstream ss(b), tt;
                 ss >> d;
                 q.iValues.push_back(int(d*100));
-                tt << q.iValues.size();
+                tt << q.iValues.size()+initial.second;
                 return fieldDescription.fieldSql+" "+values[int(op)]+" :i_"+tt.str();
             } else { //if fieldDescription.type == FieldDescriptor::STRING
                 q.sValues.push_back(b);
             }
         }
         stringstream ss;
-        ss << q.sValues.size();
+        ss << q.sValues.size()+initial.first;
         return fieldDescription.fieldSql+" "+values[int(op)]+" :s_"+ss.str();
     });
     return q;

@@ -75,7 +75,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="MinGW ( TDM-GCC-32 )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-std=c++14;-g -D__WXDEBUG__ -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP" C_Options="-g -D__WXDEBUG__ -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP " Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O0;-std=c++14;-g -D__WXDEBUG__ -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP" C_Options="-g -D__WXDEBUG__ -Wall -pipe -mthreads -Winvalid-pch -include wx_pch.h -std=gnu++1y -D__GNUWIN32__ -D__WXMSW__ -DWXUSINGDLL -DwxUSE_UNICODE -DWX_PRECOMP " Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="$(wx)/lib/gcc_dll/mswud"/>
         <IncludePath Value="$(wx)/include"/>
         <IncludePath Value="$(sqlitecpp.include)"/>
@@ -96,7 +96,7 @@
         <Library Value="CSV"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
-      <General OutputFile="bin/Debug/orcamento" IntermediateDirectory="./Debug" Command="./orcamento" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="bin/Debug" PauseExecWhenProcTerminates="no" IsGUIProgram="yes" IsEnabled="yes"/>
+      <General OutputFile="bin/Debug/orcamento" IntermediateDirectory="./Debug" Command="./orcamento" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="bin/Debug" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[WXCFG=gcc_dll/mswud]]>
       </Environment>

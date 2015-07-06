@@ -305,7 +305,7 @@ void OrcamentoMainFrame::RefreshCellAttr(bool executing)
     wxGridCellAttr* attrCategoryCol = new wxGridCellAttr();
     wxArrayString choices;
     _document->look(_categoryView,
-                    [this, &choices](const std::string& name) { choices.Add(wxString::FromUTF8(name.c_str())); });
+                    [this, &choices](int, const std::string& name) { choices.Add(wxString::FromUTF8(name.c_str())); });
     attrCategoryCol->SetEditor(new wxGridCellChoiceEditor(choices));
     gdEstimates->SetColAttr(EstimateColumn::CATEGORY, attrCategoryCol);
 
