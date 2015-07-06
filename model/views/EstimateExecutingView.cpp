@@ -4,7 +4,7 @@ static auto _sql = R"=(
 SELECT 
     estim.estimate_id,
     estim.name AS name,
-    DATE(bud.start, estim.due) AS due,
+    STRFTIME("%d", bud.start, estim.due) AS due,
     estim.amount/100.0 AS estimated,
     exc.amount/100.0 AS accounted, 
     (IFNULL(exc.amount, 0)-estim.amount)/100.0 AS remaining,

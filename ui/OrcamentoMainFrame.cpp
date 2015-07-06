@@ -61,7 +61,7 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent)
     gdEstimates->EnableGridLines(true);
     gdEstimates->SetColLabelValue(0, _("Id"));
     gdEstimates->SetColLabelValue(1, _("Name"));
-    gdEstimates->SetColLabelValue(2, _("Due"));
+    gdEstimates->SetColLabelValue(2, _("Due Day"));
     gdEstimates->SetColLabelValue(3, _("Estimated"));
     gdEstimates->SetColLabelValue(4, _("Accounted"));
     gdEstimates->SetColLabelValue(5, _("Remaining"));
@@ -147,7 +147,8 @@ void OrcamentoMainFrame::SetupCellAttr()
     auto moneyRenderer = new wxGridCellFloatRenderer(-1, 2);
     // Due
     wxGridCellAttr* attrDueCol = new wxGridCellAttr();
-    attrDueCol->SetRenderer(new wxGridCellDateTimeRenderer("%B %d, %Y", "%Y-%m-%d"));
+    attrDueCol->SetRenderer(new wxGridCellNumberRenderer());
+    attrDueCol->SetEditor(new wxGridCellNumberEditor(1, 31));
     gdEstimates->SetColAttr(EstimateColumn::DUE, attrDueCol);
 
     // Expected
@@ -592,9 +593,7 @@ void OrcamentoMainFrame::OnGdestimatesGridCellChanging(wxGridEvent& event)
         }
         case EstimateColumn::DUE:
             if(newValue.length()) {
-                wxDateTime due{};
-                due.ParseISODate(newValue);
-                int day = due.GetDay() -1;
+                int day = atoi(newValue) - 1;
                 _document->exec<action::UpdateEstimateDue>(estimateId, day);
             } else {
                 _document->exec<action::DeleteEstimateDue>(estimateId);
