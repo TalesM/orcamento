@@ -1,13 +1,13 @@
 #include "EstimateExecutingView.h"
 
-static auto sql = R"=(
+static auto _sql = R"=(
 SELECT 
     estim.estimate_id,
     estim.name AS name,
     DATE(bud.start, estim.due) AS due,
-    estim.amount/100 AS estimated,
-    exc.amount/100 AS accounted, 
-    (IFNULL(exc.amount, 0)-estim.amount)/100 AS remaining,
+    estim.amount/100.0 AS estimated,
+    exc.amount/100.0 AS accounted, 
+    (IFNULL(exc.amount, 0)-estim.amount)/100.0 AS remaining,
     cat.name AS category, 
     estim.obs AS obs
 FROM budget bud
@@ -16,46 +16,73 @@ FROM budget bud
     LEFT JOIN (
         SELECT
             IFNULL(SUM(execution.amount), 0) AS amount, estimate_id
-        FROM execution GROUP BY estimate_id
+        FROM execution 
+        {{sub}}
+        GROUP BY estimate_id
     ) AS exc USING(estimate_id)
-    WHERE budget_id = ?1
+    WHERE budget_id = :budget {{main}}
+    ORDER BY category_id, estim.name
 )=";
 
+
+static std::string sql(const std::string &mainQuery="", const std::string &execQuery="");
+
 EstimateExecutingView::EstimateExecutingView():
-    OrcaView(std::string(sql)+"\nORDER BY category_id, estim.name")
+    OrcaView(std::string(sql())+"\nORDER BY category_id, estim.name")
 {
     //ctor
 }
 void EstimateExecutingView::setup(SQLite::Statement& stm)
 {
-    stm.bind(1, _budgetId);
-    for(size_t i = 0; i < _params.sValues.size(); ++i){
+    stm.bind(":budget", _budgetId);
+    for(size_t i = 0; i < _sValues.size(); ++i){
         std::stringstream ss;
         ss << ":s_" << (i+1);
-        stm.bind(ss.str(), _params.sValues[i]);
+        stm.bind(ss.str(), _sValues[i]);
     }
-    for(size_t i = 0; i < _params.iValues.size(); ++i){
+    for(size_t i = 0; i < _iValues.size(); ++i){
         std::stringstream ss;
         ss << ":i_" << (i+1);
-        stm.bind(ss.str(), _params.iValues[i]);
+        stm.bind(ss.str(), _iValues[i]);
     }
 }
 void EstimateExecutingView::search(const Search& search)
 {
     if(!search){
-        _params = SearchQuery{};
-        return query(sql + std::string("\nORDER BY category_id, estim.name"));
+        _sValues.clear();
+        _iValues.clear(); 
+        return query(sql());
     }
-    _params = sqlize(search, { 
+    auto params = sqlize(search, { 
         { "name", "estim.name" },
         { "obs", "estim.obs" },
         { "estimated", "estim.amount", FieldDescriptor::MONEY },
         { "accounted", "exc.amount", FieldDescriptor::MONEY },
         { "remaining", "(exec.amount-estim.amount)", FieldDescriptor::MONEY },
         { "due", "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)", FieldDescriptor::INT },
+        { "category", "category_id", FieldDescriptor::INT },
     });
-    if(!_params.query.size()){
-        return query(sql + std::string("\nORDER BY category_id, estim.name"));
-    }
-    query(std::string(sql) + " AND " + _params.query + "\nORDER BY category_id, estim.name");
+    auto subParams = sqlize(search, {{"wallet", "wallet_id", FieldDescriptor::INT}});
+    
+    query(sql(params.query, subParams.query));
+    _sValues = std::move(params.sValues);
+    _sValues.insert(_sValues.end(), subParams.sValues.begin(), subParams.sValues.end());
+    _iValues = std::move(params.iValues);
+    _iValues.insert(_iValues.end(), subParams.iValues.begin(), subParams.iValues.end());
 }
+
+static std::string sql(const std::string &mainQuery, const std::string &execQuery){
+    std::string s = _sql;
+    auto replaceWithPrefix = [&s](const std::string &sub, const std::string &query, const std::string &prefix){
+        auto i = s.find(sub);
+        if(query.size()){
+            s.replace(i, sub.size(), prefix+query);
+        } else {
+            s.replace(i, sub.size(), "");
+        }
+    };
+    replaceWithPrefix("{{main}}", mainQuery, " AND ");
+    replaceWithPrefix("{{sub}}", execQuery, "WHERE ");
+    return s;
+}
+

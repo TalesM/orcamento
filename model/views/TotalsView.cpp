@@ -32,7 +32,7 @@ JOIN (
 WHERE budget_id = :budget
 )=";
 
-std::string sql(const std::string &mainQuery="", const std::string &execQuery="");
+static std::string sql(const std::string &mainQuery="", const std::string &execQuery="");
 
 TotalsView::TotalsView():
     OrcaView(sql())
@@ -72,14 +72,14 @@ void TotalsView::search(const Search& search)
     });
     auto subParams = sqlize(search, {{"wallet", "wallet_id", FieldDescriptor::INT}}, std::make_pair(params.sValues.size(), params.iValues.size()));
     
-    query(std::string(sql(params.query, subParams.query)));
+    query(sql(params.query, subParams.query));
     _sValues = std::move(params.sValues);
     _sValues.insert(_sValues.end(), subParams.sValues.begin(), subParams.sValues.end());
     _iValues = std::move(params.iValues);
     _iValues.insert(_iValues.end(), subParams.iValues.begin(), subParams.iValues.end());
 }
 
-std::string sql(const std::string &mainQuery, const std::string &execQuery){
+static std::string sql(const std::string &mainQuery, const std::string &execQuery){
     auto subQuery = [&execQuery](const std::string &_sql){
         std::string s = _sql;
         const char sub[] = "{{sub}}";
