@@ -69,6 +69,72 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent)
     gdEstimates->SetColLabelValue(7, _("Observation"));
 
     SetupCellAttr();
+    wxArrayString ss;
+    ss.Add(_("Load a existing Database"));
+    ss.Add(_("Create a new database"));
+CHOOSE_OPTION://An ugly fix for issue #22. Should replace it ASAP for a proper start window...
+    auto a = wxGetSingleChoiceIndex(_("Choose what you want to do"), _("You want to..."), ss, this);
+    switch(a){
+        case -1:
+            Close();
+            break;
+        case 0:{
+            wxFileDialog openFileDialog(
+                this, _("Select the file"), "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+            if(openFileDialog.ShowModal() != wxID_OK) {
+                return;
+            }
+            wxString location = openFileDialog.GetPath();
+            try {
+                _document = OrcaDocument::load(location);
+                RefreshModel();
+            } catch(const wrongver_error& e) {
+                if(OrcaDocument::canConvert(e.major, e.minor, e.patch, e.variant)) {
+                    try {
+                        wxString backupLocation = location + ".old";
+                        if(rename(location, backupLocation)!=0){
+                            std::runtime_error("Can not backup.");
+                        }
+                        _document = OrcaDocument::convert(backupLocation, location);
+                        RefreshModel();
+                    } catch(const std::exception& e) {
+                        wxMessageBox(e.what());
+                        goto CHOOSE_OPTION;
+                    }
+                } else {
+                    wxMessageBox(e.what());
+                    goto CHOOSE_OPTION;
+                }
+            } catch(const std::exception& e) {
+                wxMessageBox(e.what());
+                goto CHOOSE_OPTION;
+            }
+            break;
+        }
+        case 1:{
+            CreateDatabaseDialog dialog(this);
+DIALOG_SHOW: //Don't do this at home, kids.
+            if(dialog.ShowModal() != wxID_OK ) {
+                goto CHOOSE_OPTION;
+            }
+            wxString location = dialog.getLocation();
+            if(location.Trim().length()==0) {
+                wxMessageBox("Invalid Path");
+                goto DIALOG_SHOW;
+            }
+            wxDateTime start  = dialog.getStart();
+
+            try {
+                _document = OrcaDocument::create(location, start);
+            } catch (const std::exception &e) {
+                wxMessageBox(e.what());
+                _document = nullptr;
+                goto DIALOG_SHOW;
+            }
+            RefreshModel();
+            break;
+        }
+    }
 }
 
 OrcamentoMainFrame::~OrcamentoMainFrame()
@@ -415,7 +481,7 @@ DIALOG_SHOW: //Don't do this at home, kids.
 void OrcamentoMainFrame::OnMnfileopenMenuSelected(wxCommandEvent& event)
 {
     wxFileDialog openFileDialog(
-        this, L"Select the file", "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+        this, _("Select the file"), "", "", "Orca files (*.orca)|*.orca", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
     if(openFileDialog.ShowModal() != wxID_OK) {
         return;
     }
