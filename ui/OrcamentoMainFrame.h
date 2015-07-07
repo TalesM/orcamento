@@ -31,19 +31,6 @@ private:
     BudgetFilter *dgFilter = nullptr;
 
     wxGridCellAttr *attrNothing;
-    ///Attribs for estimates
-    wxGridCellAttr *attrCredit;
-    wxGridCellAttr *attrDebit;
-    wxGridCellAttr *attrNeutral;
-
-    ///Attribs for execution
-    wxGridCellAttr *attrCreditNone;
-    wxGridCellAttr *attrCreditPending;
-    wxGridCellAttr *attrCreditReceived;
-    wxGridCellAttr *attrDebitNone;
-    wxGridCellAttr *attrDebitPending;
-    wxGridCellAttr *attrDebitPaid;
-    wxGridCellAttr *attrDebitOverpaid;
     
     void SetupCellAttr();
     void RefreshModel();

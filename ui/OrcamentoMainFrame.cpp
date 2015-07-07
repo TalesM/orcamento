@@ -175,43 +175,6 @@ void OrcamentoMainFrame::SetupCellAttr()
     wxGridCellAttr* obsCol = new wxGridCellAttr();
     obsCol->SetReadOnly();
     gdEstimates->SetColAttr(EstimateColumn::OBS, obsCol);
-
-    // ROWS
-    wxColour red{ 0xAAAAFF }, green{ 0xAAFFAA }, yellow{ 0xAAD4D4 }, blue{ 0xFFAAAA }, magenta{ 0xD4AAD4 },
-        orange{ 0xAAD4FF }, white{ 0xFFFFFF };
-
-    attrNothing = new wxGridCellAttr();
-    attrNothing->SetReadOnly(true);
-
-    attrCredit = new wxGridCellAttr();
-    attrCredit->SetBackgroundColour(green);
-
-    attrDebit = new wxGridCellAttr();
-    attrDebit->SetBackgroundColour(magenta);
-
-    attrNeutral = new wxGridCellAttr();
-    attrNeutral->SetBackgroundColour(yellow);
-
-    attrCreditNone = new wxGridCellAttr();
-    attrCreditNone->SetBackgroundColour(white);
-
-    attrCreditPending = new wxGridCellAttr();
-    attrCreditPending->SetBackgroundColour(orange);
-
-    attrCreditReceived = new wxGridCellAttr();
-    attrCreditReceived->SetBackgroundColour(green);
-
-    attrDebitNone = new wxGridCellAttr();
-    attrDebit->IncRef();
-
-    attrDebitPending = new wxGridCellAttr();
-    attrDebitPending->SetBackgroundColour(blue);
-
-    attrDebitPaid = new wxGridCellAttr();
-    attrDebitPaid->SetBackgroundColour(magenta);
-
-    attrDebitOverpaid = new wxGridCellAttr();
-    attrDebitOverpaid->SetBackgroundColour(red);
 }
 
 void OrcamentoMainFrame::RefreshModel()
@@ -298,46 +261,51 @@ void OrcamentoMainFrame::RefreshEstimates()
 
 void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double accounted)
 {
-    if(estimated > 0) {
-        attrCredit->IncRef();
-        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrCredit);
-        if(accounted >= estimated) {
-            attrCreditReceived->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditReceived);
-        } else if(accounted > 0) {
-            attrCreditPending->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditPending);
+    wxColour red{ 0xAAAAFF }, green{ 0xAAFFAA }, yellow{ 0xAAD4D4 }, blue{ 0xFFD4AA }, magenta{ 0xD4AAD4 },
+        orange{ 0xAAD4FF }, white{ 0xFFFFFF };
+    auto n_cols = gdEstimates->GetNumberCols();
+    wxColour basic, current;
+    if(estimated > 0){//credit
+        basic = green;
+        double ratio = accounted/estimated;
+        if(ratio >= 1){
+            current = blue;
+        }else if(ratio >= 0){
+            double factor = 1 - ratio;
+            current = wxColour(green.Red()+(255-green.Red())*factor, 
+                                green.Green()+(255-green.Green())*factor, 
+                                green.Blue()+(255-green.Blue())*factor);
         } else {
-            attrCreditNone->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCreditNone);
+            current = red;
         }
-    } else if(estimated < 0) {
-        attrDebit->IncRef();
-        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrDebit);
-        if(accounted < estimated) {
-            attrDebitOverpaid->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitOverpaid);
-        } else if(accounted == estimated) {
-            attrDebitPaid->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPaid);
-        } else if(accounted < 0) {
-            attrDebitPending->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitPending);
+    } else if(estimated < 0){//debit
+        basic = orange;
+        double ratio = accounted/estimated;
+        if(ratio > 1){
+            current = red;
+        }else if(ratio > 0){
+            double factor = 1 - ratio;
+            current = wxColour(orange.Red()+(255-orange.Red())*factor, 
+                                orange.Green()+(255-orange.Green())*factor, 
+                                orange.Blue()+(255-orange.Blue())*factor);
         } else {
-            attrDebitNone->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebitNone);
+            current = white;
         }
-    } else {
-        attrNeutral->IncRef();
-        gdEstimates->SetAttr(i, EstimateColumn::ESTIMATED, attrNeutral);
-        if(accounted > 0) {
-            attrCredit->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrCredit);
-        } else {
-            attrDebit->IncRef();
-            gdEstimates->SetAttr(i, EstimateColumn::ACCOUNTED, attrDebit);
+    }else {//Neutral
+        basic = white;
+        if(accounted > 0){
+            current = blue;
+        }else if(accounted < 0){
+            current = red;
+        }else {
+            current = white; 
         }
     }
+    for(int j =0; j < n_cols; ++j){
+        gdEstimates->SetCellBackgroundColour(i, j, basic);
+    }
+    gdEstimates->SetCellBackgroundColour(i, EstimateColumn::ACCOUNTED, current);
+    gdEstimates->SetCellBackgroundColour(i, EstimateColumn::REMAINING, current);
 }
 
 void OrcamentoMainFrame::RefreshTotals()
