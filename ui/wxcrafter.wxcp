@@ -1485,6 +1485,13 @@
          "m_functionNameAndSignature": "OnGdestimatesGridCellRightClick(wxGridEvent& event)",
          "m_description": "The user clicked a cell with the right mouse button. Processes a wxEVT_GRID_CELL_RIGHT_CLICK.",
          "m_noBody": false
+        }, {
+         "m_eventName": "wxEVT_GRID_COL_SORT",
+         "m_eventClass": "wxGridEvent",
+         "m_eventHandler": "wxGridEventHandler",
+         "m_functionNameAndSignature": "OnGdestimatesGridColSort(wxGridEvent& event)",
+         "m_description": "This event is generated when a column is clicked by the user and its name is explained by the fact that the custom reaction to a click on a column is to sort the grid contents by this column. However the grid itself has no special support for sorting and it's up to the handler of this event to update the associated table. But if the event is handled (and not vetoed) the grid supposes that the table was indeed resorted and updates the column to indicate the new sort order and refreshes itself. This event macro correspondsto wxEVT_GRID_COL_SORT event type.",
+         "m_noBody": false
         }],
        "m_children": []
       }, {

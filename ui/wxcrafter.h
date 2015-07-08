@@ -10,28 +10,97 @@
 #include <wx/settings.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/xrc/xh_bmp.h>
-#include <wx/dialog.h>
+#include <wx/frame.h>
 #include <wx/iconbndl.h>
 #include <wx/artprov.h>
-#include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/filepicker.h>
-#include <wx/datectrl.h>
-#include <wx/button.h>
-#include <wx/gbsizer.h>
-#include <wx/textctrl.h>
-#include <wx/grid.h>
-#include <wx/htmllbox.h>
-#include <wx/frame.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
+#include <wx/sizer.h>
+#include <wx/gbsizer.h>
+#include <wx/htmllbox.h>
+#include <wx/grid.h>
 #include <wx/panel.h>
+#include <wx/stattext.h>
+#include <wx/textctrl.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
+#include <wx/filepicker.h>
+#include <wx/datectrl.h>
 #include <wx/choice.h>
 #include <wx/arrstr.h>
 #include <wx/checkbox.h>
 #include <wx/spinctrl.h>
 #include <wx/checklst.h>
 #include <wx/statline.h>
+
+class OrcamentoMainFrameBase : public wxFrame
+{
+protected:
+    wxMenuBar* mnMain;
+    wxMenu* mnFile;
+    wxMenuItem* mnFileNew;
+    wxMenuItem* mnFileOpen;
+    wxMenuItem* mnFileSave;
+    wxMenuItem* mnFileSaveAs;
+    wxMenuItem* mnFileSeparator;
+    wxMenuItem* mnFileQuit;
+    wxMenu* mnBudget;
+    wxMenuItem* mnBudgetCreateNext;
+    wxMenuItem* mnBudgetExecuteNext;
+    wxMenuItem* mnBudgetSeparator;
+    wxMenuItem* mnBudgetExport;
+    wxMenu* mnEstimate;
+    wxMenuItem* mnEstimateAdd;
+    wxMenu* mnWallet;
+    wxMenuItem* mnWalletOverview;
+    wxMenu* mnHelp;
+    wxMenuItem* mnHelpAbout;
+    wxStatusBar* sbStatus;
+    wxMenu* cmEstimate;
+    wxMenuItem* cmEstimatesExecute;
+    wxMenuItem* cmEstimatesCopySelectedRows;
+    wxMenuItem* cmEstimatesSeparator;
+    wxMenuItem* cmEstimatesDelete;
+    wxSimpleHtmlListBox* lsMonths;
+    wxGrid* gdEstimates;
+    wxPanel* pnTotals;
+    wxStaticText* lbTotalEstimated;
+    wxTextCtrl* txTotalEstimated;
+    wxStaticText* lbTotalAccounted;
+    wxTextCtrl* txTotalAccounted;
+    wxStaticText* lbTotalRemaining;
+    wxTextCtrl* txTotalRemaining;
+    wxButton* byFilterTotals;
+
+protected:
+    virtual void OnCloseWindow(wxCloseEvent& event) { event.Skip(); }
+    virtual void OnMnfilenewMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnfileopenMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnfilesaveMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnfilesaveasMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnfilequitMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnbudgetseparatorMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnbudgetexportMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnestimateaddMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnwalletoverviewMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnhelpaboutMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnLsmonthsListbox(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) { event.Skip(); }
+    virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) { event.Skip(); }
+    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
+    virtual void OnGdestimatesGridColSort(wxGridEvent& event) { event.Skip(); }
+    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) { event.Skip(); }
+
+public:
+    OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OrcaMento"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800,600), long style = wxDEFAULT_FRAME_STYLE);
+    virtual ~OrcamentoMainFrameBase();
+};
+
 
 class CreateDatabaseDialogBase : public wxDialog
 {
@@ -106,74 +175,6 @@ protected:
 public:
     WalletOverviewDialogBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Wallet Overview"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1,-1), long style = wxDEFAULT_DIALOG_STYLE);
     virtual ~WalletOverviewDialogBase();
-};
-
-
-class OrcamentoMainFrameBase : public wxFrame
-{
-protected:
-    wxMenuBar* mnMain;
-    wxMenu* mnFile;
-    wxMenuItem* mnFileNew;
-    wxMenuItem* mnFileOpen;
-    wxMenuItem* mnFileSave;
-    wxMenuItem* mnFileSaveAs;
-    wxMenuItem* mnFileSeparator;
-    wxMenuItem* mnFileQuit;
-    wxMenu* mnBudget;
-    wxMenuItem* mnBudgetCreateNext;
-    wxMenuItem* mnBudgetExecuteNext;
-    wxMenuItem* mnBudgetSeparator;
-    wxMenuItem* mnBudgetExport;
-    wxMenu* mnEstimate;
-    wxMenuItem* mnEstimateAdd;
-    wxMenu* mnWallet;
-    wxMenuItem* mnWalletOverview;
-    wxMenu* mnHelp;
-    wxMenuItem* mnHelpAbout;
-    wxStatusBar* sbStatus;
-    wxMenu* cmEstimate;
-    wxMenuItem* cmEstimatesExecute;
-    wxMenuItem* cmEstimatesCopySelectedRows;
-    wxMenuItem* cmEstimatesSeparator;
-    wxMenuItem* cmEstimatesDelete;
-    wxSimpleHtmlListBox* lsMonths;
-    wxGrid* gdEstimates;
-    wxPanel* pnTotals;
-    wxStaticText* lbTotalEstimated;
-    wxTextCtrl* txTotalEstimated;
-    wxStaticText* lbTotalAccounted;
-    wxTextCtrl* txTotalAccounted;
-    wxStaticText* lbTotalRemaining;
-    wxTextCtrl* txTotalRemaining;
-    wxButton* byFilterTotals;
-
-protected:
-    virtual void OnCloseWindow(wxCloseEvent& event) { event.Skip(); }
-    virtual void OnMnfilenewMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnfileopenMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnfilesaveMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnfilesaveasMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnfilequitMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnbudgetseparatorMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnbudgetexportMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnestimateaddMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnwalletoverviewMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnMnhelpaboutMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnLsmonthsListbox(wxCommandEvent& event) { event.Skip(); }
-    virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) { event.Skip(); }
-    virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) { event.Skip(); }
-    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) { event.Skip(); }
-    virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) { event.Skip(); }
-
-public:
-    OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OrcaMento"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800,600), long style = wxDEFAULT_FRAME_STYLE);
-    virtual ~OrcamentoMainFrameBase();
 };
 
 

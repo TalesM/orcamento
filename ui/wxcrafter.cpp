@@ -13,6 +13,221 @@ extern void wxC898CInitBitmapResources();
 static bool bBitmapLoaded = false;
 
 
+OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
+    : wxFrame(parent, id, title, pos, size, style)
+{
+    if ( !bBitmapLoaded ) {
+        // We need to initialise the default bitmap handler
+        wxXmlResource::Get()->AddHandler(new wxBitmapXmlHandler);
+        wxC898CInitBitmapResources();
+        bBitmapLoaded = true;
+    }
+    
+    mnMain = new wxMenuBar(0);
+    this->SetMenuBar(mnMain);
+    
+    mnFile = new wxMenu();
+    mnMain->Append(mnFile, _("&File"));
+    
+    mnFileNew = new wxMenuItem(mnFile, wxID_ANY, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
+    mnFileNew->SetBitmap(wxArtProvider::GetBitmap(wxART_NEW_DIR, wxART_MENU, wxDefaultSize));
+    mnFile->Append(mnFileNew);
+    
+    mnFileOpen = new wxMenuItem(mnFile, wxID_ANY, _("Open\tCtrl-O"), _("Open a database."), wxITEM_NORMAL);
+    mnFileOpen->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_MENU, wxDefaultSize));
+    mnFile->Append(mnFileOpen);
+    
+    mnFileSave = new wxMenuItem(mnFile, wxID_ANY, _("Save\tCtrl-S"), _("Commit the changed."), wxITEM_NORMAL);
+    mnFileSave->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_MENU, wxDefaultSize));
+    mnFile->Append(mnFileSave);
+    
+    mnFileSaveAs = new wxMenuItem(mnFile, wxID_ANY, _("Save as..."), _("Not implemented yet."), wxITEM_NORMAL);
+    mnFile->Append(mnFileSaveAs);
+    
+    mnFile->AppendSeparator();
+    
+    mnFileQuit = new wxMenuItem(mnFile, wxID_ANY, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
+    mnFileQuit->SetBitmap(wxArtProvider::GetBitmap(wxART_QUIT, wxART_MENU, wxDefaultSize));
+    mnFile->Append(mnFileQuit);
+    
+    mnBudget = new wxMenu();
+    mnMain->Append(mnBudget, _("Budget"));
+    
+    mnBudgetCreateNext = new wxMenuItem(mnBudget, wxID_ANY, _("Create Next Budget\tAlt-b"), wxT(""), wxITEM_NORMAL);
+    mnBudget->Append(mnBudgetCreateNext);
+    
+    mnBudgetExecuteNext = new wxMenuItem(mnBudget, wxID_ANY, _("Execute Next Budget"), wxT(""), wxITEM_NORMAL);
+    mnBudget->Append(mnBudgetExecuteNext);
+    
+    mnBudget->AppendSeparator();
+    
+    mnBudgetExport = new wxMenuItem(mnBudget, wxID_ANY, _("Export Budget"), _("Exports Current Budget"), wxITEM_NORMAL);
+    mnBudget->Append(mnBudgetExport);
+    
+    mnEstimate = new wxMenu();
+    mnMain->Append(mnEstimate, _("Estimate"));
+    
+    mnEstimateAdd = new wxMenuItem(mnEstimate, wxID_ANY, _("Add a Estimate\tAlt-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
+    mnEstimate->Append(mnEstimateAdd);
+    
+    mnWallet = new wxMenu();
+    mnMain->Append(mnWallet, _("Wallet"));
+    
+    mnWalletOverview = new wxMenuItem(mnWallet, wxID_ANY, _("Overview\tAlt-w"), wxT(""), wxITEM_NORMAL);
+    mnWallet->Append(mnWalletOverview);
+    
+    mnHelp = new wxMenu();
+    mnMain->Append(mnHelp, _("Help"));
+    
+    mnHelpAbout = new wxMenuItem(mnHelp, wxID_ANY, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
+    mnHelp->Append(mnHelpAbout);
+    
+    sbStatus = new wxStatusBar(this, wxID_ANY, wxSTB_DEFAULT_STYLE);
+    sbStatus->SetFieldsCount(5);
+    this->SetStatusBar(sbStatus);
+    
+    cmEstimate = new wxMenu();
+    
+    cmEstimatesExecute = new wxMenuItem(cmEstimate, wxID_ANY, _("Execute"), wxT(""), wxITEM_NORMAL);
+    cmEstimate->Append(cmEstimatesExecute);
+    
+    cmEstimatesCopySelectedRows = new wxMenuItem(cmEstimate, wxID_ANY, _("Copy Selected Rows to...\tCtrl-Alt-p"), _("Copies all selected rows to anothe budget."), wxITEM_NORMAL);
+    cmEstimate->Append(cmEstimatesCopySelectedRows);
+    
+    cmEstimate->AppendSeparator();
+    
+    cmEstimatesDelete = new wxMenuItem(cmEstimate, wxID_ANY, _("Delete Estimate"), wxT(""), wxITEM_NORMAL);
+    cmEstimate->Append(cmEstimatesDelete);
+    
+    wxGridBagSizer* szMain = new wxGridBagSizer(0, 0);
+    this->SetSizer(szMain);
+    
+    wxArrayString lsMonthsArr;
+    lsMonths = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsMonthsArr, wxHLB_DEFAULT_STYLE);
+    
+    szMain->Add(lsMonths, wxGBPosition(0,0), wxGBSpan(2,1), wxEXPAND, 0);
+    lsMonths->SetMinSize(wxSize(150,-1));
+    
+    gdEstimates = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxFULL_REPAINT_ON_RESIZE|wxHSCROLL|wxVSCROLL);
+    gdEstimates->CreateGrid(0, 0);
+    gdEstimates->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
+    gdEstimates->SetColLabelAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
+    #if wxVERSION_NUMBER >= 2904
+    gdEstimates->UseNativeColHeader(true);
+    #endif
+    gdEstimates->EnableEditing(true);
+    
+    szMain->Add(gdEstimates, wxGBPosition(0,1), wxGBSpan(1,1), wxEXPAND, 0);
+    
+    pnTotals = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxTAB_TRAVERSAL);
+    
+    szMain->Add(pnTotals, wxGBPosition(1,1), wxGBSpan(1,1), wxALL|wxEXPAND, 0);
+    
+    wxFlexGridSizer* szTotals = new wxFlexGridSizer(1, 7, 0, 0);
+    szTotals->SetFlexibleDirection( wxBOTH );
+    szTotals->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+    pnTotals->SetSizer(szTotals);
+    
+    lbTotalEstimated = new wxStaticText(pnTotals, wxID_ANY, _("Estimated:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalEstimated = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalEstimated->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    lbTotalAccounted = new wxStaticText(pnTotals, wxID_ANY, _("Accounted:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalAccounted = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalAccounted->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    lbTotalRemaining = new wxStaticText(pnTotals, wxID_ANY, _("Remaining:"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    szTotals->Add(lbTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    txTotalRemaining = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
+    #if wxVERSION_NUMBER >= 3000
+    txTotalRemaining->SetHint(wxT(""));
+    #endif
+    
+    szTotals->Add(txTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
+    
+    byFilterTotals = new wxButton(pnTotals, wxID_ANY, _("Filter"), wxDefaultPosition, wxSize(-1,-1), 0);
+    #if wxVERSION_NUMBER >= 2904
+    byFilterTotals->SetBitmap(wxArtProvider::GetBitmap(wxART_LIST_VIEW, wxART_BUTTON, wxSize(24, 24)), wxLEFT);
+    byFilterTotals->SetBitmapMargins(2,2);
+    #endif
+    
+    szTotals->Add(byFilterTotals, 0, wxALL, 5);
+    szMain->AddGrowableCol(1);
+    szMain->AddGrowableRow(0);
+    
+    SetName(wxT("OrcamentoMainFrameBase"));
+    SetSizeHints(800,600);
+    if ( GetSizer() ) {
+         GetSizer()->Fit(this);
+    }
+    CentreOnParent(wxBOTH);
+    // Connect events
+    this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(OrcamentoMainFrameBase::OnCloseWindow), NULL, this);
+    this->Connect(mnFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilenewMenuSelected), NULL, this);
+    this->Connect(mnFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileopenMenuSelected), NULL, this);
+    this->Connect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
+    this->Connect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
+    this->Connect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
+    this->Connect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
+    this->Connect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
+    this->Connect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);
+    this->Connect(mnEstimateAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnestimateaddMenuSelected), NULL, this);
+    this->Connect(mnWalletOverview->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnwalletoverviewMenuSelected), NULL, this);
+    this->Connect(mnHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnhelpaboutMenuSelected), NULL, this);
+    this->Connect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
+    this->Connect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
+    this->Connect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
+    lsMonths->Connect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
+    gdEstimates->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
+    gdEstimates->Connect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
+    gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
+    gdEstimates->Connect(wxEVT_GRID_COL_SORT, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridColSort), NULL, this);
+    byFilterTotals->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
+    
+}
+
+OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
+{
+    this->Disconnect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(OrcamentoMainFrameBase::OnCloseWindow), NULL, this);
+    this->Disconnect(mnFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilenewMenuSelected), NULL, this);
+    this->Disconnect(mnFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileopenMenuSelected), NULL, this);
+    this->Disconnect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
+    this->Disconnect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
+    this->Disconnect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
+    this->Disconnect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
+    this->Disconnect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
+    this->Disconnect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);
+    this->Disconnect(mnEstimateAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnestimateaddMenuSelected), NULL, this);
+    this->Disconnect(mnWalletOverview->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnwalletoverviewMenuSelected), NULL, this);
+    this->Disconnect(mnHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnhelpaboutMenuSelected), NULL, this);
+    this->Disconnect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
+    this->Disconnect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
+    this->Disconnect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
+    lsMonths->Disconnect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
+    gdEstimates->Disconnect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
+    gdEstimates->Disconnect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
+    gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
+    gdEstimates->Disconnect(wxEVT_GRID_COL_SORT, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridColSort), NULL, this);
+    byFilterTotals->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
+    
+}
+
 CreateDatabaseDialogBase::CreateDatabaseDialogBase(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
     : wxDialog(parent, id, title, pos, size, style)
 {
@@ -290,219 +505,6 @@ WalletOverviewDialogBase::~WalletOverviewDialogBase()
     btEdit->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBteditButtonClicked), NULL, this);
     btAdd->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtaddButtonClicked), NULL, this);
     btRemove->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtremoveButtonClicked), NULL, this);
-    
-}
-
-OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
-    : wxFrame(parent, id, title, pos, size, style)
-{
-    if ( !bBitmapLoaded ) {
-        // We need to initialise the default bitmap handler
-        wxXmlResource::Get()->AddHandler(new wxBitmapXmlHandler);
-        wxC898CInitBitmapResources();
-        bBitmapLoaded = true;
-    }
-    
-    mnMain = new wxMenuBar(0);
-    this->SetMenuBar(mnMain);
-    
-    mnFile = new wxMenu();
-    mnMain->Append(mnFile, _("&File"));
-    
-    mnFileNew = new wxMenuItem(mnFile, wxID_ANY, _("New\tCtrl-N"), _("Create new Database"), wxITEM_NORMAL);
-    mnFileNew->SetBitmap(wxArtProvider::GetBitmap(wxART_NEW_DIR, wxART_MENU, wxDefaultSize));
-    mnFile->Append(mnFileNew);
-    
-    mnFileOpen = new wxMenuItem(mnFile, wxID_ANY, _("Open\tCtrl-O"), _("Open a database."), wxITEM_NORMAL);
-    mnFileOpen->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_OPEN, wxART_MENU, wxDefaultSize));
-    mnFile->Append(mnFileOpen);
-    
-    mnFileSave = new wxMenuItem(mnFile, wxID_ANY, _("Save\tCtrl-S"), _("Commit the changed."), wxITEM_NORMAL);
-    mnFileSave->SetBitmap(wxArtProvider::GetBitmap(wxART_FILE_SAVE, wxART_MENU, wxDefaultSize));
-    mnFile->Append(mnFileSave);
-    
-    mnFileSaveAs = new wxMenuItem(mnFile, wxID_ANY, _("Save as..."), _("Not implemented yet."), wxITEM_NORMAL);
-    mnFile->Append(mnFileSaveAs);
-    
-    mnFile->AppendSeparator();
-    
-    mnFileQuit = new wxMenuItem(mnFile, wxID_ANY, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
-    mnFileQuit->SetBitmap(wxArtProvider::GetBitmap(wxART_QUIT, wxART_MENU, wxDefaultSize));
-    mnFile->Append(mnFileQuit);
-    
-    mnBudget = new wxMenu();
-    mnMain->Append(mnBudget, _("Budget"));
-    
-    mnBudgetCreateNext = new wxMenuItem(mnBudget, wxID_ANY, _("Create Next Budget\tAlt-b"), wxT(""), wxITEM_NORMAL);
-    mnBudget->Append(mnBudgetCreateNext);
-    
-    mnBudgetExecuteNext = new wxMenuItem(mnBudget, wxID_ANY, _("Execute Next Budget"), wxT(""), wxITEM_NORMAL);
-    mnBudget->Append(mnBudgetExecuteNext);
-    
-    mnBudget->AppendSeparator();
-    
-    mnBudgetExport = new wxMenuItem(mnBudget, wxID_ANY, _("Export Budget"), _("Exports Current Budget"), wxITEM_NORMAL);
-    mnBudget->Append(mnBudgetExport);
-    
-    mnEstimate = new wxMenu();
-    mnMain->Append(mnEstimate, _("Estimate"));
-    
-    mnEstimateAdd = new wxMenuItem(mnEstimate, wxID_ANY, _("Add a Estimate\tAlt-Insert"), _("Insert a new estimate on current budget."), wxITEM_NORMAL);
-    mnEstimate->Append(mnEstimateAdd);
-    
-    mnWallet = new wxMenu();
-    mnMain->Append(mnWallet, _("Wallet"));
-    
-    mnWalletOverview = new wxMenuItem(mnWallet, wxID_ANY, _("Overview\tAlt-w"), wxT(""), wxITEM_NORMAL);
-    mnWallet->Append(mnWalletOverview);
-    
-    mnHelp = new wxMenu();
-    mnMain->Append(mnHelp, _("Help"));
-    
-    mnHelpAbout = new wxMenuItem(mnHelp, wxID_ANY, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
-    mnHelp->Append(mnHelpAbout);
-    
-    sbStatus = new wxStatusBar(this, wxID_ANY, wxSTB_DEFAULT_STYLE);
-    sbStatus->SetFieldsCount(5);
-    this->SetStatusBar(sbStatus);
-    
-    cmEstimate = new wxMenu();
-    
-    cmEstimatesExecute = new wxMenuItem(cmEstimate, wxID_ANY, _("Execute"), wxT(""), wxITEM_NORMAL);
-    cmEstimate->Append(cmEstimatesExecute);
-    
-    cmEstimatesCopySelectedRows = new wxMenuItem(cmEstimate, wxID_ANY, _("Copy Selected Rows to...\tCtrl-Alt-p"), _("Copies all selected rows to anothe budget."), wxITEM_NORMAL);
-    cmEstimate->Append(cmEstimatesCopySelectedRows);
-    
-    cmEstimate->AppendSeparator();
-    
-    cmEstimatesDelete = new wxMenuItem(cmEstimate, wxID_ANY, _("Delete Estimate"), wxT(""), wxITEM_NORMAL);
-    cmEstimate->Append(cmEstimatesDelete);
-    
-    wxGridBagSizer* szMain = new wxGridBagSizer(0, 0);
-    this->SetSizer(szMain);
-    
-    wxArrayString lsMonthsArr;
-    lsMonths = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsMonthsArr, wxHLB_DEFAULT_STYLE);
-    
-    szMain->Add(lsMonths, wxGBPosition(0,0), wxGBSpan(2,1), wxEXPAND, 0);
-    lsMonths->SetMinSize(wxSize(150,-1));
-    
-    gdEstimates = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxFULL_REPAINT_ON_RESIZE|wxHSCROLL|wxVSCROLL);
-    gdEstimates->CreateGrid(0, 0);
-    gdEstimates->SetRowLabelAlignment(wxALIGN_RIGHT, wxALIGN_CENTRE);
-    gdEstimates->SetColLabelAlignment(wxALIGN_CENTRE, wxALIGN_CENTRE);
-    #if wxVERSION_NUMBER >= 2904
-    gdEstimates->UseNativeColHeader(true);
-    #endif
-    gdEstimates->EnableEditing(true);
-    
-    szMain->Add(gdEstimates, wxGBPosition(0,1), wxGBSpan(1,1), wxEXPAND, 0);
-    
-    pnTotals = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), wxTAB_TRAVERSAL);
-    
-    szMain->Add(pnTotals, wxGBPosition(1,1), wxGBSpan(1,1), wxALL|wxEXPAND, 0);
-    
-    wxFlexGridSizer* szTotals = new wxFlexGridSizer(1, 7, 0, 0);
-    szTotals->SetFlexibleDirection( wxBOTH );
-    szTotals->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-    pnTotals->SetSizer(szTotals);
-    
-    lbTotalEstimated = new wxStaticText(pnTotals, wxID_ANY, _("Estimated:"), wxDefaultPosition, wxSize(-1,-1), 0);
-    
-    szTotals->Add(lbTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    txTotalEstimated = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
-    #if wxVERSION_NUMBER >= 3000
-    txTotalEstimated->SetHint(wxT(""));
-    #endif
-    
-    szTotals->Add(txTotalEstimated, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    lbTotalAccounted = new wxStaticText(pnTotals, wxID_ANY, _("Accounted:"), wxDefaultPosition, wxSize(-1,-1), 0);
-    
-    szTotals->Add(lbTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    txTotalAccounted = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
-    #if wxVERSION_NUMBER >= 3000
-    txTotalAccounted->SetHint(wxT(""));
-    #endif
-    
-    szTotals->Add(txTotalAccounted, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    lbTotalRemaining = new wxStaticText(pnTotals, wxID_ANY, _("Remaining:"), wxDefaultPosition, wxSize(-1,-1), 0);
-    
-    szTotals->Add(lbTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    txTotalRemaining = new wxTextCtrl(pnTotals, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_READONLY);
-    #if wxVERSION_NUMBER >= 3000
-    txTotalRemaining->SetHint(wxT(""));
-    #endif
-    
-    szTotals->Add(txTotalRemaining, 0, wxALL|wxALIGN_CENTER, 5);
-    
-    byFilterTotals = new wxButton(pnTotals, wxID_ANY, _("Filter"), wxDefaultPosition, wxSize(-1,-1), 0);
-    #if wxVERSION_NUMBER >= 2904
-    byFilterTotals->SetBitmap(wxArtProvider::GetBitmap(wxART_LIST_VIEW, wxART_BUTTON, wxSize(24, 24)), wxLEFT);
-    byFilterTotals->SetBitmapMargins(2,2);
-    #endif
-    
-    szTotals->Add(byFilterTotals, 0, wxALL, 5);
-    szMain->AddGrowableCol(1);
-    szMain->AddGrowableRow(0);
-    
-    SetName(wxT("OrcamentoMainFrameBase"));
-    SetSizeHints(800,600);
-    if ( GetSizer() ) {
-         GetSizer()->Fit(this);
-    }
-    CentreOnParent(wxBOTH);
-    // Connect events
-    this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(OrcamentoMainFrameBase::OnCloseWindow), NULL, this);
-    this->Connect(mnFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilenewMenuSelected), NULL, this);
-    this->Connect(mnFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileopenMenuSelected), NULL, this);
-    this->Connect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
-    this->Connect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
-    this->Connect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
-    this->Connect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
-    this->Connect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
-    this->Connect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);
-    this->Connect(mnEstimateAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnestimateaddMenuSelected), NULL, this);
-    this->Connect(mnWalletOverview->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnwalletoverviewMenuSelected), NULL, this);
-    this->Connect(mnHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnhelpaboutMenuSelected), NULL, this);
-    this->Connect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
-    this->Connect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
-    this->Connect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
-    lsMonths->Connect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
-    gdEstimates->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
-    gdEstimates->Connect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
-    gdEstimates->Connect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
-    byFilterTotals->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
-    
-}
-
-OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
-{
-    this->Disconnect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(OrcamentoMainFrameBase::OnCloseWindow), NULL, this);
-    this->Disconnect(mnFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilenewMenuSelected), NULL, this);
-    this->Disconnect(mnFileOpen->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileopenMenuSelected), NULL, this);
-    this->Disconnect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
-    this->Disconnect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
-    this->Disconnect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
-    this->Disconnect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
-    this->Disconnect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
-    this->Disconnect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);
-    this->Disconnect(mnEstimateAdd->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnestimateaddMenuSelected), NULL, this);
-    this->Disconnect(mnWalletOverview->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnwalletoverviewMenuSelected), NULL, this);
-    this->Disconnect(mnHelpAbout->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnhelpaboutMenuSelected), NULL, this);
-    this->Disconnect(cmEstimatesExecute->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesexecuteMenuSelected), NULL, this);
-    this->Disconnect(cmEstimatesCopySelectedRows->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatescopyselectedrowsMenuSelected), NULL, this);
-    this->Disconnect(cmEstimatesDelete->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnCmestimatesdeleteMenuSelected), NULL, this);
-    lsMonths->Disconnect(wxEVT_LISTBOX, wxCommandEventHandler(OrcamentoMainFrameBase::OnLsmonthsListbox), NULL, this);
-    gdEstimates->Disconnect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellChanging), NULL, this);
-    gdEstimates->Disconnect(wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellLeftDclick), NULL, this);
-    gdEstimates->Disconnect(wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler(OrcamentoMainFrameBase::OnGdestimatesGridCellRightClick), NULL, this);
-    byFilterTotals->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(OrcamentoMainFrameBase::OnByfiltertotalsButtonClicked), NULL, this);
     
 }
 

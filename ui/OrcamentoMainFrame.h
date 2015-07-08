@@ -43,26 +43,27 @@ private:
         return reinterpret_cast<int>(lsMonths->GetClientData(lsMonths->GetSelection()));
     }
 protected:
+    virtual void OnGdestimatesGridColSort(wxGridEvent& event) override;
     virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) override;
-    virtual void OnLsmonthsListbox(wxCommandEvent& event);
-    virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event);
-    virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event);
-    virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event);
-    virtual void OnCloseWindow(wxCloseEvent& event);
-    virtual void OnGdestimatesGridCellChanging(wxGridEvent& event);
-    virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event);
-    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event);
-    virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event);
-    virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event);
-    virtual void OnMnbudgetexportMenuSelected(wxCommandEvent& event);
-    virtual void OnMnbudgetseparatorMenuSelected(wxCommandEvent& event);
-    virtual void OnMnestimateaddMenuSelected(wxCommandEvent& event);
-    virtual void OnMnfilenewMenuSelected(wxCommandEvent& event);
-    virtual void OnMnfilequitMenuSelected(wxCommandEvent& event);
-    virtual void OnMnfilesaveMenuSelected(wxCommandEvent& event);
-    virtual void OnMnfilesaveasMenuSelected(wxCommandEvent& event);
-    virtual void OnMnhelpaboutMenuSelected(wxCommandEvent& event);
-    virtual void OnMnwalletoverviewMenuSelected(wxCommandEvent& event);
-    virtual void OnMnfileopenMenuSelected(wxCommandEvent& event);
+    virtual void OnLsmonthsListbox(wxCommandEvent& event) override;
+    virtual void OnCmestimatescopyselectedrowsMenuSelected(wxCommandEvent& event) override;
+    virtual void OnCmestimatesdeleteMenuSelected(wxCommandEvent& event) override;
+    virtual void OnCmestimatesexecuteMenuSelected(wxCommandEvent& event) override;
+    virtual void OnCloseWindow(wxCloseEvent& event) override;
+    virtual void OnGdestimatesGridCellChanging(wxGridEvent& event) override;
+    virtual void OnGdestimatesGridCellLeftDclick(wxGridEvent& event) override;
+    virtual void OnGdestimatesGridCellRightClick(wxGridEvent& event) override;
+    virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnbudgetexportMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnbudgetseparatorMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnestimateaddMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnfilenewMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnfilequitMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnfilesaveMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnfilesaveasMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnhelpaboutMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnwalletoverviewMenuSelected(wxCommandEvent& event) override;
+    virtual void OnMnfileopenMenuSelected(wxCommandEvent& event) override;
 };
 #endif // ORCAMENTOMAINFRAME_H

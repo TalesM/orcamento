@@ -59,14 +59,16 @@ OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent)
     gdEstimates->HideCol(0);
     gdEstimates->EnableEditing(true);
     gdEstimates->EnableGridLines(true);
-    gdEstimates->SetColLabelValue(0, _("Id"));
-    gdEstimates->SetColLabelValue(1, _("Name"));
-    gdEstimates->SetColLabelValue(2, _("Due Day"));
-    gdEstimates->SetColLabelValue(3, _("Estimated"));
-    gdEstimates->SetColLabelValue(4, _("Accounted"));
-    gdEstimates->SetColLabelValue(5, _("Remaining"));
-    gdEstimates->SetColLabelValue(6, _("Category"));
-    gdEstimates->SetColLabelValue(7, _("Observation"));
+    gdEstimates->SetColLabelValue(EstimateColumn::ID, _("Id"));
+    gdEstimates->SetColLabelValue(EstimateColumn::NAME, _("Name"));
+    gdEstimates->SetColLabelValue(EstimateColumn::DUE, _("Due Day"));
+    gdEstimates->SetColLabelValue(EstimateColumn::ESTIMATED, _("Estimated"));
+    gdEstimates->SetColLabelValue(EstimateColumn::ACCOUNTED, _("Accounted"));
+    gdEstimates->SetColLabelValue(EstimateColumn::REMAINING, _("Remaining"));
+    gdEstimates->SetColLabelValue(EstimateColumn::CATEGORY, _("Category"));
+    gdEstimates->SetColLabelValue(EstimateColumn::OBS, _("Observation"));
+    
+    gdEstimates->SetSortingColumn(EstimateColumn::CATEGORY);
 
     SetupCellAttr();
     wxArrayString ss;
@@ -241,15 +243,24 @@ void OrcamentoMainFrame::RefreshEstimates()
             }
             ++i;
         };
+        int order = gdEstimates->GetSortingColumn();
         if(lsMonths->GetSelection() > _activeIndex) {
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
             _estimatePlaningView.search(_search);
+            if(order > 5){
+                order -= 2;
+            }else if(order > 2){
+                order = 5;
+                gdEstimates->SetSortingColumn(EstimateColumn::CATEGORY);
+            }
+            _estimatePlaningView.sort(order, gdEstimates->IsSortOrderAscending());
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
             RefreshCellAttr(false);
         } else {
             _estimateExecutingView.budgetId(budget_id);
             _estimateExecutingView.search(_search);
+            _estimateExecutingView.sort(order, gdEstimates->IsSortOrderAscending());
             _document->look(_estimateExecutingView, refreshFunction);
             RefreshCellAttr(true);
         }
@@ -693,4 +704,9 @@ void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
     }
     dgFilter->refreshFields(*_document);
     dgFilter->Show();
+}
+
+void OrcamentoMainFrame::OnGdestimatesGridColSort(wxGridEvent& event)
+{
+    RefreshEstimates();
 }
