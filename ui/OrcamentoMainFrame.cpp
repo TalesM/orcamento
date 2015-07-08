@@ -259,8 +259,7 @@ void OrcamentoMainFrame::RefreshEstimates()
             RefreshCellAttr(false);
         } else {
             _estimateExecutingView.budgetId(budget_id);
-            _estimateExecutingView.search(_search);
-            _estimateExecutingView.sort(order, gdEstimates->IsSortOrderAscending());
+            _estimateExecutingView.search(_search, order, gdEstimates->IsSortOrderAscending());
             _document->look(_estimateExecutingView, refreshFunction);
             RefreshCellAttr(true);
         }

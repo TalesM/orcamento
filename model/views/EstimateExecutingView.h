@@ -27,17 +27,9 @@ public:
         _budgetId = value;
     }
     
-    void sort(int order, bool asc = true){
-        assert(order >= 0 && order < 8);
-        _order = order;
-        _asc = asc;
-    }
-    
-    void search(const Search &s);
+    void search(const Search &search, int order = 6, bool asc = true);
 private:
     int _budgetId;
-    int _order = 6;
-    bool _asc = true;
     std::vector<std::string> _sValues;
     std::vector<int> _iValues;
 

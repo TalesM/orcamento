@@ -21,14 +21,14 @@ FROM budget bud
         GROUP BY estimate_id
     ) AS exc USING(estimate_id)
     WHERE budget_id = :budget {{main}}
-    ORDER BY category_id, estim.name
+    ORDER BY {{sort}} category_id, estim.name
 )=";
 
 
-static std::string sql(const std::string &mainQuery="", const std::string &execQuery="");
+static std::string sql(const std::string &mainQuery="", const std::string &execQuery="", const std::string &sort="");
 
 EstimateExecutingView::EstimateExecutingView():
-    OrcaView(std::string(sql())+"\nORDER BY category_id, estim.name")
+    OrcaView(std::string(sql()))
 {
     //ctor
 }
@@ -46,21 +46,36 @@ void EstimateExecutingView::setup(SQLite::Statement& stm)
         stm.bind(ss.str(), _iValues[i]);
     }
 }
-void EstimateExecutingView::search(const Search& search)
+void EstimateExecutingView::search(const Search& search, int order, bool asc)
 {
+    std::string sort = "";
+    const char *orders[] = {
+        "category_id",
+        "lower(estim.name)",
+        "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)",
+        "estim.amount",
+        "exc.amount",
+        "(exc.amount-estim.amount)",
+        "category_id",
+        "estim.obj",
+    };
+    sort += orders[order];
+    if(not asc){
+        sort += " DESC";
+    }
     if(!search){
         _sValues.clear();
         _iValues.clear(); 
-        return query(sql());
+        return query(sql("", "", sort));
     }
     auto params = sqlize(search, { 
-        { "name", "estim.name" },
-        { "obs", "estim.obs" },
-        { "estimated", "estim.amount", FieldDescriptor::MONEY },
-        { "accounted", "exc.amount", FieldDescriptor::MONEY },
-        { "remaining", "(exec.amount-estim.amount)", FieldDescriptor::MONEY },
-        { "due", "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)", FieldDescriptor::INT },
-        { "category", "category_id", FieldDescriptor::INT },
+        { "name",       "estim.name" },
+        { "obs",        "estim.obs" },
+        { "estimated",  "estim.amount", FieldDescriptor::MONEY },
+        { "accounted",  "exc.amount", FieldDescriptor::MONEY },
+        { "remaining",  "(exc.amount-estim.amount)", FieldDescriptor::MONEY },
+        { "due",        "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)", FieldDescriptor::INT },
+        { "category",   "category_id", FieldDescriptor::INT },
     });
     auto subParams = sqlize(search, {{"wallet", "wallet_id", FieldDescriptor::INT}});
     
@@ -71,18 +86,23 @@ void EstimateExecutingView::search(const Search& search)
     _iValues.insert(_iValues.end(), subParams.iValues.begin(), subParams.iValues.end());
 }
 
-static std::string sql(const std::string &mainQuery, const std::string &execQuery){
+static std::string sql(const std::string &mainQuery, const std::string &execQuery, const std::string &sort){
     std::string s = _sql;
-    auto replaceWithPrefix = [&s](const std::string &sub, const std::string &query, const std::string &prefix){
+    auto replaceWithPrefix = [&s](const std::string &sub, const std::string &query, const std::string &prefix, bool suffix=false){
         auto i = s.find(sub);
         if(query.size()){
-            s.replace(i, sub.size(), prefix+query);
+            if(suffix){
+                s.replace(i, sub.size(), query+prefix);
+            }else {
+                s.replace(i, sub.size(), prefix+query);
+            }
         } else {
             s.replace(i, sub.size(), "");
         }
     };
     replaceWithPrefix("{{main}}", mainQuery, " AND ");
     replaceWithPrefix("{{sub}}", execQuery, "WHERE ");
+    replaceWithPrefix("{{sort}}", sort, ", ", true);
     return s;
 }
 
