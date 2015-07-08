@@ -261,20 +261,20 @@ void OrcamentoMainFrame::RefreshEstimates()
 
 void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double accounted)
 {
-    wxColour red{ 0xAAAAFF }, green{ 0xAAFFAA }, yellow{ 0xAAD4D4 }, blue{ 0xFFD4AA }, magenta{ 0xD4AAD4 },
+    wxColour red{ 0xAAAAFF }, green{ 0xAAFFAA }, yellow{ 0xA9FEFF }, blue{ 0xFFD4AA }, purple{ 0xFFA9FF },//FFD3A9
         orange{ 0xAAD4FF }, white{ 0xFFFFFF };
     auto n_cols = gdEstimates->GetNumberCols();
     wxColour basic, current;
     if(estimated > 0){//credit
-        basic = green;
+        basic = blue;
         double ratio = accounted/estimated;
         if(ratio >= 1){
-            current = blue;
+            current = green;
         }else if(ratio >= 0){
             double factor = 1 - ratio;
-            current = wxColour(green.Red()+(255-green.Red())*factor, 
-                                green.Green()+(255-green.Green())*factor, 
-                                green.Blue()+(255-green.Blue())*factor);
+            current = wxColour(basic.Red()+(255-basic.Red())*factor, 
+                                basic.Green()+(255-basic.Green())*factor, 
+                                basic.Blue()+(255-basic.Blue())*factor);
         } else {
             current = red;
         }
@@ -285,16 +285,16 @@ void OrcamentoMainFrame::RefreshColorEstimate(int i, double estimated, double ac
             current = red;
         }else if(ratio > 0){
             double factor = 1 - ratio;
-            current = wxColour(orange.Red()+(255-orange.Red())*factor, 
-                                orange.Green()+(255-orange.Green())*factor, 
-                                orange.Blue()+(255-orange.Blue())*factor);
+            current = wxColour(basic.Red()+(255-basic.Red())*factor, 
+                                basic.Green()+(255-basic.Green())*factor, 
+                                basic.Blue()+(255-basic.Blue())*factor);
         } else {
             current = white;
         }
     }else {//Neutral
         basic = white;
         if(accounted > 0){
-            current = blue;
+            current = green;
         }else if(accounted < 0){
             current = red;
         }else {
