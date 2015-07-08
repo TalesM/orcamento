@@ -48,6 +48,7 @@ void EstimateExecutingView::setup(SQLite::Statement& stm)
 }
 void EstimateExecutingView::search(const Search& search, int order, bool asc)
 {
+    assert(order >= 0 && order < 8);
     std::string sort = "";
     const char *orders[] = {
         "category_id",

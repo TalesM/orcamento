@@ -247,14 +247,13 @@ void OrcamentoMainFrame::RefreshEstimates()
         if(lsMonths->GetSelection() > _activeIndex) {
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
-            _estimatePlaningView.search(_search);
             if(order > 5){
                 order -= 2;
             }else if(order > 2){
                 order = 5;
                 gdEstimates->SetSortingColumn(EstimateColumn::CATEGORY);
             }
-            _estimatePlaningView.sort(order, gdEstimates->IsSortOrderAscending());
+            _estimatePlaningView.search(_search, order, gdEstimates->IsSortOrderAscending());
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
             RefreshCellAttr(false);
         } else {

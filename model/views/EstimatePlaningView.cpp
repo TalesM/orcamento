@@ -34,12 +34,26 @@ void EstimatePlaningView::setup(SQLite::Statement& stm)
         stm.bind(ss.str(), _iValues[i]);
     }
 }
-void EstimatePlaningView::search(const Search& search)
+void EstimatePlaningView::search(const Search& search, int order, bool asc)
 {
+    assert(order >= 0 && order < 6);
+    std::string sort = "";
+    const char *orders[] = {
+        "category_id",
+        "lower(estim.name)",
+        "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)",
+        "estim.amount",
+        "category_id",
+        "estim.obj",
+    };
+    sort += orders[order];
+    if(not asc){
+        sort += " DESC";
+    }
     if(!search){
         _sValues.clear();
         _iValues.clear();
-        return query(sql);
+        return query(sql + std::string("\nORDER BY ") + sort + "," + " category_id, estim.name");
     }
     auto params = sqlize(search, { 
         { "name", "estim.name" },
@@ -54,6 +68,6 @@ void EstimatePlaningView::search(const Search& search)
     
     _sValues = std::move(params.sValues);
     _iValues = std::move(params.iValues);
-    query(std::string(sql) + " AND " + params.query + "\nORDER BY category_id, estim.name");
+    query(std::string(sql) + " AND " + params.query + std::string("\nORDER BY ") + sort + "," + " category_id, estim.name");
 }
 
