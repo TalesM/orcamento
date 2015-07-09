@@ -50,6 +50,17 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     mnFileQuit->SetBitmap(wxArtProvider::GetBitmap(wxART_QUIT, wxART_MENU, wxDefaultSize));
     mnFile->Append(mnFileQuit);
     
+    mnEdit = new wxMenu();
+    mnMain->Append(mnEdit, _("&Edit"));
+    
+    mnEditUndo = new wxMenuItem(mnEdit, wxID_UNDO, _("Undo\tCtrl+z"), _("Undo the last action"), wxITEM_NORMAL);
+    mnEditUndo->SetBitmap(wxArtProvider::GetBitmap(wxART_UNDO, wxART_TOOLBAR, wxDefaultSize));
+    mnEdit->Append(mnEditUndo);
+    
+    mnEditRedo = new wxMenuItem(mnEdit, wxID_REDO, _("Redo\tCtrl+Shift+z"), _("Re does the last undone action"), wxITEM_NORMAL);
+    mnEditRedo->SetBitmap(wxArtProvider::GetBitmap(wxART_REDO, wxART_TOOLBAR, wxDefaultSize));
+    mnEdit->Append(mnEditRedo);
+    
     mnBudget = new wxMenu();
     mnMain->Append(mnBudget, _("Budget"));
     
@@ -184,6 +195,8 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     this->Connect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
     this->Connect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
     this->Connect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
+    this->Connect(mnEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileundoMenuSelected), NULL, this);
+    this->Connect(mnEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMneditredoMenuSelected), NULL, this);
     this->Connect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
     this->Connect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
     this->Connect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);
@@ -210,6 +223,8 @@ OrcamentoMainFrameBase::~OrcamentoMainFrameBase()
     this->Disconnect(mnFileSave->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveMenuSelected), NULL, this);
     this->Disconnect(mnFileSaveAs->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilesaveasMenuSelected), NULL, this);
     this->Disconnect(mnFileQuit->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilequitMenuSelected), NULL, this);
+    this->Disconnect(mnEditUndo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfileundoMenuSelected), NULL, this);
+    this->Disconnect(mnEditRedo->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMneditredoMenuSelected), NULL, this);
     this->Disconnect(mnBudgetCreateNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetcreatenextMenuSelected), NULL, this);
     this->Disconnect(mnBudgetExecuteNext->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexecutenextMenuSelected), NULL, this);
     this->Disconnect(mnBudgetExport->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnbudgetexportMenuSelected), NULL, this);

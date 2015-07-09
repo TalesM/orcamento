@@ -94,11 +94,51 @@ OrcaDocument::~OrcaDocument()
     //Check if saved
 }
 
+int OrcaDocument::doAction(std::unique_ptr<OrcaAction> action)
+{
+    transaction();
+    _model.exec("SAVEPOINT actionBasic");
+    action->doAction(_model);
+    _doneActions.push_back(std::move(action));
+    _undoneActions.clear();
+    return _model.getLastInsertRowid();
+}
+
+bool OrcaDocument::undo()
+{
+    if(_doneActions.empty()){
+        return false;
+    }
+    _model.exec("ROLLBACK TO actionBasic;");
+    _undoneActions.push_back(std::move(_doneActions.back()));
+    _doneActions.pop_back();
+    if(_doneActions.empty()){
+        _transaction.reset();
+    }
+    return true;
+}
+
+bool OrcaDocument::redo()
+{
+    if(_undoneActions.empty()){
+        return false;
+    }
+    transaction();
+    _model.exec("SAVEPOINT actionBasic");
+    auto action = std::move(_undoneActions.back());
+    _undoneActions.pop_back();
+    action->doAction(_model);
+    _doneActions.push_back(std::move(action));
+    return true;
+}
+
 void OrcaDocument::save()
 {
     if(_transaction){
         _transaction->commit();
         _transaction.reset();
+        _doneActions.clear();
+        _undoneActions.clear();
     }
 }
 

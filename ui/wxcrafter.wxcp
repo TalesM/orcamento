@@ -1,7 +1,7 @@
 {
  "metadata": {
   "m_generatedFilesDir": ".",
-  "m_objCounter": 187,
+  "m_objCounter": 195,
   "m_includeFiles": [],
   "m_bitmapFunction": "wxC898CInitBitmapResources",
   "m_bitmapsFile": "wxcrafter_ui_bitmaps.cpp",
@@ -513,6 +513,127 @@
            "m_eventClass": "wxCommandEvent",
            "m_eventHandler": "wxCommandEventHandler",
            "m_functionNameAndSignature": "OnMnfilequitMenuSelected(wxCommandEvent& event)",
+           "m_description": "Menu item has been clicked",
+           "m_noBody": false
+          }],
+         "m_children": []
+        }]
+      }, {
+       "m_type": 4458,
+       "proportion": 0,
+       "border": 5,
+       "gbSpan": "1,1",
+       "gbPosition": "0,0",
+       "m_styles": [],
+       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM"],
+       "m_properties": [{
+         "type": "string",
+         "m_label": "Name:",
+         "m_value": "mnEdit"
+        }, {
+         "type": "string",
+         "m_label": "Label:",
+         "m_value": "&Edit"
+        }],
+       "m_events": [],
+       "m_children": [{
+         "m_type": 4459,
+         "proportion": 0,
+         "border": 5,
+         "gbSpan": "1,1",
+         "gbPosition": "0,0",
+         "m_styles": [],
+         "m_sizerFlags": [],
+         "m_properties": [{
+           "type": "winid",
+           "m_label": "ID:",
+           "m_winid": "wxID_UNDO"
+          }, {
+           "type": "string",
+           "m_label": "Name:",
+           "m_value": "mnEditUndo"
+          }, {
+           "type": "string",
+           "m_label": "Label:",
+           "m_value": "Undo"
+          }, {
+           "type": "string",
+           "m_label": "Shortcut:",
+           "m_value": "Ctrl+z"
+          }, {
+           "type": "string",
+           "m_label": "Help String:",
+           "m_value": "Undo the last action"
+          }, {
+           "type": "bitmapPicker",
+           "m_label": "Bitmap File:",
+           "m_path": "wxART_UNDO,wxART_TOOLBAR,wxDefaultSize"
+          }, {
+           "type": "choice",
+           "m_label": "Kind:",
+           "m_selection": 0,
+           "m_options": ["normal", "checkable", "radio", "separator"]
+          }, {
+           "type": "bool",
+           "m_label": "Checked",
+           "m_value": false
+          }],
+         "m_events": [{
+           "m_eventName": "wxEVT_COMMAND_MENU_SELECTED",
+           "m_eventClass": "wxCommandEvent",
+           "m_eventHandler": "wxCommandEventHandler",
+           "m_functionNameAndSignature": "OnMnfileundoMenuSelected(wxCommandEvent& event)",
+           "m_description": "Menu item has been clicked",
+           "m_noBody": false
+          }],
+         "m_children": []
+        }, {
+         "m_type": 4459,
+         "proportion": 0,
+         "border": 5,
+         "gbSpan": "1,1",
+         "gbPosition": "0,0",
+         "m_styles": [],
+         "m_sizerFlags": [],
+         "m_properties": [{
+           "type": "winid",
+           "m_label": "ID:",
+           "m_winid": "wxID_REDO"
+          }, {
+           "type": "string",
+           "m_label": "Name:",
+           "m_value": "mnEditRedo"
+          }, {
+           "type": "string",
+           "m_label": "Label:",
+           "m_value": "Redo"
+          }, {
+           "type": "string",
+           "m_label": "Shortcut:",
+           "m_value": "Ctrl+Shift+z"
+          }, {
+           "type": "string",
+           "m_label": "Help String:",
+           "m_value": "Re does the last undone action"
+          }, {
+           "type": "bitmapPicker",
+           "m_label": "Bitmap File:",
+           "m_path": "wxART_REDO,wxART_TOOLBAR,wxDefaultSize"
+          }, {
+           "type": "choice",
+           "m_label": "Kind:",
+           "m_selection": 0,
+           "m_options": ["normal", "checkable", "radio", "separator"]
+          }, {
+           "type": "bool",
+           "m_label": "Checked",
+           "m_value": false
+          }],
+         "m_events": [{
+           "m_eventName": "wxEVT_COMMAND_MENU_SELECTED",
+           "m_eventClass": "wxCommandEvent",
+           "m_eventHandler": "wxCommandEventHandler",
+           "m_functionNameAndSignature": "OnMneditredoMenuSelected(wxCommandEvent& event)",
            "m_description": "Menu item has been clicked",
            "m_noBody": false
           }],

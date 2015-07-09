@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 #include <SQLiteCpp/Database.h>
 #include <SQLiteCpp/Transaction.h>
 #include "OrcaAction.h"
@@ -70,13 +71,24 @@ public:
     template<typename Action, typename ...ARGS>
     auto exec(ARGS ...args)
     {
-        transaction();
         static_assert(std::is_base_of<OrcaAction, Action>::value, "You must give class derived from action as base class.");
         std::unique_ptr<OrcaAction> action = std::make_unique<Action>(std::forward<ARGS>(args)...);
-        action->doAction(_model);
-        return _model.getLastInsertRowid();
-        // TODO (Tales#1#): Push
+        return doAction(std::move(action));
     }
+    
+    int doAction(std::unique_ptr<OrcaAction> action);
+    
+    /**
+     * @brief Undo the last action
+     * @return Whether it still have actions to undo.
+     */
+    bool undo();
+    
+    /**
+     * @brief Redo the last action
+     * @return Whether it still have actions to redo.
+     */
+    bool redo();
 
     /** @brief Iterate over a view giving it a look
      *
@@ -110,6 +122,7 @@ protected:
     std::unique_ptr<SQLite::Transaction> &transaction();
 private:
     SQLite::Database _model;
+    std::vector<std::unique_ptr<OrcaAction>> _doneActions, _undoneActions;
     std::unique_ptr<SQLite::Transaction> _transaction;
 };
 

@@ -43,6 +43,8 @@ private:
         return reinterpret_cast<int>(lsMonths->GetClientData(lsMonths->GetSelection()));
     }
 protected:
+    virtual void OnMneditredoMenuSelected(wxCommandEvent& event);
+    virtual void OnMnfileundoMenuSelected(wxCommandEvent& event);
     virtual void OnGdestimatesGridColSort(wxGridEvent& event) override;
     virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) override;
     virtual void OnLsmonthsListbox(wxCommandEvent& event) override;

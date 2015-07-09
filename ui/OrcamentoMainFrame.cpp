@@ -708,3 +708,13 @@ void OrcamentoMainFrame::OnGdestimatesGridColSort(wxGridEvent& event)
 {
     RefreshEstimates();
 }
+void OrcamentoMainFrame::OnMneditredoMenuSelected(wxCommandEvent& event)
+{
+    _document->redo();
+    RefreshEstimates();
+}
+void OrcamentoMainFrame::OnMnfileundoMenuSelected(wxCommandEvent& event)
+{
+    _document->undo();
+    RefreshEstimates();
+}

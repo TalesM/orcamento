@@ -44,6 +44,9 @@ protected:
     wxMenuItem* mnFileSaveAs;
     wxMenuItem* mnFileSeparator;
     wxMenuItem* mnFileQuit;
+    wxMenu* mnEdit;
+    wxMenuItem* mnEditUndo;
+    wxMenuItem* mnEditRedo;
     wxMenu* mnBudget;
     wxMenuItem* mnBudgetCreateNext;
     wxMenuItem* mnBudgetExecuteNext;
@@ -79,6 +82,8 @@ protected:
     virtual void OnMnfilesaveMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnMnfilesaveasMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnMnfilequitMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMnfileundoMenuSelected(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnMneditredoMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event) { event.Skip(); }
     virtual void OnMnbudgetseparatorMenuSelected(wxCommandEvent& event) { event.Skip(); }
