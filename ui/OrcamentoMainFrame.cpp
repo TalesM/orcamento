@@ -364,11 +364,12 @@ void OrcamentoMainFrame::RefreshCellAttr(bool executing)
 }
 void OrcamentoMainFrame::OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event)
 {
-    if(wxMessageBox(L"Are you sure you want to create a new Budget?", L"Create Budget", wxYES_NO|wxCENTRE) != wxYES) {
+    if(wxMessageBox(L"Are you sure you want to create a new Budget?\nThis is irreversible and will cause the file to be saved.", L"Create Budget", wxYES_NO|wxCENTRE) != wxYES) {
         return;
     }
     try {
         _document->exec<action::InsertBudget>();
+        _document->save();
     } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
@@ -376,11 +377,12 @@ void OrcamentoMainFrame::OnMnbudgetcreatenextMenuSelected(wxCommandEvent& event)
 }
 void OrcamentoMainFrame::OnMnbudgetexecutenextMenuSelected(wxCommandEvent& event)
 {
-    if(wxMessageBox(L"Are you sure you want to execute the next Budget?", L"Execute Budget", wxYES_NO|wxCENTRE) != wxYES) {
+    if(wxMessageBox(L"Are you sure you want to execute the next Budget?\nThis is irreversible and will cause the file to be saved.", L"Execute Budget", wxYES_NO|wxCENTRE) != wxYES) {
         return;
     }
     try {
         _document->exec<action::ExecuteNextBudget>();
+        _document->save();
     } catch (const std::exception &e) {
         wxMessageBox(e.what());
     }
