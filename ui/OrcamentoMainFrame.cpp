@@ -53,7 +53,7 @@ constexpr int length = 8;
 };
 
 OrcamentoMainFrame::OrcamentoMainFrame(wxWindow* parent)
-    : OrcamentoMainFrameBase(parent)
+    : OrcamentoMainFrameBase(parent), _sort(EstimateColumn::CATEGORY)
 {
     gdEstimates->AppendCols(8);
     gdEstimates->HideCol(0);
@@ -243,22 +243,22 @@ void OrcamentoMainFrame::RefreshEstimates()
             }
             ++i;
         };
-        int order = gdEstimates->GetSortingColumn();
         if(lsMonths->GetSelection() > _activeIndex) {
             using namespace std::placeholders;
             _estimatePlaningView.budgetId(budget_id);
-            if(order > 5){
-                order -= 2;
-            }else if(order > 2){
-                order = 5;
+            int sort = _sort;
+            if(sort > 5){
+                sort -= 2;
+            }else if(sort > 2){
+                sort = 5;
                 gdEstimates->SetSortingColumn(EstimateColumn::CATEGORY);
             }
-            _estimatePlaningView.search(_search, order, gdEstimates->IsSortOrderAscending());
+            _estimatePlaningView.search(_search, sort, _asc);
             _document->look(_estimatePlaningView, std::bind(refreshFunction, _1, _2, _3, _4, 0, 0, _5, _6));
             RefreshCellAttr(false);
         } else {
             _estimateExecutingView.budgetId(budget_id);
-            _estimateExecutingView.search(_search, order, gdEstimates->IsSortOrderAscending());
+            _estimateExecutingView.search(_search, _sort, _asc);
             _document->look(_estimateExecutingView, refreshFunction);
             RefreshCellAttr(true);
         }
@@ -708,6 +708,12 @@ void OrcamentoMainFrame::OnByfiltertotalsButtonClicked(wxCommandEvent& event)
 
 void OrcamentoMainFrame::OnGdestimatesGridColSort(wxGridEvent& event)
 {
+    _sort = event.GetCol();
+    if(gdEstimates->GetSortingColumn() == _sort){
+        _asc = !_asc;
+    } else {
+        _asc = true;
+    }
     RefreshEstimates();
 }
 void OrcamentoMainFrame::OnMneditredoMenuSelected(wxCommandEvent& event)

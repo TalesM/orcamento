@@ -58,7 +58,7 @@ void EstimateExecutingView::search(const Search& search, int order, bool asc)
         "exc.amount",
         "(exc.amount-estim.amount)",
         "category_id",
-        "estim.obj",
+        "estim.obs",
     };
     sort += orders[order];
     if(not asc){

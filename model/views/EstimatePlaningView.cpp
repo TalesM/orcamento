@@ -44,7 +44,7 @@ void EstimatePlaningView::search(const Search& search, int order, bool asc)
         "CAST(STRFTIME('%d', \"start\", due) AS INTEGER)",
         "estim.amount",
         "category_id",
-        "estim.obj",
+        "estim.obs",
     };
     sort += orders[order];
     if(not asc){

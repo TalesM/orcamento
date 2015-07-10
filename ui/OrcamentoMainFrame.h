@@ -22,6 +22,8 @@ private:
     std::unique_ptr<OrcaDocument> _document;
     Search _search;
     int _activeIndex = -1;
+    int _sort;
+    bool _asc=true;
     BudgetView _budgetView;
     CategoryView _categoryView;
     EstimateExecutingView _estimateExecutingView;
