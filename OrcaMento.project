@@ -144,10 +144,10 @@
         <LibraryPath Value="$(wx)/lib/gcc_dll"/>
         <LibraryPath Value="$(sqlitecpp.lib)"/>
         <LibraryPath Value="$(csv.lib)"/>
+        <Library Value="model"/>
         <Library Value="libwxmsw30u.a"/>
         <Library Value="SQLiteCpp"/>
         <Library Value="CSV"/>
-        <Library Value="model"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags);" Required="no"/>
       <General OutputFile="bin/Release/orcamento" IntermediateDirectory="./Release" Command="./orcamento" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="bin/Release" PauseExecWhenProcTerminates="no" IsGUIProgram="yes" IsEnabled="yes"/>
@@ -183,4 +183,7 @@
       </Completion>
     </Configuration>
   </Settings>
+  <Dependencies Name="Release">
+    <Project Name="model"/>
+  </Dependencies>
 </CodeLite_Project>
