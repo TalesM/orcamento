@@ -47,9 +47,11 @@ Limitations
 	error message and revert the operation. It is robust as you can continue
 	working without restart the program but I know it is really bad UX and I
 	will punish myself in honour to front-end gods.
-- ~~Lack of a explicit save feature. All your changes are saved automatically
-	(and, in general, immediately) and the user have no feedback or control.
-	I plan to solve this ASAP as it may scare people.~~<ins>Solved on v0.2!</ins>
+- Lack of Analysis and Graphic views of you budget. It can export to you check
+    on Excel or Calc, but it would be better to have some basic charts built in.
+- Lack of interoperability. You can always view the database, but it is not documented
+	and can be hard to understand. We do have a CSV export feature, but it is very
+	limited.
 	
 Goals
 -----
