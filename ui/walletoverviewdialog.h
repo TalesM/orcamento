@@ -24,6 +24,7 @@ private:
     WalletView _walletView;
     WalletDetailView _walletDetailView;
 protected:
+    virtual void OnBtokButtonClicked(wxCommandEvent& event);
     virtual void OnBtaddButtonClicked(wxCommandEvent& event);
     virtual void OnBteditButtonClicked(wxCommandEvent& event);
     virtual void OnBtremoveButtonClicked(wxCommandEvent& event);

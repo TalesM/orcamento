@@ -4,8 +4,8 @@
 // Do not modify this file by hand!
 //////////////////////////////////////////////////////////////////////
 
-#ifndef WXCRAFTER_BASE_CLASSES_H
-#define WXCRAFTER_BASE_CLASSES_H
+#ifndef ORCAMENTO_UI_WXCRAFTER_BASE_CLASSES_H
+#define ORCAMENTO_UI_WXCRAFTER_BASE_CLASSES_H
 
 #include <wx/settings.h>
 #include <wx/xrc/xmlres.h>
@@ -32,6 +32,12 @@
 #include <wx/spinctrl.h>
 #include <wx/checklst.h>
 #include <wx/statline.h>
+#if wxVERSION_NUMBER >= 2900
+#include <wx/persist.h>
+#include <wx/persist/toplevel.h>
+#include <wx/persist/bookctrl.h>
+#include <wx/persist/treebook.h>
+#endif
 
 class OrcamentoMainFrameBase : public wxFrame
 {
@@ -102,6 +108,18 @@ protected:
     virtual void OnByfiltertotalsButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
+    wxMenuBar* GetMnMain() { return mnMain; }
+    wxStatusBar* GetSbStatus() { return sbStatus; }
+    wxSimpleHtmlListBox* GetLsMonths() { return lsMonths; }
+    wxGrid* GetGdEstimates() { return gdEstimates; }
+    wxStaticText* GetLbTotalEstimated() { return lbTotalEstimated; }
+    wxTextCtrl* GetTxTotalEstimated() { return txTotalEstimated; }
+    wxStaticText* GetLbTotalAccounted() { return lbTotalAccounted; }
+    wxTextCtrl* GetTxTotalAccounted() { return txTotalAccounted; }
+    wxStaticText* GetLbTotalRemaining() { return lbTotalRemaining; }
+    wxTextCtrl* GetTxTotalRemaining() { return txTotalRemaining; }
+    wxButton* GetByFilterTotals() { return byFilterTotals; }
+    wxPanel* GetPnTotals() { return pnTotals; }
     OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("OrcaMento"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(800,600), long style = wxDEFAULT_FRAME_STYLE);
     virtual ~OrcamentoMainFrameBase();
 };
@@ -121,6 +139,10 @@ protected:
 protected:
 
 public:
+    wxStaticText* GetLbLocation() { return lbLocation; }
+    wxFilePickerCtrl* GetFlLocation() { return flLocation; }
+    wxStaticText* GetLbStart() { return lbStart; }
+    wxDatePickerCtrl* GetDtStart() { return dtStart; }
     CreateDatabaseDialogBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Setup Database"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1,-1), long style = wxDEFAULT_DIALOG_STYLE);
     virtual ~CreateDatabaseDialogBase();
 };
@@ -151,6 +173,21 @@ protected:
     virtual void OnbtDeleteClick(wxCommandEvent& event) { event.Skip(); }
 
 public:
+    wxStaticText* GetLbBudget() { return lbBudget; }
+    wxTextCtrl* GetTxBudget() { return txBudget; }
+    wxTextCtrl* GetTxEstimateName() { return txEstimateName; }
+    wxStaticText* GetLbEstimated() { return lbEstimated; }
+    wxTextCtrl* GetTxEstimateAmount() { return txEstimateAmount; }
+    wxStaticText* GetLbAccounted() { return lbAccounted; }
+    wxStaticText* GetLbLeftover() { return lbLeftover; }
+    wxTextCtrl* GetTxAccounted() { return txAccounted; }
+    wxTextCtrl* GetTxLeftover() { return txLeftover; }
+    wxStaticText* GetLbExecutions() { return lbExecutions; }
+    wxGrid* GetGdExecutions() { return gdExecutions; }
+    wxButton* GetBtAdd() { return btAdd; }
+    wxButton* GetBtDelete() { return btDelete; }
+    wxButton* GetBtClose() { return btClose; }
+    wxStaticText* GetLbEstimateName() { return lbEstimateName; }
     ExecutionDialogBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Execution"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600,-1), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER);
     virtual ~ExecutionDialogBase();
 };
@@ -168,6 +205,7 @@ protected:
     wxButton* btAdd;
     wxButton* btRemove;
     wxButton* btClose;
+    wxButton* btOk;
 
 protected:
     virtual void OnLswalletsListbox(wxCommandEvent& event) { event.Skip(); }
@@ -176,8 +214,19 @@ protected:
     virtual void OnBteditButtonClicked(wxCommandEvent& event) { event.Skip(); }
     virtual void OnBtaddButtonClicked(wxCommandEvent& event) { event.Skip(); }
     virtual void OnBtremoveButtonClicked(wxCommandEvent& event) { event.Skip(); }
+    virtual void OnBtokButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
+    wxSimpleHtmlListBox* GetLsWallets() { return lsWallets; }
+    wxStaticText* GetLbName() { return lbName; }
+    wxTextCtrl* GetTxName() { return txName; }
+    wxStaticText* GetLbObs() { return lbObs; }
+    wxTextCtrl* GetTxObs() { return txObs; }
+    wxButton* GetBtEdit() { return btEdit; }
+    wxButton* GetBtAdd() { return btAdd; }
+    wxButton* GetBtRemove() { return btRemove; }
+    wxButton* GetBtClose() { return btClose; }
+    wxButton* GetBtOk() { return btOk; }
     WalletOverviewDialogBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Wallet Overview"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(-1,-1), long style = wxDEFAULT_DIALOG_STYLE);
     virtual ~WalletOverviewDialogBase();
 };
@@ -234,6 +283,48 @@ protected:
     virtual void OnBtcloseButtonClicked(wxCommandEvent& event) { event.Skip(); }
 
 public:
+    wxStaticText* GetLbName() { return lbName; }
+    wxTextCtrl* GetTxName() { return txName; }
+    wxChoice* GetChName() { return chName; }
+    wxCheckBox* GetCkInvertName() { return ckInvertName; }
+    wxStaticText* GetLbDate() { return lbDate; }
+    wxStaticText* GetLbDateFrom() { return lbDateFrom; }
+    wxSpinCtrl* GetSpDateFrom() { return spDateFrom; }
+    wxStaticText* GetLbDateTo() { return lbDateTo; }
+    wxSpinCtrl* GetSpDateTo() { return spDateTo; }
+    wxCheckBox* GetCkInvertDate() { return ckInvertDate; }
+    wxStaticText* GetLbEstimated() { return lbEstimated; }
+    wxStaticText* GetLbEstimatedFrom() { return lbEstimatedFrom; }
+    wxTextCtrl* GetTxEstimatedFrom() { return txEstimatedFrom; }
+    wxStaticText* GetLbEstimateTo() { return lbEstimateTo; }
+    wxTextCtrl* GetTxEstimatedTo() { return txEstimatedTo; }
+    wxCheckBox* GetCkinvertEstimated() { return ckinvertEstimated; }
+    wxStaticText* GetLbAccounted() { return lbAccounted; }
+    wxStaticText* GetLbAccountedFrom() { return lbAccountedFrom; }
+    wxTextCtrl* GetTxAccountedFrom() { return txAccountedFrom; }
+    wxStaticText* GetLbAccountedTo() { return lbAccountedTo; }
+    wxTextCtrl* GetTxAccountedTo() { return txAccountedTo; }
+    wxCheckBox* GetCkInvertAccounted() { return ckInvertAccounted; }
+    wxStaticText* GetLbRemaining() { return lbRemaining; }
+    wxStaticText* GetLbRemainingFrom() { return lbRemainingFrom; }
+    wxTextCtrl* GetTxRemainingFrom() { return txRemainingFrom; }
+    wxStaticText* GetLbRemainingTo() { return lbRemainingTo; }
+    wxTextCtrl* GetTxRemainingTo() { return txRemainingTo; }
+    wxCheckBox* GetCkInvertRemaining() { return ckInvertRemaining; }
+    wxStaticText* GetLbObservation() { return lbObservation; }
+    wxTextCtrl* GetTxObservation() { return txObservation; }
+    wxChoice* GetChObservation() { return chObservation; }
+    wxCheckBox* GetCkInvertObservation() { return ckInvertObservation; }
+    wxStaticText* GetLbCategories() { return lbCategories; }
+    wxCheckListBox* GetLsckCategories() { return lsckCategories; }
+    wxCheckBox* GetCkInvertCategories() { return ckInvertCategories; }
+    wxStaticText* GetLbWallets() { return lbWallets; }
+    wxCheckListBox* GetLsckWallets() { return lsckWallets; }
+    wxCheckBox* GetCkInvertWallets() { return ckInvertWallets; }
+    wxStaticLine* GetLnControls() { return lnControls; }
+    wxButton* GetBtReset() { return btReset; }
+    wxButton* GetBtRefresh() { return btRefresh; }
+    wxButton* GetBtClose() { return btClose; }
     BudgetFilterBase(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Budget Filtering"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600,500), long style = wxDEFAULT_DIALOG_STYLE);
     virtual ~BudgetFilterBase();
 };

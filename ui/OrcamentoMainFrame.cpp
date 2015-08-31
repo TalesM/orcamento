@@ -527,9 +527,13 @@ void OrcamentoMainFrame::OnMnwalletoverviewMenuSelected(wxCommandEvent& event)
         _document->save();
         WalletOverviewDialog overview(this);
         overview.giveDatabase(_document);
-        overview.ShowModal();
+        int response = overview.ShowModal();
         _document = overview.takeDatabase();
-        _document->save();
+        if(response == wxOK){
+            _document->save();
+        } else {
+            while(_document->undo());
+        }
     } catch(std::exception &e) {
         wxMessageBox(e.what());
     }

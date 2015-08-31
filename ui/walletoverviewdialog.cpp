@@ -51,6 +51,7 @@ void WalletOverviewDialog::OnBtaddButtonClicked(wxCommandEvent& event)
         std::string name(txName->GetValue().ToUTF8()), obs(txObs->GetValue().ToUTF8());
         int id = _document->exec<action::InsertWallet>(name, obs);
         lsWallets->Append(txName->GetValue(), reinterpret_cast<void*>(id));
+        btAdd->Enable(false);
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
     }
@@ -62,6 +63,7 @@ void WalletOverviewDialog::OnBteditButtonClicked(wxCommandEvent& event)
         std::string name(txName->GetValue().ToUTF8()), obs(txObs->GetValue().ToUTF8());
         _document->exec<action::UpdateWallet>(walletId, name, obs);
         lsWallets->SetString(lsWallets->GetSelection(), txName->GetValue());
+        btAdd->Enable(false);
     } catch(const std::exception& e) {
         wxMessageBox(e.what());
     }
@@ -90,4 +92,8 @@ void WalletOverviewDialog::OnTxobsTextUpdated(wxCommandEvent& event)
     if(selected > 0) {
         btEdit->Enable();
     }
+}
+void WalletOverviewDialog::OnBtokButtonClicked(wxCommandEvent& event)
+{
+    EndModal(wxOK);
 }

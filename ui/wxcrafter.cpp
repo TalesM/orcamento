@@ -188,6 +188,13 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+#if wxVERSION_NUMBER >= 2900
+    if(!wxPersistenceManager::Get().Find(this)) {
+        wxPersistenceManager::Get().RegisterAndRestore(this);
+    } else {
+        wxPersistenceManager::Get().Restore(this);
+    }
+#endif
     // Connect events
     this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(OrcamentoMainFrameBase::OnCloseWindow), NULL, this);
     this->Connect(mnFileNew->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(OrcamentoMainFrameBase::OnMnfilenewMenuSelected), NULL, this);
@@ -296,6 +303,13 @@ CreateDatabaseDialogBase::CreateDatabaseDialogBase(wxWindow* parent, wxWindowID 
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+#if wxVERSION_NUMBER >= 2900
+    if(!wxPersistenceManager::Get().Find(this)) {
+        wxPersistenceManager::Get().RegisterAndRestore(this);
+    } else {
+        wxPersistenceManager::Get().Restore(this);
+    }
+#endif
 }
 
 CreateDatabaseDialogBase::~CreateDatabaseDialogBase()
@@ -406,6 +420,13 @@ ExecutionDialogBase::ExecutionDialogBase(wxWindow* parent, wxWindowID id, const 
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+#if wxVERSION_NUMBER >= 2900
+    if(!wxPersistenceManager::Get().Find(this)) {
+        wxPersistenceManager::Get().RegisterAndRestore(this);
+    } else {
+        wxPersistenceManager::Get().Restore(this);
+    }
+#endif
     // Connect events
     gdExecutions->Connect(wxEVT_GRID_CELL_CHANGING, wxGridEventHandler(ExecutionDialogBase::OngdExecutionsCellChange), NULL, this);
     btAdd->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(ExecutionDialogBase::OnbtAddClick), NULL, this);
@@ -438,6 +459,7 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
     lsWallets = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsWalletsArr, wxHLB_DEFAULT_STYLE);
     
     BoxSizer135->Add(lsWallets, 4, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    lsWallets->SetMinSize(wxSize(200,-1));
     
     wxFlexGridSizer* flexGridSizer2137 = new wxFlexGridSizer(3, 2, 0, 0);
     flexGridSizer2137->SetFlexibleDirection( wxBOTH );
@@ -490,11 +512,13 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
     
     BoxSizer346->Add(0, 0, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     
-    BoxSizer346->Add(0, 0, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-    
-    btClose = new wxButton(this, wxID_CANCEL, _("Close"), wxDefaultPosition, wxSize(-1,-1), 0);
+    btClose = new wxButton(this, wxID_CANCEL, _("Cancel"), wxDefaultPosition, wxSize(-1,-1), 0);
     
     BoxSizer346->Add(btClose, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    
+    btOk = new wxButton(this, wxID_OK, _("Ok"), wxDefaultPosition, wxSize(-1,-1), 0);
+    
+    BoxSizer346->Add(btOk, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     
     SetName(wxT("WalletOverviewDialogBase"));
     SetSizeHints(-1,-1);
@@ -502,6 +526,13 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+#if wxVERSION_NUMBER >= 2900
+    if(!wxPersistenceManager::Get().Find(this)) {
+        wxPersistenceManager::Get().RegisterAndRestore(this);
+    } else {
+        wxPersistenceManager::Get().Restore(this);
+    }
+#endif
     // Connect events
     lsWallets->Connect(wxEVT_LISTBOX, wxCommandEventHandler(WalletOverviewDialogBase::OnLswalletsListbox), NULL, this);
     txName->Connect(wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(WalletOverviewDialogBase::OnTxnameTextUpdated), NULL, this);
@@ -509,6 +540,7 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
     btEdit->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBteditButtonClicked), NULL, this);
     btAdd->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtaddButtonClicked), NULL, this);
     btRemove->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtremoveButtonClicked), NULL, this);
+    btOk->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtokButtonClicked), NULL, this);
     
 }
 
@@ -520,6 +552,7 @@ WalletOverviewDialogBase::~WalletOverviewDialogBase()
     btEdit->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBteditButtonClicked), NULL, this);
     btAdd->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtaddButtonClicked), NULL, this);
     btRemove->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtremoveButtonClicked), NULL, this);
+    btOk->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WalletOverviewDialogBase::OnBtokButtonClicked), NULL, this);
     
 }
 
@@ -781,6 +814,13 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
          GetSizer()->Fit(this);
     }
     CentreOnParent(wxBOTH);
+#if wxVERSION_NUMBER >= 2900
+    if(!wxPersistenceManager::Get().Find(this)) {
+        wxPersistenceManager::Get().RegisterAndRestore(this);
+    } else {
+        wxPersistenceManager::Get().Restore(this);
+    }
+#endif
     // Connect events
     btRefresh->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtrefreshButtonClicked), NULL, this);
     btClose->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(BudgetFilterBase::OnBtcloseButtonClicked), NULL, this);
