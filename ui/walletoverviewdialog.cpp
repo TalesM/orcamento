@@ -58,8 +58,7 @@ void WalletOverviewDialog::OnBtaddButtonClicked(wxCommandEvent& event)
 void WalletOverviewDialog::OnBteditButtonClicked(wxCommandEvent& event)
 {
     try {
-        // TODO (Tales#1#): Don't use wallet position to deduce id. It can break once we support delete.
-        int walletId = lsWallets->GetSelection() + 1;
+        int walletId = reinterpret_cast<int>(lsWallets->GetClientData(lsWallets->GetSelection()));
         std::string name(txName->GetValue().ToUTF8()), obs(txObs->GetValue().ToUTF8());
         _document->exec<action::UpdateWallet>(walletId, name, obs);
         lsWallets->SetString(lsWallets->GetSelection(), txName->GetValue());
@@ -73,19 +72,22 @@ void WalletOverviewDialog::OnBtremoveButtonClicked(wxCommandEvent& event)
 }
 void WalletOverviewDialog::OnTxnameTextUpdated(wxCommandEvent& event)
 {
-    int id = lsWallets->GetSelection() + 1;
-    if(id > 0) {
-        btEdit->Enable();
-    }
     wxArrayString strs = lsWallets->GetStrings();
-    btAdd->Enable(std::none_of(strs.begin(), strs.end(), [current=txName->GetValue()](auto &str) {
+    auto current = txName->GetValue();
+    bool isUnique = std::none_of(strs.begin(), strs.end(), [current=txName->GetValue()](auto &str) {
         return str==current;
-    }));
+    });
+    btAdd->Enable(isUnique);
+    
+    int selected = lsWallets->GetSelection() + 1;
+    if(selected > 0) {
+        btEdit->Enable(isUnique || strs[lsWallets->GetSelection()] == current);
+    }
 }
 void WalletOverviewDialog::OnTxobsTextUpdated(wxCommandEvent& event)
 {
-    int id = lsWallets->GetSelection() + 1;
-    if(id > 0) {
+    int selected = lsWallets->GetSelection() + 1;
+    if(selected > 0) {
         btEdit->Enable();
     }
 }
