@@ -520,10 +520,19 @@ void OrcamentoMainFrame::OnMnhelpaboutMenuSelected(wxCommandEvent& event)
 }
 void OrcamentoMainFrame::OnMnwalletoverviewMenuSelected(wxCommandEvent& event)
 {
-    WalletOverviewDialog overview(this);
-    overview.giveDatabase(_document);
-    overview.ShowModal();
-    _document = overview.takeDatabase();
+    if(wxMessageBox(_("This action will cause the file to be saved. Do you want to continue?"), L"Wallet Overview", wxYES_NO|wxCENTRE) != wxYES) {
+        return;
+    }
+    try {
+        _document->save();
+        WalletOverviewDialog overview(this);
+        overview.giveDatabase(_document);
+        overview.ShowModal();
+        _document = overview.takeDatabase();
+        _document->save();
+    } catch(std::exception &e) {
+        wxMessageBox(e.what());
+    }
 }
 void OrcamentoMainFrame::OnCloseWindow(wxCloseEvent& event)
 {
