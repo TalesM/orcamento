@@ -11,6 +11,7 @@ compile_commands.json
 model.txt
 orcamentoCb.workspace.backup
 OrcaMento.txt
+Makefile
 *.mk
 *.orca
 *.depend
