@@ -55,10 +55,10 @@ public:
 #endif
 
     static bool canConvert(int major, int minor, int patch, int variant);
-    static std::unique_ptr<OrcaDocument> convert(const std::string &oldPath, const std::string &newPath);
+    static std::unique_ptr<OrcaDocument> convertFrom0_1_0(const std::string &oldPath, const std::string &newPath);
 #ifdef ORCA_WX
-    static std::unique_ptr<OrcaDocument> convert(const wxString &oldPath, const wxString &newPath){
-        return convert(oldPath.ToUTF8(), newPath.ToUTF8());
+    static std::unique_ptr<OrcaDocument> convertFrom0_1_0(const wxString &oldPath, const wxString &newPath){
+        return convertFrom0_1_0(oldPath.ToUTF8(), newPath.ToUTF8());
     }
 #endif
     /** @brief execute an action.

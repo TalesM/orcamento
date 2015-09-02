@@ -97,7 +97,7 @@ CHOOSE_OPTION://An ugly fix for issue #22. Should replace it ASAP for a proper s
                         if(rename(location, backupLocation)!=0){
                             std::runtime_error("Can not backup.");
                         }
-                        _document = OrcaDocument::convert(backupLocation, location);
+                        _document = OrcaDocument::convertFrom0_1_0(backupLocation, location);
                         RefreshModel();
                     } catch(const std::exception& e) {
                         wxMessageBox(e.what());
@@ -477,7 +477,7 @@ void OrcamentoMainFrame::OnMnfileopenMenuSelected(wxCommandEvent& event)
                 if(rename(location, backupLocation)!=0){
                     std::runtime_error("Can not backup.");
                 }
-                _document = OrcaDocument::convert(backupLocation, location);
+                _document = OrcaDocument::convertFrom0_1_0(backupLocation, location);
                 RefreshModel();
             } catch(const std::exception& e) {
                 wxMessageBox(e.what());

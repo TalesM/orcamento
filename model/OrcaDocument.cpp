@@ -1,5 +1,6 @@
 #include "OrcaDocument.h"
 #include "sql/create_0_4_0.h"
+#include "conversor.h"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -14,18 +15,22 @@ OrcaDocument::OrcaDocument(const std::string &path, bool erase):
         return;
     }
     std::string s = _model.execAndGet("SELECT \"value\" FROM \"meta\" WHERE \"key\"='format-version'");
-    std::vector<int> vs;
+    std::vector<int> versionArray;
     size_t p = 0, q = 0;
     do{
         p = s.find('.', q);
-        vs.push_back(atoi(s.substr(q, p).c_str()));
+        versionArray.push_back(atoi(s.substr(q, p).c_str()));
         q = p+1;
     }while(p != std::string::npos);
-    if(vs.size() < 3){
+    if(versionArray.size() < 3){
         throw std::runtime_error("String Version formated incorrectly.");
     }
-    if(vs[0] != fileFormat::MAJOR || vs[1] != fileFormat::MINOR || vs[2] != fileFormat::PATCH || (vs.size()>3 && vs[3] < fileFormat::VARIANT)){
-        throw wrongver_error(vs[0], vs[1], vs[2], (vs.size()>3)?(vs[3]):0);
+    
+    if(versionArray[0] != fileFormat::MAJOR || versionArray[1] != fileFormat::MINOR || versionArray[2] != fileFormat::PATCH || (versionArray.size()>3 && versionArray[3] < fileFormat::VARIANT)){
+        transaction();
+        if(not upgrade(_model, versionArray, {fileFormat::MAJOR, fileFormat::MINOR, fileFormat::PATCH, fileFormat::PATCH})){
+            throw wrongver_error(versionArray[0], versionArray[1], versionArray[2], (versionArray.size()>3)?(versionArray[3]):0);
+        }
     }
 }
 
@@ -60,7 +65,7 @@ bool OrcaDocument::canConvert(int major, int minor, int patch, int variant)
     return (major == 0 && minor == 1);
 }
 
-std::unique_ptr<OrcaDocument> OrcaDocument::convert(const std::string &opath, const std::string &npath)
+std::unique_ptr<OrcaDocument> OrcaDocument::convertFrom0_1_0(const std::string &opath, const std::string &npath)
 {
     auto newDocument = std::make_unique<OrcaDocument>(npath, true);
     newDocument->_model.exec(readModel());
