@@ -127,6 +127,7 @@ DIALOG_SHOW: //Don't do this at home, kids.
             wxDateTime start  = dialog.getStart();
 
             try {
+                std::remove(location);
                 _document = OrcaDocument::create(location, start);
             } catch (const std::exception &e) {
                 wxMessageBox(e.what());

@@ -7,12 +7,12 @@
   <Project Name="test" Path="test.project" Active="No"/>
   <Project Name="model" Path="model.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Project Name="OrcaMento" ConfigName="Debug"/>
       <Project Name="test" ConfigName="Debug"/>
       <Project Name="model" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Project Name="OrcaMento" ConfigName="Release"/>
       <Project Name="test" ConfigName="Release"/>
       <Project Name="model" ConfigName="Release"/>

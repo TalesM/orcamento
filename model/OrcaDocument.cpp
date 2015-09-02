@@ -1,5 +1,5 @@
 #include "OrcaDocument.h"
-#include "sql/create_0_2_0.h"
+#include "sql/create_0_4_0.h"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -30,7 +30,7 @@ OrcaDocument::OrcaDocument(const std::string &path, bool erase):
 }
 
 static std::string readModel(){
-    return v0_2_0::createScript;
+    return v0_4_0::createScript;
 }
 
 std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, const std::string& start)
@@ -62,15 +62,9 @@ bool OrcaDocument::canConvert(int major, int minor, int patch, int variant)
 
 std::unique_ptr<OrcaDocument> OrcaDocument::convert(const std::string &opath, const std::string &npath)
 {
-//    std::string npath(path.ToUTF8());
-//    std::string opath = npath + ".old";
-//    if(rename(path, path+_(".old"))!=0){
-//        std::runtime_error("Can not rename.");
-//    }
     auto newDocument = std::make_unique<OrcaDocument>(npath, true);
     newDocument->_model.exec(readModel());
     newDocument->_model.exec("ATTACH DATABASE '"+opath+"' AS oldData");
-//    SQLite::Transaction transaction(newDocument->_model);
     const char conversor[] =
 "REPLACE INTO main.wallet SELECT * FROM oldData.wallet;"
 "REPLACE INTO main.budget SELECT * FROM oldData.budget;"
@@ -80,8 +74,6 @@ std::unique_ptr<OrcaDocument> OrcaDocument::convert(const std::string &opath, co
 "    SELECT estimate_id FROM oldData.estimate WHERE category_id IS NOT NULL"
 ");";
     newDocument->_model.exec(conversor);
-    // Commit transaction
-//    transaction.commit();
     newDocument->_model.exec("DETACH DATABASE oldData");
     return newDocument;
 }

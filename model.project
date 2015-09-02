@@ -45,6 +45,8 @@
     <File Name="model/Search.cpp"/>
     <VirtualDirectory Name="sql">
       <File Name="model/sql/create_0_2_0.cpp"/>
+      <File Name="model/sql/translate_0_2_0_to_0_4_0.cpp"/>
+      <File Name="model/sql/create_0_4_0.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
@@ -79,6 +81,7 @@
     <File Name="model/Search.h"/>
     <VirtualDirectory Name="sql">
       <File Name="model/sql/create_0_2_0.h"/>
+      <File Name="model/sql/create_0_4_0.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Static Library">

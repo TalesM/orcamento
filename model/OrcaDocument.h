@@ -10,7 +10,7 @@
 #include "OrcaView.h"
 
 namespace fileFormat{
-constexpr int MAJOR = 0, MINOR = 2, PATCH = 0, VARIANT = 0;
+constexpr int MAJOR = 0, MINOR = 4, PATCH = 0, VARIANT = 0;
 }
 
 struct wrongver_error: public std::runtime_error{
