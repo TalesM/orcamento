@@ -48,7 +48,7 @@
       <File Name="model/sql/translate_0_2_0_to_0_4_0.cpp"/>
       <File Name="model/sql/create_0_4_0.cpp"/>
     </VirtualDirectory>
-    <File Name="model/conversor.cpp"/>
+    <File Name="model/upgrader.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="model/OrcaAction.h"/>
@@ -85,7 +85,7 @@
       <File Name="model/sql/create_0_4_0.h"/>
       <File Name="model/sql/translate_0_2_0_to_0_4_0.h"/>
     </VirtualDirectory>
-    <File Name="model/conversor.h"/>
+    <File Name="model/upgrader.h"/>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>

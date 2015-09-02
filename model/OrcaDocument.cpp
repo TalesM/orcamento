@@ -1,6 +1,6 @@
 #include "OrcaDocument.h"
 #include "sql/create_0_4_0.h"
-#include "conversor.h"
+#include "upgrader.h"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>

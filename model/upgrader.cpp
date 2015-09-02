@@ -1,4 +1,4 @@
-#include "conversor.h"
+#include "upgrader.h"
 #include "sql/translate_0_2_0_to_0_4_0.h"
 
 bool upgrade(SQLite::Database &db, const std::vector<int> &versionFrom, const std::vector<int> &versionTo){
