@@ -36,7 +36,6 @@
     <File Name="orcamentoApp.cpp"/>
     <File Name="orcamentoApp.h"/>
     <File Name="resource.rc"/>
-    <File Name="theModel.sql"/>
     <File Name="wx_pch.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="ui">

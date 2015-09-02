@@ -1,4 +1,5 @@
 #include "OrcaDocument.h"
+#include "sql/create_0_2_0.h"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -29,9 +30,7 @@ OrcaDocument::OrcaDocument(const std::string &path, bool erase):
 }
 
 static std::string readModel(){
-    std::ifstream t("theModel.sql");
-    std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-    return str;
+    return v0_2_0::createScript;
 }
 
 std::unique_ptr<OrcaDocument> OrcaDocument::create(const std::string &path, const std::string& start)

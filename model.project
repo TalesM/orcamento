@@ -43,6 +43,9 @@
       <File Name="model/views/WalletView.cpp"/>
     </VirtualDirectory>
     <File Name="model/Search.cpp"/>
+    <VirtualDirectory Name="sql">
+      <File Name="model/sql/create_0_2_0.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="model/OrcaAction.h"/>
@@ -74,6 +77,9 @@
       <File Name="model/actions/UpdateWallet.h"/>
     </VirtualDirectory>
     <File Name="model/Search.h"/>
+    <VirtualDirectory Name="sql">
+      <File Name="model/sql/create_0_2_0.h"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Static Library">
     <GlobalSettings>
