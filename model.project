@@ -47,7 +47,7 @@
       <File Name="model/sql/create_0_2_0.cpp"/>
       <File Name="model/sql/translate_0_2_0_to_0_4_0.cpp"/>
       <File Name="model/sql/create_0_4_0.cpp"/>
-      <File Name="model/sql/translate_0_4_0_to_0_4_1.cpp"/>
+      <File Name="model/sql/translate_0_4_0_to_0_4_0_1.cpp"/>
     </VirtualDirectory>
     <File Name="model/upgrader.cpp"/>
   </VirtualDirectory>
@@ -85,7 +85,7 @@
       <File Name="model/sql/create_0_2_0.h"/>
       <File Name="model/sql/create_0_4_0.h"/>
       <File Name="model/sql/translate_0_2_0_to_0_4_0.h"/>
-      <File Name="model/sql/translate_0_4_0_to_0_4_1.h"/>
+      <File Name="model/sql/translate_0_4_0_to_0_4_0_1.h"/>
     </VirtualDirectory>
     <File Name="model/upgrader.h"/>
   </VirtualDirectory>
