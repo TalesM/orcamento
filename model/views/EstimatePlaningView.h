@@ -1,8 +1,8 @@
 #ifndef _ORCA_ESTIMATEPLANINGVIEW_H
 #define _ORCA_ESTIMATEPLANINGVIEW_H
 
-#include "../OrcaView.h"
 #include "../Search.h"
+#include "../OrcaView.h"
 
 class EstimatePlaningView : public OrcaView<
     int,            //estimate_id

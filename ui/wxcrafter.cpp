@@ -183,11 +183,15 @@ OrcamentoMainFrameBase::OrcamentoMainFrameBase(wxWindow* parent, wxWindowID id, 
     szMain->AddGrowableRow(0);
     
     SetName(wxT("OrcamentoMainFrameBase"));
-    SetSizeHints(800,600);
-    if ( GetSizer() ) {
+    SetSize(800,600);
+    if (GetSizer()) {
          GetSizer()->Fit(this);
     }
-    CentreOnParent(wxBOTH);
+    if(GetParent()) {
+        CentreOnParent(wxBOTH);
+    } else {
+        CentreOnScreen(wxBOTH);
+    }
 #if wxVERSION_NUMBER >= 2900
     if(!wxPersistenceManager::Get().Find(this)) {
         wxPersistenceManager::Get().RegisterAndRestore(this);
@@ -298,11 +302,15 @@ CreateDatabaseDialogBase::CreateDatabaseDialogBase(wxWindow* parent, wxWindowID 
     m_stdBtnSizer17->Realize();
     
     SetName(wxT("CreateDatabaseDialogBase"));
-    SetSizeHints(-1,-1);
-    if ( GetSizer() ) {
+    SetSize(-1,-1);
+    if (GetSizer()) {
          GetSizer()->Fit(this);
     }
-    CentreOnParent(wxBOTH);
+    if(GetParent()) {
+        CentreOnParent(wxBOTH);
+    } else {
+        CentreOnScreen(wxBOTH);
+    }
 #if wxVERSION_NUMBER >= 2900
     if(!wxPersistenceManager::Get().Find(this)) {
         wxPersistenceManager::Get().RegisterAndRestore(this);
@@ -414,12 +422,16 @@ ExecutionDialogBase::ExecutionDialogBase(wxWindow* parent, wxWindowID id, const 
     gridBagSizer22->Add(lbEstimateName, wxGBPosition(1,0), wxGBSpan(), wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     
     SetName(wxT("ExecutionDialogBase"));
-    SetMinSize( wxSize(550,-1) );
-    SetSizeHints(600,-1);
-    if ( GetSizer() ) {
+    SetMinClientSize(wxSize(550,-1));
+    SetSize(600,-1);
+    if (GetSizer()) {
          GetSizer()->Fit(this);
     }
-    CentreOnParent(wxBOTH);
+    if(GetParent()) {
+        CentreOnParent(wxBOTH);
+    } else {
+        CentreOnScreen(wxBOTH);
+    }
 #if wxVERSION_NUMBER >= 2900
     if(!wxPersistenceManager::Get().Find(this)) {
         wxPersistenceManager::Get().RegisterAndRestore(this);
@@ -521,11 +533,15 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
     BoxSizer346->Add(btOk, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     
     SetName(wxT("WalletOverviewDialogBase"));
-    SetSizeHints(-1,-1);
-    if ( GetSizer() ) {
+    SetSize(-1,-1);
+    if (GetSizer()) {
          GetSizer()->Fit(this);
     }
-    CentreOnParent(wxBOTH);
+    if(GetParent()) {
+        CentreOnParent(wxBOTH);
+    } else {
+        CentreOnScreen(wxBOTH);
+    }
 #if wxVERSION_NUMBER >= 2900
     if(!wxPersistenceManager::Get().Find(this)) {
         wxPersistenceManager::Get().RegisterAndRestore(this);
@@ -809,11 +825,15 @@ BudgetFilterBase::BudgetFilterBase(wxWindow* parent, wxWindowID id, const wxStri
     szControls->Add(btClose, 1, wxALL|wxEXPAND, 5);
     
     SetName(wxT("BudgetFilterBase"));
-    SetSizeHints(600,500);
-    if ( GetSizer() ) {
+    SetSize(600,500);
+    if (GetSizer()) {
          GetSizer()->Fit(this);
     }
-    CentreOnParent(wxBOTH);
+    if(GetParent()) {
+        CentreOnParent(wxBOTH);
+    } else {
+        CentreOnScreen(wxBOTH);
+    }
 #if wxVERSION_NUMBER >= 2900
     if(!wxPersistenceManager::Get().Find(this)) {
         wxPersistenceManager::Get().RegisterAndRestore(this);

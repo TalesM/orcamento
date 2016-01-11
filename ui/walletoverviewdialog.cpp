@@ -1,5 +1,5 @@
-#include "WalletOverviewDialog.h"
 #include <algorithm>
+#include "WalletOverviewDialog.h"
 #include "WalletOverviewDialog.h"
 #include "model/actions/InsertWallet.h"
 #include "model/actions/UpdateWallet.h"

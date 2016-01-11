@@ -9,6 +9,7 @@
   "m_outputFileName": "",
   "m_firstWindowId": 10000,
   "m_useEnum": true,
+  "m_useUnderscoreMacro": true,
   "m_templateClasses": []
  },
  "windows": [{

@@ -1,8 +1,8 @@
 #ifndef _ORCA_TOTALSVIEW_H
 #define _ORCA_TOTALSVIEW_H
 
-#include "../OrcaView.h"
 #include "../Search.h"
+#include "../OrcaView.h"
 
 class TotalsView : public OrcaView<
     std::string,//Budget Name
