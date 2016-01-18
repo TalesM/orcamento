@@ -1,0 +1,3 @@
+[submodule "external/sqlite3"]
+	path = external/sqlite3
+	url = https://github.com/alex85k/sqlite3-cmake.git
