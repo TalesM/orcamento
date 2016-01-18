@@ -25,7 +25,7 @@ target_link_libraries(orcamento
 #######################
 add_executable(orcamento_tests
   test/main.cpp
-  test/PlannerSqlite0_5.cpp
+  test/PlannerSqlite0_5-test.cpp
 )
 target_include_directories(orcamento_tests
   PRIVATE ${CATCH_INCLUDE_DIR}
