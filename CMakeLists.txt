@@ -2,10 +2,23 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(orcamento VERSION 0.5 LANGUAGES CXX)
 
 add_subdirectory(external/catch)
+# add_subdirectory(external/sqlite3)
+add_subdirectory(external/SQLiteCpp)
 enable_testing(true)  # Enables unit-testing.
 
+###############
+# The library #
+###############
 add_library(orcamento STATIC
   library/PlannerSqlite0_5.cpp
+)
+target_include_directories(orcamento
+  PUBLIC ${SQLITECPP_INCLUDE_DIR}
+  PUBLIC ${SQLITE_INLUDE_DIRS}
+)
+target_link_libraries(orcamento
+  PRIVATE SQLiteCpp
+  PRIVATE sqlite3
 )
 
 #######################
@@ -26,5 +39,6 @@ add_dependencies(orcamento_tests
   catch
 )
 target_compile_features(orcamento_tests
-  PRIVATE cxx_aggregate_default_initializers
+  PUBLIC cxx_aggregate_default_initializers
+  PUBLIC cxx_thread_local
 )
