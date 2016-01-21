@@ -25,6 +25,7 @@ target_link_libraries(orcamento
 #######################
 add_executable(orcamento_tests
   test/main.cpp
+  test/Manager-test.cpp
   test/PlannerSqlite0_5-test.cpp
 )
 target_include_directories(orcamento_tests
@@ -41,3 +42,6 @@ target_compile_features(orcamento_tests
   PUBLIC cxx_aggregate_default_initializers
   PUBLIC cxx_thread_local
 )
+
+include(CTest)
+add_test(orcamento_tests orcamento_tests)
