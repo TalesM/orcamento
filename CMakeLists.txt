@@ -11,6 +11,7 @@ enable_testing(true)  # Enables unit-testing.
 ###############
 add_library(orcamento STATIC
   library/PlannerSqlite0_5.cpp
+  library/Manager.cpp
 )
 target_include_directories(orcamento
   PUBLIC ${SQLITECPP_INCLUDE_DIR}
@@ -19,6 +20,10 @@ target_include_directories(orcamento
 target_link_libraries(orcamento
   PUBLIC SQLiteCpp
 )
+target_compile_features(orcamento
+  PUBLIC cxx_aggregate_default_initializers
+)
+
 
 #######################
 # The test executable #
