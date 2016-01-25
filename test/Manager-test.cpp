@@ -28,7 +28,12 @@ TEST_CASE("Manager regexing", "[controller][class-manager]") {
 TEST_CASE("Manager opening", "[controller][class-manager]") {
   Manager manager;
   manager.register_filetype("dumb-test", dumbTest);
-  REQUIRE(manager.open("dumb-test") == nullptr);
-  /*TODO A no so dumb test with a mocking of Planner and some way to link it
-   * with PlannerSqlite0_5*/
+  std::unique_ptr<Planner> answer;
+  answer = manager.open("dumb-test");
+  REQUIRE(answer == nullptr);
+  manager.register_filetype("smart-test",
+                            []() { return std::make_unique<Planner>(); });
+  answer = manager.open("smart-test");
+  REQUIRE(answer != nullptr);
+  /*TODO Integration with PlannerSqlite0_5*/
 }
