@@ -4,6 +4,7 @@
 #include <functional>
 #include <list>
 #include <memory>
+#include <regex>
 #include <stdexcept>
 #include <string>
 
@@ -17,7 +18,7 @@ private:
 
 class Manager {
 private:
-  std::list<std::string> a_initializers;
+  std::list<std::regex> a_initializers;
 
 public:
   void *open(const std::string &test);
@@ -25,10 +26,11 @@ public:
   void
   register_filetype(const std::string &pattern,
                     std::function<std::unique_ptr<Planner>()> initializer) {
-    a_initializers.emplace_back(pattern);
+    a_initializers.emplace_back(pattern, std::regex_constants::icase |
+                                             std::regex_constants::ECMAScript);
   }
 
-  bool is_registered(const std::string &pattern) const { return true; }
+  bool is_registered(const std::string &test) const;
 };
 } /* orca */
 
