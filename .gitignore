@@ -1,2 +1,7 @@
 debug/
+release/
+Makefile
+orcamento.mk
 .clang_complete
+.cmake_dirty
+.codelite/
