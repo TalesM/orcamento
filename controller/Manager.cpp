@@ -9,7 +9,7 @@ std::unique_ptr<Planner> Manager::open(const std::string &test) {
     throw std::logic_error("No File Type registered.");
   }
   smatch match;
-  auto predicate = [test, &match](auto &re) {
+  auto predicate = [&test, &match](auto &re) {
     return regex_match(test, match, re.a_regex);
   };
   auto initializer =
