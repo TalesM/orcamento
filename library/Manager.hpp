@@ -18,7 +18,8 @@ private:
 
 class Manager {
 private:
-  using Initializer = std::function<std::unique_ptr<Planner>()>;
+  using Initializer =
+      std::function<std::unique_ptr<Planner>(const std::smatch &)>;
   struct InitializerData {
     std::regex a_regex;
     Initializer a_initializer;
