@@ -3,8 +3,8 @@
 
 using namespace orca;
 
-TEST_CASE("PlannerSqlite0_5-creation",
-          "[controller][planner][model-interface]") {
+TEST_CASE("PlannerSqlite0_5 creation",
+          "[controller][planner][class-plannersqlite0_5][unit]") {
   PlannerSqlite0_5 planner{""};
   auto &db = planner.db();
 

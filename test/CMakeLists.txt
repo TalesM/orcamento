@@ -2,8 +2,11 @@
 # The test executable #
 #######################
 add_executable(orcamento_tests
-  Manager-test.cpp
-  PlannerSqlite0_5-test.cpp
+#Unit tests
+  Manager-unit.cpp
+  PlannerSqlite0_5-unit.cpp
+
+#The main
   main.cpp
 )
 target_include_directories(orcamento_tests

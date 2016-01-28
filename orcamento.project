@@ -122,10 +122,12 @@
     <File Name="controller/Manager.hpp"/>
     <File Name="controller/PlannerSqlite0_5.cpp"/>
     <File Name="controller/PlannerSqlite0_5.hpp"/>
+    <File Name="controller/CMakeLists.txt"/>
   </VirtualDirectory>
   <VirtualDirectory Name="test">
     <File Name="test/main.cpp"/>
-    <File Name="test/Manager-test.cpp"/>
-    <File Name="test/PlannerSqlite0_5-test.cpp"/>
+    <File Name="test/CMakeLists.txt"/>
+    <File Name="test/Manager-unit.cpp"/>
+    <File Name="test/PlannerSqlite0_5-unit.cpp"/>
   </VirtualDirectory>
 </CodeLite_Project>

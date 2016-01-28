@@ -1,4 +1,3 @@
-#include <iostream>
 #include <catch.hpp>
 #include "Manager.hpp"
 
@@ -6,7 +5,7 @@ using namespace orca;
 
 std::unique_ptr<Planner> dumbTest(const std::smatch &) { return nullptr; }
 
-TEST_CASE("Manager registering", "[controller][class-manager]") {
+TEST_CASE("Manager registering", "[controller][class-manager][unit]") {
   Manager manager;
   REQUIRE_THROWS_AS(manager.open("test"), std::logic_error);
   manager.register_filetype("test", dumbTest);
@@ -16,7 +15,7 @@ TEST_CASE("Manager registering", "[controller][class-manager]") {
   REQUIRE_THROWS_AS(manager.open("test2"), std::runtime_error);
 }
 
-TEST_CASE("Manager regexing", "[controller][class-manager]") {
+TEST_CASE("Manager regexing", "[controller][class-manager][unit]") {
   Manager manager;
   manager.register_filetype("test*", dumbTest);
   REQUIRE_FALSE(manager.is_registered("test*"));
@@ -26,7 +25,7 @@ TEST_CASE("Manager regexing", "[controller][class-manager]") {
   REQUIRE_FALSE(manager.is_registered("atesta"));
 }
 
-TEST_CASE("Manager opening", "[controller][class-manager]") {
+TEST_CASE("Manager opening", "[controller][class-manager][unit]") {
   Manager manager;
   manager.register_filetype("dumb-test", dumbTest);
   std::unique_ptr<Planner> answer;
@@ -40,7 +39,7 @@ TEST_CASE("Manager opening", "[controller][class-manager]") {
   /*TODO Integration with PlannerSqlite0_5*/
 }
 
-TEST_CASE("Manager opening, regexing", "[controller][class-manager]") {
+TEST_CASE("Manager opening, regexing", "[controller][class-manager][unit]") {
   Manager manager;
   manager.register_filetype(
       "test([0-9]+)", [](const std::smatch &m) -> std::unique_ptr<Planner> {
