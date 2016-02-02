@@ -1,7 +1,7 @@
 #######################
 # The test executable #
 #######################
-add_executable(orcamento_tests
+add_executable(controller_test
 #Unit tests
   Manager-unit.cpp
   PlannerSqlite0_5-unit.cpp
@@ -9,17 +9,17 @@ add_executable(orcamento_tests
 #The main
   main.cpp
 )
-target_include_directories(orcamento_tests
+target_include_directories(controller_test
   PRIVATE ${CATCH_INCLUDE_DIR}
   PRIVATE ../controller
 )
-target_link_libraries(orcamento_tests
+target_link_libraries(controller_test
   PUBLIC orcamento
 )
-add_dependencies(orcamento_tests
+add_dependencies(controller_test
   catch
 )
-target_compile_features(orcamento_tests
+target_compile_features(controller_test
   PUBLIC cxx_aggregate_default_initializers
   PUBLIC cxx_thread_local
 )
