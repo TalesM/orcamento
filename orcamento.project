@@ -130,4 +130,7 @@
     <File Name="controller-test/Manager-unit.cpp"/>
     <File Name="controller-test/PlannerSqlite0_5-unit.cpp"/>
   </VirtualDirectory>
+  <VirtualDirectory Name="presenter">
+    <File Name="presenter/HelloWorld.cpp"/>
+  </VirtualDirectory>
 </CodeLite_Project>
