@@ -1,10 +1,10 @@
 #include "Presenter.hpp"
 
-#include <nana/gui/wvl.hpp>
-#include <nana/gui/widgets/label.hpp>
+#include <nana/gui.hpp>
 #include <nana/gui/timer.hpp>
 
 namespace orca{
+using namespace nana;
 
 Presenter::Presenter()
 {
@@ -16,12 +16,6 @@ Presenter::~Presenter()
 
 void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
 {
-  using namespace nana;
-  form fm;
-  label lb(fm);
-  lb.caption("Hi Mundo");
-  fm.show();
-  
   timer timer;
   timer.interval(timeout);
   bool time_is_up = false;
@@ -30,8 +24,23 @@ void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
     API::exit();
   });
   timer.start();
+  present();
   exec();
   callback(not time_is_up);
 }
   
+}
+
+size_t orca::Presenter::schedule(unsigned timeout, function<void()> callback)
+{
+  aTimers.emplace_back();
+  auto iterator = --(aTimers.end());
+  auto &timer = aTimers.back();
+  timer.interval(timeout);
+  timer.elapse([callback, iterator, this]() {
+    aTimers.erase(iterator);
+    callback();
+  });
+  timer.start();
+  return 0;
 }

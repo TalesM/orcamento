@@ -4,6 +4,7 @@
 add_executable(Presenter-test
 #Unit tests
   Presenter-unit
+  SplasherPresenter-unit
 
 #Integration Scenarios
   Startup-scenario

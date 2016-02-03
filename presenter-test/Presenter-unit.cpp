@@ -1,22 +1,31 @@
 #include <catch.hpp>
+#include "Presenter.hpp"
 
 #include <nana/gui.hpp>
 #include <nana/gui/timer.hpp>
+#include <nana/gui/widgets/label.hpp>
+#include <nana/gui/wvl.hpp>
 
-#include "Presenter.hpp"
 using namespace orca;
 
-TEST_CASE("Presenter exiting on timeout", "[presenter][presenter-class]") {
-  Presenter presenter;
-  bool executed = false, finished = false;
+struct MockPresenter: public Presenter{
+  nana::form fm;
+  
+  void present() override{
+    fm.show();
+  }
+};
 
-  nana::timer timer;
-  timer.interval(500);
-  timer.elapse([&executed, &finished]() {
+TEST_CASE("Presenter exiting on timeout", "[presenter][presenter-class]") {
+  MockPresenter presenter;
+  bool executed = false, finished = false;
+  auto timer = presenter.schedule(500, [&executed, &finished]() {
     REQUIRE_FALSE(finished);
     executed = true;
   });
-  timer.start();
+  
+  CAPTURE( executed );
+  executed = false;
   presenter.execTimeout(1000, [&finished](bool finishedOk) {
     finished = true;
     REQUIRE_FALSE(finishedOk);
@@ -26,7 +35,7 @@ TEST_CASE("Presenter exiting on timeout", "[presenter][presenter-class]") {
 }
 
 TEST_CASE("Presenter exiting normally", "[presenter][presenter-class]") {
-  Presenter presenter;
+  MockPresenter presenter;
   bool finished = false;
 
   nana::timer timer;
@@ -41,3 +50,5 @@ TEST_CASE("Presenter exiting normally", "[presenter][presenter-class]") {
   });
   REQUIRE(finished);
 }
+
+//TODO: Present method should be abstract

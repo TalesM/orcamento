@@ -1,6 +1,7 @@
 
 add_library(presenter
   Presenter
+  SplasherPresenter
 )
 
 target_include_directories(presenter
