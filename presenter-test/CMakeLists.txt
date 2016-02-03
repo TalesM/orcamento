@@ -3,7 +3,10 @@
 #######################
 add_executable(Presenter-test
 #Unit tests
-  StartupScenario
+  Presenter-unit
+
+#Integration Scenarios
+  Startup-scenario
 
 #The main
   main.cpp

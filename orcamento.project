@@ -70,7 +70,8 @@
   <VirtualDirectory Name="presenter-test">
     <File Name="presenter-test/CMakeLists.txt"/>
     <File Name="presenter-test/main.cpp"/>
-    <File Name="presenter-test/StartupScenario.cpp"/>
+    <File Name="presenter-test/Startup-scenario.cpp"/>
+    <File Name="presenter-test/Presenter-unit.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
