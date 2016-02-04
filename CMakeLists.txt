@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(orcamento VERSION 0.5 LANGUAGES CXX)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/sqlite3/src)
 add_subdirectory(external/catch)
 add_subdirectory(external/nana)
 add_subdirectory(external/sqlite3)

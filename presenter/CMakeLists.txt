@@ -13,14 +13,17 @@ target_compile_features(presenter
   PUBLIC cxx_lambdas
 )
 
-add_executable(HelloWorld
-  HelloWorld.cpp
-)
+if(UNIX)
+  set(THREADS_PREFER_PTHREAD_FLAG ON)
+  find_package(Threads REQUIRED)
+  find_package(X11 REQUIRED)
+  find_package(Freetype REQUIRED)
+  target_link_libraries(presenter 
+    PUBLIC Threads::Threads
+    PUBLIC ${X11_LIBRARIES}
+    PUBLIC ${FREETYPE_LIBRARIES}
+    PUBLIC Xft
+    PUBLIC nana
+  )
+endif(UNIX)
 
-target_include_directories(HelloWorld
-  PRIVATE ${CMAKE_SOURCE_DIR}/external/nana/include/
-)
-
-target_link_libraries(HelloWorld nana)
-set_property( TARGET HelloWorld PROPERTY CXX_STANDARD 14 ) #Uggly hack because I don't know how to inherit it from nana.
-set_property( TARGET HelloWorld PROPERTY CXX_STANDARD_REQUIRED OFF ) #Uggly hack because I don't know how to inherit it from nana.

@@ -11,6 +11,8 @@ add_executable(controller_test
 )
 target_include_directories(controller_test
   PRIVATE ${CATCH_INCLUDE_DIR}
+  PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/include
+  PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/sqlite3
   PRIVATE ../controller
 )
 target_link_libraries(controller_test
