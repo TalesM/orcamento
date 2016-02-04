@@ -3,11 +3,11 @@
 
 #include <functional>
 #include <list>
+#include <stdexcept>
 
 namespace nana{
 //Forward decl
 class timer; 
-class widget; 
 }
 
 namespace orca
@@ -46,7 +46,7 @@ public:
   
 protected:
   virtual void present(){
-    //throw?
+    throw std::logic_error("Not implemented");
   }
 private:
   list<nana::timer> aTimers;

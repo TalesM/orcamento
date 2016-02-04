@@ -51,4 +51,8 @@ TEST_CASE("Presenter exiting normally", "[presenter][presenter-class]") {
   REQUIRE(finished);
 }
 
+TEST_CASE("Presenter throws at present", "[presenter][presenter-class]"){
+  Presenter presenter;
+  REQUIRE_THROWS_AS(presenter.execTimeout(1, [](bool){}), std::logic_error);
+}
 //TODO: Present method should be abstract
