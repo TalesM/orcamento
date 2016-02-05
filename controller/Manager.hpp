@@ -11,6 +11,8 @@
 namespace orca {
 
 struct Planner {
+public:
+  virtual ~Planner() = default;
 private:
   bool a_member;
   /* data */

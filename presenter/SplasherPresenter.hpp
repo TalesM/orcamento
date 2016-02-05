@@ -46,7 +46,7 @@ private:
   Manager &a_manager;
   CancelHandler a_cancel_handler;
   SuccessHandler a_success_handler;
-  bool a_file_success = false;
+  std::unique_ptr<Planner> a_controller;
 
   form f_splasher;
   button b_new, b_open;

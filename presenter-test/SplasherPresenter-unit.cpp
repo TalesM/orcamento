@@ -14,10 +14,12 @@ inline void checkFinishedOk(bool finishedOk){
   REQUIRE(finishedOk);
 }
 
+struct StubMainController: public Planner{bool stub;};
+
 static string result = "";
 static auto nullStubRegister = [](auto p) -> std::unique_ptr<Planner> {
   result = p[0];
-  return nullptr;
+  return make_unique<StubMainController>();
 };
 
 TEST_CASE("PresenterSplasher exiting", "[presenter][splasher-presenter-class]") {
@@ -42,8 +44,10 @@ TEST_CASE("PresenterSplasher new", "[presenter][splasher-presenter-class]") {
   bool cancelled = false;
   splasher.onCancel([&cancelled](){cancelled = true;});
   bool success = false;
-  splasher.onSuccess([&success](std::unique_ptr<Planner>){
+  splasher.onSuccess([&success](std::unique_ptr<Planner> p){
     success = true;
+    REQUIRE(p != nullptr);
+    REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
   });
   
   cout << "Click at 'New' button." << endl;
@@ -63,8 +67,10 @@ TEST_CASE("PresenterSplasher open", "[presenter][splasher-presenter-class]") {
   bool cancelled = false;
   splasher.onCancel([&cancelled](){cancelled = true;});
   bool success = false;
-  splasher.onSuccess([&success](std::unique_ptr<Planner>){
+  splasher.onSuccess([&success](std::unique_ptr<Planner> p){
     success = true;
+    REQUIRE(p != nullptr);
+    REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
   });
   
   cout << "Click at 'Open' button." << endl;
