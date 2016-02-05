@@ -8,11 +8,12 @@ orca::SplasherPresenter::SplasherPresenter(Manager& manager):
   f_splasher(API::make_center(600, 400)),
   b_new(f_splasher, "New"),
   b_open(f_splasher, "Open"),
+  b_cancel(f_splasher, "Cancel"),
   placer(f_splasher)
 {
   //placing
-  placer.div("<main>");
-  placer.field("main") << b_new << b_open;
+  placer.div("<vert main arrange=[100,variable,50]>");
+  placer.field("main") << b_new << b_open << b_cancel;
   placer.collocate();
   
   //Event handling
@@ -33,6 +34,9 @@ orca::SplasherPresenter::SplasherPresenter(Manager& manager):
       a_controller = a_manager.open(fb.file());
       f_splasher.close();
     }
+  });
+  b_cancel.events().click([this](){
+    f_splasher.close();
   });
 }
 

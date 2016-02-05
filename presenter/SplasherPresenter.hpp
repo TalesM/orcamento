@@ -49,7 +49,7 @@ private:
   std::unique_ptr<MainController> a_controller;
 
   form f_splasher;
-  button b_new, b_open;
+  button b_new, b_open, b_cancel;
   place placer;
 };
 

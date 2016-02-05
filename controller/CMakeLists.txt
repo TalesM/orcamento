@@ -6,7 +6,7 @@ add_library(controller STATIC
   Manager.cpp
 )
 target_include_directories(controller
-  PUBLIC ${CMAKE_CURRENSOURCE_DIR}/
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/
   PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/include
   PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/sqlite3
 )
