@@ -20,7 +20,7 @@ using namespace nana;
 class SplasherPresenter: public Presenter
 {
   using CancelHandler = std::function<void()>;
-  using SuccessHandler = std::function<void(std::unique_ptr<Planner> controller)>;
+  using SuccessHandler = std::function<void(std::unique_ptr<MainController> controller)>;
 public:
   /**
    * @brief Creates a Splasher
@@ -46,7 +46,7 @@ private:
   Manager &a_manager;
   CancelHandler a_cancel_handler;
   SuccessHandler a_success_handler;
-  std::unique_ptr<Planner> a_controller;
+  std::unique_ptr<MainController> a_controller;
 
   form f_splasher;
   button b_new, b_open;

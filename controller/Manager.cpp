@@ -4,7 +4,7 @@
 namespace orca {
 using namespace std;
 
-std::unique_ptr<Planner> Manager::open(const std::string &test) {
+std::unique_ptr<MainController> Manager::open(const std::string &test) {
   if (a_initializers.size() == 0) {
     throw std::logic_error("No File Type registered.");
   }

@@ -3,7 +3,7 @@
 
 using namespace orca;
 
-std::unique_ptr<Planner> dumbTest(const std::smatch &) { return nullptr; }
+std::unique_ptr<MainController> dumbTest(const std::smatch &) { return nullptr; }
 
 TEST_CASE("Manager registering", "[controller][class-manager][unit]") {
   Manager manager;
@@ -28,11 +28,11 @@ TEST_CASE("Manager regexing", "[controller][class-manager][unit]") {
 TEST_CASE("Manager opening", "[controller][class-manager][unit]") {
   Manager manager;
   manager.register_filetype("dumb-test", dumbTest);
-  std::unique_ptr<Planner> answer;
+  std::unique_ptr<MainController> answer;
   answer = manager.open("dumb-test");
   REQUIRE(answer == nullptr);
   manager.register_filetype("smart-test", [](const std::smatch &) {
-    return std::make_unique<Planner>();
+    return std::make_unique<MainController>();
   });
   answer = manager.open("smart-test");
   REQUIRE(answer != nullptr);
@@ -42,7 +42,7 @@ TEST_CASE("Manager opening", "[controller][class-manager][unit]") {
 TEST_CASE("Manager opening, regexing", "[controller][class-manager][unit]") {
   Manager manager;
   manager.register_filetype(
-      "test([0-9]+)", [](const std::smatch &m) -> std::unique_ptr<Planner> {
+      "test([0-9]+)", [](const std::smatch &m) -> std::unique_ptr<MainController> {
         if (m.size() <= 1) {
           return nullptr;
         }
@@ -52,7 +52,7 @@ TEST_CASE("Manager opening, regexing", "[controller][class-manager][unit]") {
         int value;
         stream >> value;
         if (value % 2 == 0) {
-          return std::make_unique<Planner>();
+          return std::make_unique<MainController>();
         }
         return nullptr;
       });

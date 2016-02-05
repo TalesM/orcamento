@@ -10,9 +10,9 @@
 
 namespace orca {
 
-struct Planner {
+struct MainController {
 public:
-  virtual ~Planner() = default;
+  virtual ~MainController() = default;
 private:
   bool a_member;
   /* data */
@@ -21,7 +21,7 @@ private:
 class Manager {
 private:
   using Initializer =
-      std::function<std::unique_ptr<Planner>(const std::smatch &)>;
+      std::function<std::unique_ptr<MainController>(const std::smatch &)>;
   struct InitializerData {
     std::regex a_regex;
     Initializer a_initializer;
@@ -33,7 +33,7 @@ private:
   std::list<InitializerData> a_initializers;
 
 public:
-  std::unique_ptr<Planner> open(const std::string &test);
+  std::unique_ptr<MainController> open(const std::string &test);
 
   void register_filetype(const std::string &pattern, Initializer initializer) {
     a_initializers.emplace_back(pattern, initializer);
