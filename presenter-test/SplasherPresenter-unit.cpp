@@ -14,6 +14,12 @@ inline void checkFinishedOk(bool finishedOk){
   REQUIRE(finishedOk);
 }
 
+static string result = "";
+static auto nullStubRegister = [](auto p) -> std::unique_ptr<Planner> {
+  result = p[0];
+  return nullptr;
+};
+
 TEST_CASE("PresenterSplasher exiting", "[presenter][splasher-presenter-class]") {
   Manager manager;
   SplasherPresenter splasher{manager};
@@ -29,21 +35,12 @@ TEST_CASE("PresenterSplasher exiting", "[presenter][splasher-presenter-class]") 
 
 TEST_CASE("PresenterSplasher new", "[presenter][splasher-presenter-class]") {
   Manager manager;
-  bool opened = false;
-  string file;
-  manager.register_filetype(".*", [&opened, &file](auto p)->std::unique_ptr<Planner>{
-    opened = true;
-    file = p[0];
-    cout << "'Opened' the file: " << file << endl;
-    return nullptr;
-  });
+  manager.register_filetype(".*", nullStubRegister);
   
   SplasherPresenter splasher{manager};
   
   bool cancelled = false;
-  splasher.onCancel([&cancelled](){
-    cancelled = true;
-  });
+  splasher.onCancel([&cancelled](){cancelled = true;});
   bool success = false;
   splasher.onSuccess([&success](std::unique_ptr<Planner>){
     success = true;
@@ -51,7 +48,29 @@ TEST_CASE("PresenterSplasher new", "[presenter][splasher-presenter-class]") {
   
   cout << "Click at 'New' button." << endl;
   splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
-  REQUIRE(opened);
+  cout << "'Created' file " << result << endl;
+  REQUIRE(result != "");
+  REQUIRE(success);
+  REQUIRE_FALSE(cancelled);
+}
+
+TEST_CASE("PresenterSplasher open", "[presenter][splasher-presenter-class]") {
+  Manager manager;
+  manager.register_filetype(".*", nullStubRegister);
+  
+  SplasherPresenter splasher{manager};
+  
+  bool cancelled = false;
+  splasher.onCancel([&cancelled](){cancelled = true;});
+  bool success = false;
+  splasher.onSuccess([&success](std::unique_ptr<Planner>){
+    success = true;
+  });
+  
+  cout << "Click at 'Open' button." << endl;
+  splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
+  cout << "'Opened' file " << result << endl;
+  REQUIRE(result != "");
   REQUIRE(success);
   REQUIRE_FALSE(cancelled);
 }

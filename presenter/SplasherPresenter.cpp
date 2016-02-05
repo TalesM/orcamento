@@ -26,6 +26,16 @@ orca::SplasherPresenter::SplasherPresenter(Manager& manager):
       a_file_success = true;
     }
   });
+  b_open.events().click([this](){
+    filebox fb{f_splasher, true};
+    fb.add_filter("Orca files", "*.orca");
+    fb.add_filter("All files", "*.*");
+    if(fb()){
+      a_manager.open(fb.file());
+      f_splasher.close();
+      a_file_success = true;
+    }
+  });
 }
 
 void orca::SplasherPresenter::present()
