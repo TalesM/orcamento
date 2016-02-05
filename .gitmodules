@@ -1,9 +1,9 @@
 [submodule "external/sqlite3"]
 	path = external/sqlite3
-	url = https://github.com/TalesM/sqlite3-cmake.git 
+	url = https://github.com/TalesM/sqlite3-cmake.git
 [submodule "external/nana"]
 	path = external/nana
 	url = https://github.com/cnjinhao/nana.git
 [submodule "external/SQLiteCpp"]
 	path = external/SQLiteCpp
-	url = https://github.com/SRombauts/SQLiteCpp
+	url = https://github.com/TalesM/SQLiteCpp.git
