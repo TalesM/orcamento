@@ -16,7 +16,7 @@ target_include_directories(controller_test
   PRIVATE ../controller
 )
 target_link_libraries(controller_test
-  PUBLIC orcamento
+  PUBLIC controller
 )
 add_dependencies(controller_test
   catch
