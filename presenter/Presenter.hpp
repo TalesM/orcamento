@@ -23,8 +23,14 @@ using namespace std;
 class Presenter
 {
 public:
+  //Rule of five mandates if one is declared, all others must be. 
+  // I needed a virtual dtor, so the others are marked as default.
   Presenter();
-  ~Presenter();
+  Presenter(const Presenter &) = default;
+  Presenter(Presenter &&) = default;
+  Presenter &operator=(const Presenter &) = default;
+  Presenter &operator=(Presenter &&) = default;
+  virtual ~Presenter();
   
   /**
    * @brief Executes the presenter until it times out.

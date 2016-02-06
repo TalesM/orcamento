@@ -5,10 +5,13 @@
 #include <nana/gui/wvl.hpp>
 #include <nana/gui/widgets/button.hpp>
 #include "Presenter.hpp"
-#include "Manager.hpp"
 
 namespace orca
 {
+//Forward Declaration
+class MainController;
+class Manager;
+
 using namespace nana;
 /**
  * @class SplasherPresenter

@@ -5,6 +5,8 @@
 #include <nana/gui.hpp>
 #include <nana/gui/timer.hpp>
 
+#include "Manager.hpp"
+
 constexpr auto USER_TIMEOUT = 60000u;
 
 using namespace std;

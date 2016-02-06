@@ -6,13 +6,9 @@
 namespace orca{
 using namespace nana;
 
-Presenter::Presenter()
-{
-}
-
-Presenter::~Presenter()
-{
-}
+// Necessary to define here because the time is foward declared on the header so the destructor can't be generated them.
+Presenter::Presenter() = default;
+Presenter::~Presenter() = default;
 
 void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
 {
