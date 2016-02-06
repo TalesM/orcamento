@@ -62,7 +62,6 @@
     <File Name="controller-test/PlannerSqlite0_5-unit.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter">
-    <File Name="presenter/HelloWorld.cpp"/>
     <File Name="presenter/CMakeLists.txt"/>
     <File Name="presenter/Presenter.hpp"/>
     <File Name="presenter/Presenter.cpp"/>

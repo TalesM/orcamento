@@ -6,23 +6,22 @@
 #include "Presenter.hpp"
 using namespace orca;
 
-SCENARIO( "Application Startup", "[presenter]" ){
-  
-  GIVEN("A new main frame"){
+SCENARIO("Application Startup", "[presenter]")
+{
+  GIVEN("A new main frame")
+  {
     Presenter presenter;
-    
-    WHEN("Request Exit"){
+
+    WHEN("Request Exit")
+    {
       nana::timer timer;
       timer.interval(800);
-      timer.elapse([&presenter](){
-        nana::API::exit();
-      });
+      timer.elapse([&presenter]() { nana::API::exit(); });
       timer.start();
-      
-      THEN("Finishes ok"){
-        presenter.execTimeout(1000, [](bool finishedOk){
-          REQUIRE(finishedOk);
-        });        
+
+      THEN("Finishes ok")
+      {
+        presenter.execTimeout(1000, [](bool finishedOk) { REQUIRE(finishedOk); });
       }
     }
   }
