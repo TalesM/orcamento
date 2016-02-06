@@ -3,6 +3,7 @@
 #######################
 add_executable(Presenter-test
 #Unit tests
+  MainPresenter-unit
   Presenter-unit
   SplasherPresenter-unit
 

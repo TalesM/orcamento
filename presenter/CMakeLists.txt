@@ -1,5 +1,6 @@
 
 add_library(presenter
+  MainPresenter
   Presenter
   SplasherPresenter
 )
