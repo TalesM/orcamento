@@ -44,6 +44,9 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
       }
     }
   });
+  fileMenu.append("&Save", [this](auto &&) {
+    a_controller->flush();
+  });
   fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
 

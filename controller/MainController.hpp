@@ -20,7 +20,18 @@ class MainController
   MainController() {}
   virtual ~MainController() {}
   
+  /**
+   * @brief Request the budgets available, in chronological order.
+   * @return the budgets names.
+   */
   virtual vector<string> listBudgets() const {return {};}
+  
+  /**
+   * @brief Persists the all changes.
+   * 
+   * @throw std::runtime_error if it can persist.
+   */
+  virtual void flush(){}
 };
 }
 

@@ -28,11 +28,11 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 
       THEN("Finishes Application")
       {
-        bool called = false;
-        mainPresenter.onLoadError([&called]() { called = true; });
-        REQUIRE_FALSE(called);
+        bool calledListBudgets = false;
+        mainPresenter.onLoadError([&calledListBudgets]() { calledListBudgets = true; });
+        REQUIRE_FALSE(calledListBudgets);
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        REQUIRE(called);
+        REQUIRE(calledListBudgets);
       }
     }
     WHEN("User opens or create a file on splasher")
@@ -41,15 +41,15 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 
       THEN("Creates a controller")
       {
-        bool called = false;
+        bool calledListBudgets = false;
         MainController *addressController = nullptr;
-        mainPresenter.onLoadSuccess([&called, &addressController](auto &&controller) {
-          called = true;
+        mainPresenter.onLoadSuccess([&calledListBudgets, &addressController](auto &&controller) {
+          calledListBudgets = true;
           addressController = &controller;
         });
-        REQUIRE_FALSE(called);
+        REQUIRE_FALSE(calledListBudgets);
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        REQUIRE(called);
+        REQUIRE(calledListBudgets);
         MainController &controller = mainPresenter.controller().value();
         REQUIRE(&controller == addressController);
       }
@@ -67,12 +67,12 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 
       THEN("Does not show dialog at presentation")
       {
-        bool called = false;
-        mainPresenter.onLoadSuccess([&called](auto &&) { called = true; });
-        mainPresenter.onLoadError([&called]() { called = true; });
+        bool calledListBudgets = false;
+        mainPresenter.onLoadSuccess([&calledListBudgets](auto &&) { calledListBudgets = true; });
+        mainPresenter.onLoadError([&calledListBudgets]() { calledListBudgets = true; });
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        INFO("Splasher should not be called in this case");
-        REQUIRE_FALSE(called);
+        INFO("Splasher should not be calledListBudgets in this case");
+        REQUIRE_FALSE(calledListBudgets);
       }
     }
   }
@@ -81,17 +81,27 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
 {
   Manager manager;
-  int called = false;
+  int calledListBudgets = 0;
+  int calledFlush = 0;
   struct StubMainController : public MainController {
-    int &called;
-    StubMainController(int &called) : called(called) {}
+    int &calledListBudgets;
+    int &calledFlush;
+    StubMainController(int &calledListBudgets, int &calledFlush)
+        : calledListBudgets(calledListBudgets), calledFlush(calledFlush)
+    {
+    }
     vector<string> listBudgets() const override
     {
-      ++called;
+      ++calledListBudgets;
       return {"One", "Two", "Three"};
     }
+    
+    void flush() override{
+      ++calledFlush;
+    }
   };
-  manager.register_filetype(".*", [&called](auto x) { return make_unique<StubMainController>(called); });
+  manager.register_filetype(
+      ".*", [&calledListBudgets, &calledFlush](auto x) { return make_unique<StubMainController>(calledListBudgets, calledFlush); });
 
   GIVEN("A MainPresenter with a filepath")
   {
@@ -104,7 +114,7 @@ SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
       THEN("Calls the MainController.listBudgets()")
       {
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        REQUIRE(called);
+        REQUIRE(calledListBudgets);
       }
     }
 
@@ -115,18 +125,29 @@ SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
       THEN("Calls the MainController.listBudgets() twice")
       {
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        REQUIRE(called == 2);
+        REQUIRE(calledListBudgets == 2);
       }
     }
 
-    WHEN("It clicks Menu->New, then exit")
+    WHEN("It clicks Menu->New")
     {
-      cout << "Click at file->New" << endl;
+      cout << "Click at file->New, then exit" << endl;
 
       THEN("Calls the MainController.listBudgets() twice")
       {
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
-        REQUIRE(called == 2);
+        REQUIRE(calledListBudgets == 2);
+      }
+    }
+
+    WHEN("It clicks Menu->Save")
+    {
+      cout << "Click at file->save, then exit" << endl;
+
+      THEN("Calls the MainController.flush()")
+      {
+        mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        REQUIRE(calledFlush);
       }
     }
   }
