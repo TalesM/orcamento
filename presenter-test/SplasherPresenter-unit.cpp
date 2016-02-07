@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "SplasherPresenter.hpp"
 
+#include "MainController.hpp"
 #include "Manager.hpp"
 using namespace orca;
 

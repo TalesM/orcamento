@@ -1,5 +1,6 @@
 #include <catch.hpp>
 #include "Manager.hpp"
+#include "MainController.hpp"
 
 using namespace orca;
 

@@ -1,5 +1,9 @@
 #include "Manager.hpp"
+
 #include <algorithm>
+#include "MainController.hpp"
+
+orca::Manager::~Manager() = default;
 
 namespace orca
 {

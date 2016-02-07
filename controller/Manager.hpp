@@ -10,14 +10,8 @@
 
 namespace orca
 {
-struct MainController {
- public:
-  virtual ~MainController() = default;
-
- private:
-  bool a_member;
-  /* data */
-};
+// Forward declaration
+class MainController;
 
 class Manager
 {
@@ -34,6 +28,13 @@ class Manager
   std::list<InitializerData> a_initializers;
 
  public:
+  Manager() = default;
+  ~Manager();
+  Manager(const Manager &) = delete;
+  Manager(Manager &&) = delete;
+  Manager &operator=(const Manager &) = delete;
+  Manager &operator=(Manager &&) = delete;
+
   std::unique_ptr<MainController> open(const std::string &test);
 
   void register_filetype(const std::string &pattern, Initializer initializer)

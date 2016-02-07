@@ -2,6 +2,7 @@
 #include "MainPresenter.hpp"
 
 #include <iostream>
+#include "MainController.hpp"
 #include "Manager.hpp"
 
 using namespace orca;
@@ -72,6 +73,35 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
         INFO("Splasher should not be called in this case");
         REQUIRE_FALSE(called);
+      }
+    }
+  }
+}
+
+//struct StubMainController : public MainController {
+//  bool stub;
+//};
+//static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
+//  return make_unique<StubMainController>();
+//};
+
+SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
+{
+  Manager manager;
+  manager.register_filetype(".*", nullStubRegister);
+  
+  GIVEN("A Main  Presenter with a filepath")
+  {
+    MainPresenter mainPresenter{manager, "/home/user/test"};
+
+    WHEN("Presented")
+    {
+      cout << "If splasher opens, cancel. It is already wrong." << endl;
+
+      THEN("Does not show dialog at presentation")
+      {
+        mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        INFO("Splasher should not be called in this case");
       }
     }
   }

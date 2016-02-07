@@ -1,6 +1,7 @@
 #include "SplasherPresenter.hpp"
 
 #include <nana/gui/filebox.hpp>
+#include "MainController.hpp"
 #include "Manager.hpp"
 
 using namespace nana;

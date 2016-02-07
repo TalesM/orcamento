@@ -1,3 +1,4 @@
+#include "MainController.hpp"
 #include "MainPresenter.hpp"
 #include "Manager.hpp"
 #include "SplasherPresenter.hpp"

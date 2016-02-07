@@ -54,6 +54,7 @@
     <File Name="controller/PlannerSqlite0_5.cpp"/>
     <File Name="controller/PlannerSqlite0_5.hpp"/>
     <File Name="controller/CMakeLists.txt"/>
+    <File Name="controller/MainController.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="controller-test">
     <File Name="controller-test/CMakeLists.txt"/>
