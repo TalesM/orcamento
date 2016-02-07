@@ -15,9 +15,19 @@ class MainControllerSqlite0_5: public MainController
   SQLite::Database a_db;
 
  public:
+  /**
+   * @brief Open or create a database with given name
+   * @param name any sqlite3 valid name.
+   */
   MainControllerSqlite0_5(const char *name);
   
-  std::string format() const { return "OrcaMento file format 0.5.0"; }
+  /**
+   * @brief Returns the current format
+   */
+  string format() const { return "OrcaMento file format 0.5.0"; }
+  
+  vector<string> listBudgets() const;
+  
   /**
    * Returns a reference to the internal database.
    */

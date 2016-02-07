@@ -1,8 +1,10 @@
 #include "MainControllerSqlite0_5.hpp"
 
+using namespace std;
 namespace orca
 {
-MainControllerSqlite0_5::MainControllerSqlite0_5(const char *name) : a_db(name, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
+MainControllerSqlite0_5::MainControllerSqlite0_5(const char *name)
+    : a_db(name, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
 {
   SQLite::Transaction transaction(a_db);
   a_db.exec(
@@ -16,3 +18,5 @@ MainControllerSqlite0_5::MainControllerSqlite0_5(const char *name) : a_db(name, 
 }
 
 } /* orca */
+
+vector<string> orca::MainControllerSqlite0_5::listBudgets() const { return {"stub"}; }
