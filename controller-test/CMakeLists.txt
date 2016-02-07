@@ -3,8 +3,8 @@
 #######################
 add_executable(controller-test
 #Unit tests
+  MainControllerSqlite0_5-unit
   Manager-unit.cpp
-  PlannerSqlite0_5-unit.cpp
 
 #The main
   main.cpp

@@ -1,11 +1,11 @@
 #include <catch.hpp>
-#include "PlannerSqlite0_5.hpp"
+#include "MainControllerSqlite0_5.hpp"
 
 using namespace orca;
 
 TEST_CASE("PlannerSqlite0_5 creation", "[controller][planner][class-plannersqlite0_5][unit]")
 {
-  PlannerSqlite0_5 planner{""};
+  MainControllerSqlite0_5 planner{""};
   auto &db = planner.db();
 
   REQUIRE((int)db.execAndGet("SELECT COUNT(name) FROM sqlite_master WHERE "

@@ -3,25 +3,26 @@
 
 #include <string>
 #include <SQLiteCpp/SQLiteCpp.h>
+#include "MainController.hpp"
 
 namespace orca
 {
 /**
  * Implements a Sqlite Planner for the format 0.5
  */
-class PlannerSqlite0_5
+class MainControllerSqlite0_5: public MainController
 {
   SQLite::Database a_db;
 
  public:
-  PlannerSqlite0_5(const char *name);
-
+  MainControllerSqlite0_5(const char *name);
+  
+  std::string format() const { return "OrcaMento file format 0.5.0"; }
   /**
    * Returns a reference to the internal database.
    */
   SQLite::Database &db() { return a_db; }
   SQLite::Database const &db() const { return a_db; }
-  std::string format() const { return "OrcaMento file format 0.5.0"; }
 };
 } /* orca */
 

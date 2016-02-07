@@ -2,8 +2,8 @@
 # The library #
 ###############
 add_library(controller STATIC
-  PlannerSqlite0_5.cpp
-  Manager.cpp
+  MainControllerSqlite0_5
+  Manager
 )
 target_include_directories(controller
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/

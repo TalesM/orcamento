@@ -57,7 +57,7 @@
   "sourceDirectory": "$(ProjectPath)",
   "generator": "MinGW Makefiles",
   "buildType": "Debug",
-  "arguments": [],
+  "arguments": ["--target controller-test"],
   "parentProject": ""
  }, {
   "name": "presenter-test",
@@ -78,16 +78,16 @@
   <VirtualDirectory Name="controller">
     <File Name="controller/Manager.cpp"/>
     <File Name="controller/Manager.hpp"/>
-    <File Name="controller/PlannerSqlite0_5.cpp"/>
-    <File Name="controller/PlannerSqlite0_5.hpp"/>
     <File Name="controller/CMakeLists.txt"/>
     <File Name="controller/MainController.hpp"/>
+    <File Name="controller/MainControllerSqlite0_5.cpp"/>
+    <File Name="controller/MainControllerSqlite0_5.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="controller-test">
     <File Name="controller-test/CMakeLists.txt"/>
     <File Name="controller-test/main.cpp"/>
     <File Name="controller-test/Manager-unit.cpp"/>
-    <File Name="controller-test/PlannerSqlite0_5-unit.cpp"/>
+    <File Name="controller-test/MainControllerSqlite0_5-unit.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter">
     <File Name="presenter/CMakeLists.txt"/>
