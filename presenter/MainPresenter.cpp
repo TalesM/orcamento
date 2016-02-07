@@ -4,8 +4,18 @@
 #include "SplasherPresenter.hpp"
 
 orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_path)
-    : a_manager(manager), a_controller((file_path != "") ? a_manager.open(file_path) : nullptr)
+    : a_manager(manager)
+    , a_controller((file_path != "") ? a_manager.open(file_path) : nullptr)
+    , l_budgets(f_main)
+    , placer(f_main)
 {
+  f_main.caption("OrcaMento");
+  l_budgets.append_header("Budgets");
+  l_budgets.show_header(false);
+  
+  placer.div("<main>");
+  placer.field("main") << l_budgets;
+  placer.collocate();
 }
 
 void orca::MainPresenter::present()
@@ -19,4 +29,12 @@ void orca::MainPresenter::present()
     });
     splasher.present();
   }
+  f_main.show();
+  l_budgets.clear();
+  l_budgets.auto_draw(false);
+  auto cat = l_budgets.at(0);
+  for(auto &&budget: a_controller->listBudgets()){
+    cat.append(budget);
+  }
+  l_budgets.auto_draw(true);
 }

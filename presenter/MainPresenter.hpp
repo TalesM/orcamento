@@ -4,6 +4,9 @@
 #include <experimental/optional>
 #include <functional>
 #include <memory>
+#include <nana/gui.hpp>
+#include <nana/gui/place.hpp>
+#include <nana/gui/widgets/listbox.hpp>
 #include "Presenter.hpp"  // Base class: orca::Presenter
 
 namespace orca
@@ -60,6 +63,11 @@ class MainPresenter : public Presenter
   LoadSuccessCallback a_load_success_callback;
   Manager &a_manager;
   unique_ptr<MainController> a_controller;
+  
+  //UI
+  nana::form f_main;
+  nana::listbox l_budgets;
+  nana::place placer;
 };
 }
 

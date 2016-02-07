@@ -1,8 +1,12 @@
 #ifndef ORCA_CONTROLLER_MAINPRESENTER_HPP
 #define ORCA_CONTROLLER_MAINPRESENTER_HPP
 
+#include <string>
+#include <vector>
+
 namespace orca
 {
+  using namespace std;
 /**
  * @class MainController
  * @author Tales
@@ -15,6 +19,8 @@ class MainController
  public:
   MainController() {}
   virtual ~MainController() {}
+  
+  virtual vector<string> listBudgets() const {return {};}
 };
 }
 

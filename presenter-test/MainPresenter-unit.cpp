@@ -78,29 +78,31 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
   }
 }
 
-//struct StubMainController : public MainController {
-//  bool stub;
-//};
-//static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
-//  return make_unique<StubMainController>();
-//};
-
 SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
 {
   Manager manager;
-  manager.register_filetype(".*", nullStubRegister);
-  
-  GIVEN("A Main  Presenter with a filepath")
+  bool called = false;
+  struct StubMainController : public MainController {
+    bool &called;
+    StubMainController(bool &called) : called(called) {}
+    vector<string> listBudgets() const override{
+      called = true;
+      return {"One", "Two", "Three"};
+    }
+  };
+  manager.register_filetype(".*", [&called](auto x) { return make_unique<StubMainController>(called); });
+
+  GIVEN("A MainPresenter with a filepath")
   {
     MainPresenter mainPresenter{manager, "/home/user/test"};
 
-    WHEN("Presented")
+    WHEN("Is created")
     {
-      cout << "If splasher opens, cancel. It is already wrong." << endl;
 
-      THEN("Does not show dialog at presentation")
+      THEN("Calls the MainController.listBudgets()")
       {
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        REQUIRE(called);
         INFO("Splasher should not be called in this case");
       }
     }
