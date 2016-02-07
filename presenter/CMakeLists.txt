@@ -11,7 +11,7 @@ target_include_directories(presenter
 )
 
 target_link_libraries(presenter
-  PUBLIC controller 
+  PUBLIC controller-sqlite3
 )
  
 target_compile_features(presenter 

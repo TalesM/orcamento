@@ -13,10 +13,9 @@ target_include_directories(controller-test
   PRIVATE ${CATCH_INCLUDE_DIR}
   PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/include
   PRIVATE ${CMAKE_SOURCE_DIR}/external/SQLiteCpp/sqlite3
-  PRIVATE ../controller
 )
 target_link_libraries(controller-test
-  PUBLIC controller
+  PUBLIC controller-sqlite3
 )
 add_dependencies(controller-test
   catch
