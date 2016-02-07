@@ -17,7 +17,6 @@ target_include_directories(presenter-test
   PRIVATE ${CATCH_INCLUDE_DIR}
 )
 target_link_libraries(presenter-test
-  PRIVATE nana
   PRIVATE presenter
 )
 add_dependencies(presenter-test

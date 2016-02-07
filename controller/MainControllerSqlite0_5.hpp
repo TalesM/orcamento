@@ -19,7 +19,7 @@ class MainControllerSqlite0_5: public MainController
    * @brief Open or create a database with given name
    * @param name any sqlite3 valid name.
    */
-  MainControllerSqlite0_5(const char *name);
+  MainControllerSqlite0_5(const string &name);
   
   /**
    * @brief Returns the current format

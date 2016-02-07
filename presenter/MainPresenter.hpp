@@ -30,6 +30,11 @@ class MainPresenter : public Presenter
 
  public:
   MainPresenter(Manager &manager, const std::string &file_path = "");
+  MainPresenter(const MainPresenter &) = delete;
+  MainPresenter(MainPresenter &&) = delete;
+  ~MainPresenter();
+  MainPresenter &operator=(const MainPresenter&) = delete;
+  MainPresenter &operator=(MainPresenter&&) = delete;
 
   experimental::optional<reference_wrapper<MainController>> controller() const
   {

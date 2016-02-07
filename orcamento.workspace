@@ -16,7 +16,7 @@
     </WorkspaceConfiguration>
     <WorkspaceConfiguration Name="presenter-test" Selected="no">
       <Environment/>
-      <Project Name="orcamento" ConfigName="Presenter-test"/>
+      <Project Name="orcamento" ConfigName="presenter-test"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

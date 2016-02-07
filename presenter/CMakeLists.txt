@@ -12,6 +12,7 @@ target_include_directories(presenter
 
 target_link_libraries(presenter
   PUBLIC controller-sqlite3
+  PUBLIC nana
 )
  
 target_compile_features(presenter 

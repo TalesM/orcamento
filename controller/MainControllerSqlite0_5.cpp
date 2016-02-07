@@ -3,7 +3,7 @@
 using namespace std;
 namespace orca
 {
-MainControllerSqlite0_5::MainControllerSqlite0_5(const char *name)
+MainControllerSqlite0_5::MainControllerSqlite0_5(const string &name)
     : a_db(name, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE)
 {
   SQLite::Transaction transaction(a_db);
