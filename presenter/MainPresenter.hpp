@@ -7,6 +7,7 @@
 #include <nana/gui.hpp>
 #include <nana/gui/place.hpp>
 #include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/widgets/menubar.hpp>
 #include "Presenter.hpp"  // Base class: orca::Presenter
 
 namespace orca
@@ -67,6 +68,7 @@ class MainPresenter : public Presenter
   //UI
   nana::form f_main;
   nana::listbox l_budgets;
+  nana::menubar mb_main;
   nana::place placer;
 };
 }

@@ -1,4 +1,6 @@
 #include "MainController.hpp"
+
+#include <nana/gui/widgets/menu.hpp>
 #include "MainPresenter.hpp"
 #include "Manager.hpp"
 #include "SplasherPresenter.hpp"
@@ -7,13 +9,23 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
     : a_manager(manager)
     , a_controller((file_path != "") ? a_manager.open(file_path) : nullptr)
     , l_budgets(f_main)
+    , mb_main(f_main)
     , placer(f_main)
 {
+  // Main widgets
   f_main.caption("OrcaMento");
   l_budgets.append_header("Budgets");
   l_budgets.show_header(false);
-  
-  placer.div("<main>");
+
+  // Menu
+  nana::menu &fileMenu = mb_main.push_back("&File");
+  fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
+
+  // Layout
+  stringstream ss;
+  ss << "<vert <menu weight=" << mb_main.size().height << "> <main>>";
+  placer.div(ss.str().c_str());
+  placer.field("menu") << mb_main;
   placer.field("main") << l_budgets;
   placer.collocate();
 }
@@ -33,7 +45,7 @@ void orca::MainPresenter::present()
   l_budgets.clear();
   l_budgets.auto_draw(false);
   auto cat = l_budgets.at(0);
-  for(auto &&budget: a_controller->listBudgets()){
+  for(auto &&budget : a_controller->listBudgets()) {
     cat.append(budget);
   }
   l_budgets.auto_draw(true);
