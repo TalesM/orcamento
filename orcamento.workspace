@@ -2,7 +2,7 @@
 <CodeLite_Workspace Name="orcamento" Database="">
   <Project Name="orcamento" Path="orcamento.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="orcamento" ConfigName="Debug"/>
     </WorkspaceConfiguration>
@@ -10,7 +10,7 @@
       <Environment/>
       <Project Name="orcamento" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="controller-test" Selected="yes">
+    <WorkspaceConfiguration Name="controller-test" Selected="no">
       <Environment/>
       <Project Name="orcamento" ConfigName="controller-test"/>
     </WorkspaceConfiguration>

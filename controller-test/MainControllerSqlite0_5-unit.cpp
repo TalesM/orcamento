@@ -18,7 +18,7 @@ TEST_CASE("MainControllerSqlite0_5 creation", "[controller][planner][class-mainc
   REQUIRE(planner.format() == "OrcaMento file format 0.5.0");
 }
 
-TEST_CASE("MainControllerSqlite0_5 flush", "[controller][planner][class-maincontrollersqlite0_5][unit]") {
+TEST_CASE("MainControllerSqlite0_5 listBudgets", "[controller][planner][class-maincontrollersqlite0_5][unit]") {
   MainControllerSqlite0_5 planner{""};
   auto &db = planner.db();
   std::vector<std::string> vec = planner.listBudgets();

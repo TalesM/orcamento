@@ -20,3 +20,8 @@ MainControllerSqlite0_5::MainControllerSqlite0_5(const char *name)
 } /* orca */
 
 vector<string> orca::MainControllerSqlite0_5::listBudgets() const { return {"stub"}; }
+
+void orca::MainControllerSqlite0_5::flush()
+{
+  //Should commit...
+}

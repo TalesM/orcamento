@@ -26,7 +26,11 @@ class MainControllerSqlite0_5: public MainController
    */
   string format() const { return "OrcaMento file format 0.5.0"; }
   
-  vector<string> listBudgets() const;
+  // @see MainController.listBudgets
+  vector<string> listBudgets() const override;
+  
+  // @see MainController.flush
+  void flush() override;
   
   /**
    * Returns a reference to the internal database.
