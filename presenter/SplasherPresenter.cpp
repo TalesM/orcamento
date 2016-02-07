@@ -40,6 +40,8 @@ orca::SplasherPresenter::SplasherPresenter(Manager& manager)
   b_cancel.events().click([this]() { f_splasher.close(); });
 }
 
+orca::SplasherPresenter::~SplasherPresenter() = default;
+
 void orca::SplasherPresenter::present()
 {
   f_splasher.modality();

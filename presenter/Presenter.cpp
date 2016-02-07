@@ -24,7 +24,7 @@ void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
   present();
   exec();
   callback(not time_is_up);
-}
+} 
 }
 
 size_t orca::Presenter::schedule(unsigned timeout, function<void()> callback)

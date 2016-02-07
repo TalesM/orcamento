@@ -34,6 +34,7 @@ class SplasherPresenter : public Presenter
    *  present() in order to launch it (always as a modal.)
    */
   SplasherPresenter(Manager &manager);
+  ~SplasherPresenter();
 
   void present() override;
 

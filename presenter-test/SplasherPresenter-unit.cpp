@@ -1,22 +1,13 @@
-#include <catch.hpp>
+#include "config.hpp"
 #include "SplasherPresenter.hpp"
 
-#include <iostream>
-#include <nana/gui.hpp>
-#include <nana/gui/timer.hpp>
-
 #include "Manager.hpp"
-
-constexpr auto USER_TIMEOUT = 60000u;
-
-using namespace std;
 using namespace orca;
 
-inline void checkFinishedOk(bool finishedOk) { REQUIRE(finishedOk); }
 struct StubMainController : public MainController {
   bool stub;
 };
-
+/// Ugly hack.
 static string result = "";
 static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
   result = p[0];
