@@ -25,7 +25,7 @@ class MainPresenter : public Presenter
   using LoadSuccessCallback = function<void(MainController &)>;
 
  public:
-  MainPresenter(Manager &manager);
+  MainPresenter(Manager &manager, const std::string &file_path = "");
 
   experimental::optional<reference_wrapper<MainController>> controller() const
   {

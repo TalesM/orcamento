@@ -8,7 +8,7 @@ add_executable(Presenter-test
   SplasherPresenter-unit
 
 #Integration Scenarios
-  Startup-scenario
+  #Startup-scenario
 
 #The main
   main.cpp

@@ -54,4 +54,25 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
       }
     }
   }
+  GIVEN("A Main  Presenter with a filepath")
+  {
+    Manager manager;
+    manager.register_filetype(".*", nullStubRegister);
+    MainPresenter mainPresenter{manager, "/home/user/test"};
+
+    WHEN("Presented")
+    {
+      cout << "If splasher opens, cancel. It is already wrong." << endl;
+
+      THEN("Does not show dialog at presentation")
+      {
+        bool called = false;
+        mainPresenter.onLoadSuccess([&called](auto &&) { called = true; });
+        mainPresenter.onLoadError([&called]() { called = true; });
+        mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        INFO("Splasher should not be called in this case");
+        REQUIRE_FALSE(called);
+      }
+    }
+  }
 }
