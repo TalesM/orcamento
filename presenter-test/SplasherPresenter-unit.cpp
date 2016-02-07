@@ -14,62 +14,69 @@ static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
   return make_unique<StubMainController>();
 };
 
-TEST_CASE("PresenterSplasher exiting", "[presenter][splasher-presenter-class]")
+SCENARIO("PresenterSplasher exit conditions.", "[presenter][splasher-presenter-class]")
 {
-  Manager manager;
-  SplasherPresenter splasher{manager};
-  cout << "Click at 'X' button." << endl;
+  GIVEN("A manager")
+  {
+    Manager manager;
+    manager.register_filetype(".*", nullStubRegister);
+    SplasherPresenter splasher{manager};
 
-  bool cancelled = false;
-  splasher.onCancel([&cancelled]() { cancelled = true; });
-  splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
-  REQUIRE(cancelled);
-}
+    WHEN("Click on cancel or exit")
+    {
+      cout << "Click at 'X' button." << endl;
 
-TEST_CASE("PresenterSplasher new", "[presenter][splasher-presenter-class]")
-{
-  Manager manager;
-  manager.register_filetype(".*", nullStubRegister);
+      THEN("Exit normally")
+      {
+        bool cancelled = false;
+        splasher.onCancel([&cancelled]() { cancelled = true; });
+        splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        REQUIRE(cancelled);
+      }
+    }
 
-  SplasherPresenter splasher{manager};
+    WHEN("Click on new")
+    {
+      cout << "Click at 'New' button." << endl;
+      THEN("Executes success callback and exits")
+      {
+        bool cancelled = false;
+        splasher.onCancel([&cancelled]() { cancelled = true; });
+        bool success = false;
+        splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
+          success = true;
+          REQUIRE(p != nullptr);
+          REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
+        });
 
-  bool cancelled = false;
-  splasher.onCancel([&cancelled]() { cancelled = true; });
-  bool success = false;
-  splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
-    success = true;
-    REQUIRE(p != nullptr);
-    REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
-  });
+        splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        cout << "'Created' file " << result << endl;
+        REQUIRE(result != "");
+        REQUIRE(success);
+        REQUIRE_FALSE(cancelled);
+      }
+    }
 
-  cout << "Click at 'New' button." << endl;
-  splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
-  cout << "'Created' file " << result << endl;
-  REQUIRE(result != "");
-  REQUIRE(success);
-  REQUIRE_FALSE(cancelled);
-}
+    WHEN("Click on open")
+    {
+      cout << "Click at 'Open' button." << endl;
+      THEN("Executes success callback and exits")
+      {
+        bool cancelled = false;
+        splasher.onCancel([&cancelled]() { cancelled = true; });
+        bool success = false;
+        splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
+          success = true;
+          REQUIRE(p != nullptr);
+          REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
+        });
 
-TEST_CASE("PresenterSplasher open", "[presenter][splasher-presenter-class]")
-{
-  Manager manager;
-  manager.register_filetype(".*", nullStubRegister);
-
-  SplasherPresenter splasher{manager};
-
-  bool cancelled = false;
-  splasher.onCancel([&cancelled]() { cancelled = true; });
-  bool success = false;
-  splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
-    success = true;
-    REQUIRE(p != nullptr);
-    REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
-  });
-
-  cout << "Click at 'Open' button." << endl;
-  splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
-  cout << "'Opened' file " << result << endl;
-  REQUIRE(result != "");
-  REQUIRE(success);
-  REQUIRE_FALSE(cancelled);
+        splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        cout << "'Opened' file " << result << endl;
+        REQUIRE(result != "");
+        REQUIRE(success);
+        REQUIRE_FALSE(cancelled);
+      }
+    }
+  }
 }
