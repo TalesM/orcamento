@@ -10,7 +10,11 @@
       <Environment/>
       <Project Name="orcamento" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Presenter-test" Selected="yes">
+    <WorkspaceConfiguration Name="controller-test" Selected="yes">
+      <Environment/>
+      <Project Name="orcamento" ConfigName="controller-test"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="presenter-test" Selected="no">
       <Environment/>
       <Project Name="orcamento" ConfigName="Presenter-test"/>
     </WorkspaceConfiguration>

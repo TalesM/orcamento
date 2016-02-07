@@ -1,7 +1,7 @@
 #######################
 # The test executable #
 #######################
-add_executable(Presenter-test
+add_executable(presenter-test
 #Unit tests
   MainPresenter-unit
   Presenter-unit
@@ -13,17 +13,17 @@ add_executable(Presenter-test
 #The main
   main.cpp
 )
-target_include_directories(Presenter-test
+target_include_directories(presenter-test
   PRIVATE ${CATCH_INCLUDE_DIR}
 )
-target_link_libraries(Presenter-test
+target_link_libraries(presenter-test
   PRIVATE nana
   PRIVATE presenter
 )
-add_dependencies(Presenter-test
+add_dependencies(presenter-test
   catch
 )
-target_compile_features(Presenter-test
+target_compile_features(presenter-test
   PUBLIC cxx_aggregate_default_initializers
   PUBLIC cxx_thread_local
 )
