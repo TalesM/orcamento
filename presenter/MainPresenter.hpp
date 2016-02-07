@@ -60,6 +60,8 @@ class MainPresenter : public Presenter
   void present() override;
 
  private:
+  void refreshBudgetList();
+ 
   LoadErrorCallback a_load_error_callback;
   LoadSuccessCallback a_load_success_callback;
   Manager &a_manager;

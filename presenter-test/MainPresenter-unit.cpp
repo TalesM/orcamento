@@ -81,12 +81,13 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
 {
   Manager manager;
-  bool called = false;
+  int called = false;
   struct StubMainController : public MainController {
-    bool &called;
-    StubMainController(bool &called) : called(called) {}
-    vector<string> listBudgets() const override{
-      called = true;
+    int &called;
+    StubMainController(int &called) : called(called) {}
+    vector<string> listBudgets() const override
+    {
+      ++called;
       return {"One", "Two", "Three"};
     }
   };
@@ -98,12 +99,34 @@ SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
 
     WHEN("Is created")
     {
+      mainPresenter.schedule(100, []() { nana::API::exit(); });
 
       THEN("Calls the MainController.listBudgets()")
       {
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
         REQUIRE(called);
-        INFO("Splasher should not be called in this case");
+      }
+    }
+
+    WHEN("It clicks Menu->Open")
+    {
+      cout << "Click at file->Open, then exit" << endl;
+
+      THEN("Calls the MainController.listBudgets() twice")
+      {
+        mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        REQUIRE(called == 2);
+      }
+    }
+
+    WHEN("It clicks Menu->New, then exit")
+    {
+      cout << "Click at file->New" << endl;
+
+      THEN("Calls the MainController.listBudgets() twice")
+      {
+        mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
+        REQUIRE(called == 2);
       }
     }
   }

@@ -1,5 +1,6 @@
 #include "MainController.hpp"
 
+#include <nana/gui/filebox.hpp>
 #include <nana/gui/widgets/menu.hpp>
 #include "MainPresenter.hpp"
 #include "Manager.hpp"
@@ -19,6 +20,31 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
 
   // Menu
   nana::menu &fileMenu = mb_main.push_back("&File");
+  fileMenu.append("&New", [this](auto &&) {
+    nana::filebox fb(f_main, false);
+    fb.add_filter("Orca files", "*.orca");
+    fb.add_filter("Any files", "*.*");
+    if(fb()) {
+      auto newController = a_manager.open(fb.file());
+      if(newController) {
+        a_controller = move(newController);
+        this->refreshBudgetList();
+      }
+    }
+  });
+  fileMenu.append("&Open", [this](auto &&) {
+    nana::filebox fb(f_main, true);
+    fb.add_filter("Orca files", "*.orca");
+    fb.add_filter("Any files", "*.*");
+    if(fb()) {
+      auto newController = a_manager.open(fb.file());
+      if(newController) {
+        a_controller = move(newController);
+        this->refreshBudgetList();
+      }
+    }
+  });
+  fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
 
   // Layout
@@ -42,6 +68,11 @@ void orca::MainPresenter::present()
     splasher.present();
   }
   f_main.show();
+  refreshBudgetList();
+}
+
+void orca::MainPresenter::refreshBudgetList()
+{
   l_budgets.clear();
   l_budgets.auto_draw(false);
   auto cat = l_budgets.at(0);
