@@ -150,3 +150,50 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
     }
   }
 }
+
+struct CallRecorder {
+  vector<string> record;
+  bool has(const std::string &call) const { return std::find(record.begin(), record.end(), call) != record.end(); }
+  void push(std::string call) { record.push_back(std::move(call)); }
+};
+
+struct RecorderMainController : public MainController {
+  CallRecorder &call_recorder;
+
+  RecorderMainController(CallRecorder &r) : call_recorder{r} {}
+  std::string pushBudget() override
+  {
+    static const char *names[] = {"A new one", "Another new one"};
+    static auto index = 0;
+    call_recorder.push("pushBudget");
+    return names[(index++) % 2];
+  }
+
+  vector<string> listBudgets() const override
+  {
+    call_recorder.push("listBudgets");
+    return {"One", "Two", "Three"};
+  }
+};
+
+inline void exec(Presenter &p, unsigned timeout = USER_TIMEOUT) { p.execTimeout(timeout, checkFinishedOk); }
+SCENARIO("Adding a Budget", "[presenter][main-presenter-class]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager;
+    manager.register_filetype(".*",
+                              [&callRecorder](auto x) { return make_unique<RecorderMainController>(callRecorder); });
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("User clicks on Budget->New")
+    {
+      cout << "Please, click in Budget->New and then exit" << endl;
+      THEN("It calls MainController.pushBudget() returning the name.")
+      {
+        exec(mainPresenter);
+        REQUIRE(callRecorder.has("pushBudget"));
+      }
+    }
+  }
+}

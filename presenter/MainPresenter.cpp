@@ -49,6 +49,11 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   fileMenu.append("&Save", [this](auto &&) { a_controller->flush(); });
   fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
+  nana::menu &budgetMenu = mb_main.push_back("&Budget");
+  budgetMenu.append("&New", [this](auto &&) {
+    auto b = this->a_controller->pushBudget(); 
+    l_budgets.at(0).append(b);
+  });
 
   // Layout
   stringstream ss;
@@ -94,7 +99,4 @@ void orca::MainPresenter::refreshBudgetList()
   l_budgets.auto_draw(true);
 }
 
-void orca::MainPresenter::close()
-{
-  f_main.close();
-}
+void orca::MainPresenter::close() { f_main.close(); }

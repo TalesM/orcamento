@@ -10,5 +10,9 @@ using namespace std;
 constexpr auto USER_TIMEOUT = 60000u;
 
 /// Check if the execution ended ok
-inline void checkFinishedOk(bool finishedOk) { REQUIRE(finishedOk); }
+inline void checkFinishedOk(bool finishedOk)
+{
+  INFO("Execution timeout. Please execute the tasks more quickly.");
+  REQUIRE(finishedOk);
+}
 #endif  // ORCA_PRESENTER_TEST_CONFIG_HPP

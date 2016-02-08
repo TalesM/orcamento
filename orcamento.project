@@ -111,6 +111,9 @@
     <File Name="standalone/CMakeLists.txt"/>
     <File Name="standalone/main.cpp"/>
   </VirtualDirectory>
+  <VirtualDirectory Name="res">
+    <File Name="res/sql0_5_0.sql"/>
+  </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -241,7 +244,7 @@
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="&quot;Scenario: MainPresenter started ok&quot;" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="&quot;Scenario: Adding a Budget&quot;" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -274,7 +277,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="res">
-    <File Name="res/sql0_5_0.sql"/>
-  </VirtualDirectory>
 </CodeLite_Project>
