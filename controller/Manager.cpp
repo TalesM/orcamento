@@ -4,6 +4,8 @@
 #include "MainController.hpp"
 
 orca::Manager::~Manager() = default;
+orca::Manager::Manager(Manager &&) = default;
+orca::Manager &orca::Manager::operator =(orca::Manager &&) = default;
 
 namespace orca
 {

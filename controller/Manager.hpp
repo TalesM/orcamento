@@ -31,9 +31,9 @@ class Manager
   Manager() = default;
   ~Manager();
   Manager(const Manager &) = delete;
-  Manager(Manager &&) = delete;
+  Manager(Manager &&);
   Manager &operator=(const Manager &) = delete;
-  Manager &operator=(Manager &&) = delete;
+  Manager &operator=(Manager &&);
 
   std::unique_ptr<MainController> open(const std::string &test);
 

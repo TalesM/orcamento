@@ -176,15 +176,21 @@ struct RecorderMainController : public MainController {
   }
 };
 
+inline Manager createManagerForTest(CallRecorder &callRecorder)
+{
+  Manager manager;
+  manager.register_filetype(".*",
+                            [&callRecorder](auto x) { return make_unique<RecorderMainController>(callRecorder); });
+  return manager;
+}
+
 inline void exec(Presenter &p, unsigned timeout = USER_TIMEOUT) { p.execTimeout(timeout, checkFinishedOk); }
 SCENARIO("Adding a Budget", "[presenter][main-presenter-class]")
 {
   GIVEN("A MainPresenter with a file loaded")
   {
     CallRecorder callRecorder;
-    Manager manager;
-    manager.register_filetype(".*",
-                              [&callRecorder](auto x) { return make_unique<RecorderMainController>(callRecorder); });
+    Manager manager = createManagerForTest(callRecorder);
     MainPresenter mainPresenter{manager, "teste"};
     WHEN("User clicks on Budget->New")
     {
