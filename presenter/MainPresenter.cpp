@@ -61,23 +61,26 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
 
 void orca::MainPresenter::present()
 {
+  f_main.show();
   if(not a_controller) {
     SplasherPresenter splasher{a_manager};
     splasher.onCancel([this]() {
       if(a_load_error_callback) {
         a_load_error_callback();
       }
+      f_main.close();
     });
     splasher.onSuccess([this](auto &&controller) {
       if(a_load_success_callback) {
         a_load_success_callback(*controller);
       }
       a_controller = move(controller);
+      this->refreshBudgetList();
     });
     splasher.present();
+  } else {
+    refreshBudgetList();
   }
-  f_main.show();
-  refreshBudgetList();
 }
 
 void orca::MainPresenter::refreshBudgetList()
