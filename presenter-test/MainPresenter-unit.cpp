@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "common.hpp"
 #include "MainPresenter.hpp"
 
 #include <iostream>
@@ -150,12 +150,6 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
     }
   }
 }
-
-struct CallRecorder {
-  vector<string> record;
-  bool has(const std::string &call) const { return std::find(record.begin(), record.end(), call) != record.end(); }
-  void push(std::string call) { record.push_back(std::move(call)); }
-};
 
 struct RecorderMainController : public MainController {
   CallRecorder &call_recorder;

@@ -4,7 +4,7 @@
 #include <functional>
 #include <nana/gui/wvl.hpp>
 #include <nana/gui/widgets/button.hpp>
-#include "Presenter.hpp"
+#include "FormPresenter.hpp"
 
 namespace orca
 {
@@ -20,7 +20,7 @@ using namespace nana;
  * @file SplasherPresenter.hpp
  * @brief The splasher screen.
  */
-class SplasherPresenter : public Presenter
+class SplasherPresenter : public FormPresenter
 {
   using CancelHandler = std::function<void()>;
   using SuccessHandler = std::function<void(std::unique_ptr<MainController> controller)>;

@@ -1,4 +1,4 @@
-#include "Presenter.hpp"
+#include "FormPresenter.hpp"
 
 #include <nana/gui.hpp>
 #include <nana/gui/timer.hpp>
@@ -8,14 +8,14 @@ namespace orca
 using namespace nana;
 
 // Necessary to define here because the time is foward declared on the header so the destructor can't be generated them.
-Presenter::Presenter() = default;
-Presenter::~Presenter(){
+FormPresenter::FormPresenter() = default;
+FormPresenter::~FormPresenter(){
   for(auto &&timer: aTimers){
     timer.stop();
   }
 }
 
-void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
+void FormPresenter::execTimeout(unsigned timeout, function<void(bool)> callback)
 {
   timer timer;
   timer.interval(timeout);
@@ -35,7 +35,7 @@ void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
 } 
 }
 
-size_t orca::Presenter::schedule(unsigned timeout, function<void()> callback)
+size_t orca::FormPresenter::schedule(unsigned timeout, function<void()> callback)
 {
   aTimers.emplace_back();
   auto iterator = --(aTimers.end());

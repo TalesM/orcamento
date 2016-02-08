@@ -8,7 +8,7 @@
 #include <nana/gui/place.hpp>
 #include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/menubar.hpp>
-#include "Presenter.hpp"  // Base class: orca::Presenter
+#include "FormPresenter.hpp"  // Base class: orca::Presenter
 
 namespace orca
 {
@@ -23,7 +23,7 @@ class Manager;
  * @file MainPresenter.hpp
  * @brief Owns the app main frame
  */
-class MainPresenter : public Presenter
+class MainPresenter : public FormPresenter
 {
   using LoadErrorCallback = function<void()>;
   using LoadSuccessCallback = function<void(MainController &)>;

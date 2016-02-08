@@ -92,12 +92,15 @@
   </VirtualDirectory>
   <VirtualDirectory Name="presenter">
     <File Name="presenter/CMakeLists.txt"/>
-    <File Name="presenter/Presenter.hpp"/>
-    <File Name="presenter/Presenter.cpp"/>
     <File Name="presenter/SplasherPresenter.hpp"/>
     <File Name="presenter/SplasherPresenter.cpp"/>
     <File Name="presenter/MainPresenter.hpp"/>
     <File Name="presenter/MainPresenter.cpp"/>
+    <File Name="presenter/FormPresenter.cpp"/>
+    <File Name="presenter/FormPresenter.hpp"/>
+    <File Name="presenter/Presenter.hpp"/>
+    <File Name="presenter/EstimateListPresenter.cpp"/>
+    <File Name="presenter/EstimateListPresenter.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter-test">
     <File Name="presenter-test/CMakeLists.txt"/>
@@ -105,7 +108,8 @@
     <File Name="presenter-test/Presenter-unit.cpp"/>
     <File Name="presenter-test/SplasherPresenter-unit.cpp"/>
     <File Name="presenter-test/MainPresenter-unit.cpp"/>
-    <File Name="presenter-test/config.hpp"/>
+    <File Name="presenter-test/common.hpp"/>
+    <File Name="presenter-test/EstimateListPresenter-unit.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="standalone">
     <File Name="standalone/CMakeLists.txt"/>
@@ -244,7 +248,7 @@
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="&quot;Scenario: Budget list manipulation&quot;" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="[estimate-presenter-class]" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>

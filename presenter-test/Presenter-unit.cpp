@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include "Presenter.hpp"
+#include "FormPresenter.hpp"
 
 #include <nana/gui.hpp>
 #include <nana/gui/timer.hpp>
@@ -8,7 +8,7 @@
 
 using namespace orca;
 
-struct MockPresenter : public Presenter {
+struct MockPresenter : public FormPresenter {
   nana::form fm;
 
   void present() override { fm.show(); }
@@ -51,7 +51,7 @@ TEST_CASE("Presenter exiting normally", "[presenter][presenter-class]")
 
 TEST_CASE("Presenter throws at present", "[presenter][presenter-class]")
 {
-  Presenter presenter;
+  FormPresenter presenter;
   REQUIRE_THROWS_AS(presenter.execTimeout(1, [](bool) {}), std::logic_error);
 }
 // TODO: Present method should be abstract

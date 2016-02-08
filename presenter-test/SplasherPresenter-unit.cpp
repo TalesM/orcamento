@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "common.hpp"
 #include "SplasherPresenter.hpp"
 
 #include "MainController.hpp"
