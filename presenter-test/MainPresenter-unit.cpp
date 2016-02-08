@@ -14,7 +14,7 @@ static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
   return make_unique<StubMainController>();
 };
 
-SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
+SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class]")
 {
   GIVEN("A main presenter with no file")
   {
@@ -78,41 +78,39 @@ SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
   }
 }
 
-SCENARIO("MainPresenter started ok", "[presenter][main-presenter-class]")
-{
-  Manager manager;
-  int calledListBudgets = 0;
-  int calledFlush = 0;
-  struct StubMainController : public MainController {
-    int &calledListBudgets;
-    int &calledFlush;
-    StubMainController(int &calledListBudgets, int &calledFlush)
-        : calledListBudgets(calledListBudgets), calledFlush(calledFlush)
-    {
-    }
-    vector<string> listBudgets() const override
-    {
-      ++calledListBudgets;
-      return {"One", "Two", "Three"};
-    }
-    
-    void flush() override{
-      ++calledFlush;
-    }
-  };
-  manager.register_filetype(
-      ".*", [&calledListBudgets, &calledFlush](auto x) { return make_unique<StubMainController>(calledListBudgets, calledFlush); });
+struct CounterMainController : public MainController {
+  int &calledListBudgets;
+  int &calledFlush;
+  CounterMainController(int &calledListBudgets, int &calledFlush)
+      : calledListBudgets(calledListBudgets), calledFlush(calledFlush)
+  {
+  }
+  vector<string> listBudgets() const override
+  {
+    ++calledListBudgets;
+    return {"One", "Two", "Three"};
+  }
 
+  void flush() override { ++calledFlush; }
+};
+
+SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
+{
   GIVEN("A MainPresenter with a filepath")
   {
+    Manager manager;
+    int calledListBudgets = 0;
+    int calledFlush = 0;
+    manager.register_filetype(".*", [&calledListBudgets, &calledFlush](auto x) {
+      return make_unique<CounterMainController>(calledListBudgets, calledFlush);
+    });
     MainPresenter mainPresenter{manager, "/home/user/test"};
 
     WHEN("Is created")
     {
-      mainPresenter.schedule(100, []() { nana::API::exit(); });
-
       THEN("Calls the MainController.listBudgets()")
       {
+        mainPresenter.schedule(100, [&mainPresenter]() { mainPresenter.close(); });
         mainPresenter.execTimeout(USER_TIMEOUT, checkFinishedOk);
         REQUIRE(calledListBudgets);
       }

@@ -93,3 +93,8 @@ void orca::MainPresenter::refreshBudgetList()
   }
   l_budgets.auto_draw(true);
 }
+
+void orca::MainPresenter::close()
+{
+  f_main.close();
+}

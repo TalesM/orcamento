@@ -63,6 +63,8 @@ class MainPresenter : public Presenter
    * @brief Shows
    */
   void present() override;
+  
+  void close();
 
  private:
   void refreshBudgetList();

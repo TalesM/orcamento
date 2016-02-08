@@ -9,7 +9,11 @@ using namespace nana;
 
 // Necessary to define here because the time is foward declared on the header so the destructor can't be generated them.
 Presenter::Presenter() = default;
-Presenter::~Presenter() = default;
+Presenter::~Presenter(){
+  for(auto &&timer: aTimers){
+    timer.stop();
+  }
+}
 
 void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
 {
@@ -23,6 +27,10 @@ void Presenter::execTimeout(unsigned timeout, function<void(bool)> callback)
   timer.start();
   present();
   exec();
+  for(auto &&timer: aTimers){
+    timer.stop();
+  }
+  aTimers.clear();
   callback(not time_is_up);
 } 
 }
@@ -34,8 +42,9 @@ size_t orca::Presenter::schedule(unsigned timeout, function<void()> callback)
   auto &timer = aTimers.back();
   timer.interval(timeout);
   timer.elapse([callback, iterator, this]() {
-    aTimers.erase(iterator);
     callback();
+    iterator->stop();
+    aTimers.erase(iterator);
   });
   timer.start();
   return 0;
