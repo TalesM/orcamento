@@ -171,7 +171,7 @@ struct RecorderMainController : public MainController {
   
   void popBudget() override 
   {
-    call_recorder.push("pushBudget"); // Don't do nothing here...
+    call_recorder.push("popBudget"); // Don't do nothing here...
   }
 
   vector<string> listBudgets() const override

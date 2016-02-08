@@ -7,7 +7,7 @@
   <Project Name="test" Path="test.project" Active="No"/>
   <Project Name="model" Path="model.project" Active="No"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Debug" Selected="no">
       <Environment/>
       <Project Name="orcamento" ConfigName="Debug"/>
       <Project Name="test" ConfigName="Debug"/>

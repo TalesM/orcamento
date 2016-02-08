@@ -66,6 +66,7 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
     auto last_item = l_budgets.at(listbox::index_pair{0, qtd_budgets - 1});
     mb << "Are you sure you want to delete the budget '" << last_item.text(0) << "'?";
     if(mb.show() == msgbox::pick_yes) {
+      a_controller->popBudget();
       l_budgets.erase(last_item);
     }
   });
