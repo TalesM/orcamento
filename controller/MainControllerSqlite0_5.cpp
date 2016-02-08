@@ -8,11 +8,11 @@ MainControllerSqlite0_5::MainControllerSqlite0_5(const string &name)
 {
   SQLite::Transaction transaction(a_db);
   a_db.exec(
-      "CREATE TABLE \"meta\" ("
+      "CREATE TABLE IF NOT EXISTS \"meta\" ("
       "  \"key\"           VARCHAR PRIMARY KEY,"
       "  \"value\"         TEXT"
       ");"
-      "INSERT INTO meta VALUES('format-name', 'orcamento'),"
+      "INSERT OR IGNORE INTO meta VALUES('format-name', 'orcamento'),"
       "  ('format-version', '0.5.0');");
   transaction.commit();
 }
