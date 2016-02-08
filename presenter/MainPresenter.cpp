@@ -6,6 +6,8 @@
 #include "Manager.hpp"
 #include "SplasherPresenter.hpp"
 
+using namespace nana;
+
 orca::MainPresenter::~MainPresenter() = default;
 
 orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_path)
@@ -21,9 +23,9 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   l_budgets.show_header(false);
 
   // Menu
-  nana::menu &fileMenu = mb_main.push_back("&File");
+  menu &fileMenu = mb_main.push_back("&File");
   fileMenu.append("&New", [this](auto &&) {
-    nana::filebox fb(f_main, false);
+    filebox fb(f_main, false);
     fb.add_filter("Orca files", "*.orca");
     fb.add_filter("Any files", "*.*");
     if(fb()) {
@@ -35,7 +37,7 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
     }
   });
   fileMenu.append("&Open", [this](auto &&) {
-    nana::filebox fb(f_main, true);
+    filebox fb(f_main, true);
     fb.add_filter("Orca files", "*.orca");
     fb.add_filter("Any files", "*.*");
     if(fb()) {
@@ -49,10 +51,23 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   fileMenu.append("&Save", [this](auto &&) { a_controller->flush(); });
   fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
-  nana::menu &budgetMenu = mb_main.push_back("&Budget");
+  menu &budgetMenu = mb_main.push_back("&Budget");
   budgetMenu.append("&New", [this](auto &&) {
-    auto b = this->a_controller->pushBudget(); 
+    auto b = this->a_controller->pushBudget();
     l_budgets.at(0).append(b);
+  });
+  budgetMenu.append("Delete &Last", [this](auto &&) {
+    auto qtd_budgets = l_budgets.at(0).size();
+    if(qtd_budgets == 0) {
+      return;
+    }
+    msgbox mb{f_main, "Confirm", msgbox::yes_no};
+    mb.icon(mb.icon_question);
+    auto last_item = l_budgets.at(listbox::index_pair{0, qtd_budgets - 1});
+    mb << "Are you sure you want to delete the budget '" << last_item.text(0) << "'?";
+    if(mb.show() == msgbox::pick_yes) {
+      l_budgets.erase(last_item);
+    }
   });
 
   // Layout

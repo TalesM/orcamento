@@ -41,6 +41,14 @@ class MainController
    *    method.
    */
   virtual string pushBudget() { throw logic_error("Not implemented"); }
+  /**
+   * @brief Remove the last budget.
+   *
+   * @throw std::logic_error if this file type does not support budget insertion
+   * @throw std::runtime_error if it is supported but could not be done (Eg There
+   *    is active estimates). The reason should be informed in the what() method.
+   */
+  virtual void popBudget() { throw logic_error("Not implemented"); }
 };
 }
 

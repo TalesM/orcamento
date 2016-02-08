@@ -168,6 +168,11 @@ struct RecorderMainController : public MainController {
     call_recorder.push("pushBudget");
     return names[(index++) % 2];
   }
+  
+  void popBudget() override 
+  {
+    call_recorder.push("pushBudget"); // Don't do nothing here...
+  }
 
   vector<string> listBudgets() const override
   {
@@ -184,8 +189,7 @@ inline Manager createManagerForTest(CallRecorder &callRecorder)
   return manager;
 }
 
-inline void exec(Presenter &p, unsigned timeout = USER_TIMEOUT) { p.execTimeout(timeout, checkFinishedOk); }
-SCENARIO("Adding a Budget", "[presenter][main-presenter-class]")
+SCENARIO("Budget list manipulation", "[presenter][main-presenter-class]")
 {
   GIVEN("A MainPresenter with a file loaded")
   {
@@ -194,11 +198,18 @@ SCENARIO("Adding a Budget", "[presenter][main-presenter-class]")
     MainPresenter mainPresenter{manager, "teste"};
     WHEN("User clicks on Budget->New")
     {
-      cout << "Please, click in Budget->New and then exit" << endl;
+      cout << "Please, click in Budget->New and then exit." << endl;
       THEN("It calls MainController.pushBudget() returning the name.")
       {
         exec(mainPresenter);
         REQUIRE(callRecorder.has("pushBudget"));
+      }
+    }
+    WHEN("User clicks on Budget->Delete Last Budgets"){
+      cout << "Please, click in Budget->Delete Last, confirm it and then exit." << endl;
+      THEN("It calls MainController.popBudget()"){
+        exec(mainPresenter);
+        REQUIRE(callRecorder.has("popBudget"));
       }
     }
   }
