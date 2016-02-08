@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CodeLite_Workspace Name="orcamento" Database="/dev/projects/orcamento/.codelite/orcamentoCb.tags">
-  <Project Name="OrcaMento" Path="OrcaMento.project" Active="Yes"/>
+<CodeLite_Workspace Name="orcamento" Database="">
+  <Project Name="orcamento" Path="orcamento.project" Active="Yes"/>
   <Environment>
     <![CDATA[]]>
   </Environment>
@@ -9,7 +9,7 @@
   <BuildMatrix>
     <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
-      <Project Name="OrcaMento" ConfigName="Debug"/>
+      <Project Name="orcamento" ConfigName="Debug"/>
       <Project Name="test" ConfigName="Debug"/>
       <Project Name="model" ConfigName="Debug"/>
     </WorkspaceConfiguration>
@@ -18,6 +18,14 @@
       <Project Name="OrcaMento" ConfigName="Release"/>
       <Project Name="test" ConfigName="Release"/>
       <Project Name="model" ConfigName="Release"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="controller-test" Selected="no">
+      <Environment/>
+      <Project Name="orcamento" ConfigName="controller-test"/>
+    </WorkspaceConfiguration>
+    <WorkspaceConfiguration Name="presenter-test" Selected="yes">
+      <Environment/>
+      <Project Name="orcamento" ConfigName="presenter-test"/>
     </WorkspaceConfiguration>
   </BuildMatrix>
 </CodeLite_Workspace>

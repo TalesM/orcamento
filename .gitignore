@@ -11,8 +11,14 @@ compile_commands.json
 model.txt
 orcamentoCb.workspace.backup
 OrcaMento.txt
+debug/
+release/
 Makefile
 *.mk
 *.orca
 *.depend
 *.layout
+orcamento.mk
+.clang_complete
+.cmake_dirty
+.codelite/
