@@ -82,6 +82,7 @@
     <File Name="controller/MainController.hpp"/>
     <File Name="controller/MainControllerSqlite0_5.cpp"/>
     <File Name="controller/MainControllerSqlite0_5.hpp"/>
+    <File Name="controller/sql0_5_0.hpp.in"/>
   </VirtualDirectory>
   <VirtualDirectory Name="controller-test">
     <File Name="controller-test/CMakeLists.txt"/>
@@ -273,4 +274,7 @@
       </Completion>
     </Configuration>
   </Settings>
+  <VirtualDirectory Name="res">
+    <File Name="res/sql0_5_0.sql"/>
+  </VirtualDirectory>
 </CodeLite_Project>

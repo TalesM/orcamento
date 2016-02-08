@@ -1,0 +1,8 @@
+#ifndef ORCAMENTO_CONTROLLER_SQL0_5_0_HPP
+#define ORCAMENTO_CONTROLLER_SQL0_5_0_HPP
+
+namespace orca{
+static const char sql0_5_0[] = R"===(@sql0_5_0@)===";
+}
+
+#endif
