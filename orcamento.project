@@ -83,6 +83,9 @@
     <File Name="controller/MainControllerSqlite0_5.cpp"/>
     <File Name="controller/MainControllerSqlite0_5.hpp"/>
     <File Name="controller/sql0_5_0.hpp.in"/>
+    <File Name="controller/EstimateController.hpp"/>
+    <File Name="controller/EstimateView.hpp"/>
+    <File Name="controller/BudgetController.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="controller-test">
     <File Name="controller-test/CMakeLists.txt"/>
@@ -110,6 +113,9 @@
     <File Name="presenter-test/MainPresenter-unit.cpp"/>
     <File Name="presenter-test/common.hpp"/>
     <File Name="presenter-test/EstimateListPresenter-unit.cpp"/>
+    <VirtualDirectory Name="stubs">
+      <File Name="presenter-test/stubs/BudgetControllerStub.hpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="standalone">
     <File Name="standalone/CMakeLists.txt"/>
@@ -248,7 +254,7 @@
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="[estimate-presenter-class]" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(ConfigurationName)" IntermediateDirectory="./debug" Command="./$(ConfigurationName)/$(ConfigurationName).exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>

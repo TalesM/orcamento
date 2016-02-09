@@ -1,8 +1,12 @@
 #include "EstimateListPresenter.hpp"
+
 #include <iostream>
 #include <unordered_set>
 #include <set>
+
 #include <nana/gui.hpp>
+#include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/label.hpp>
 
 using namespace std;
 using namespace nana;
@@ -32,24 +36,18 @@ orca::EstimateListPresenter::EstimateListPresenter(nana::window wd, std::unique_
 {
   // Defining the list
   l_estimates.move({0, 0, 300, 200});
-  l_estimates.caption("Test");
   l_estimates.events().key_press([this](const arg_keyboard& arg) {
     switch(arg.key) {
-    case 45:  // INSERT
+    case keyboard::os_insert:  // INSERT
       if(arg.ctrl == true and arg.shift == false) {
         this->newEstimate();
       }
       break;
-    case 46:  // REMOVE
+    case keyboard::os_del:  // REMOVE
       if(arg.ctrl == true and arg.shift == false) {
         this->deleteSelectedEstimates();
       }
       break;
-    case 16:
-    case 17:
-      break;
-    default:
-      cout << "User pressed unknown key: " << arg.key << endl;
     }
   });
   const char* headers[] = {"name", "category", "operation", "estimated", "fulfilled", "dueDay", "done"};
@@ -110,8 +108,7 @@ void orca::EstimateListPresenter::deleteSelectedEstimates()
   }
   if(mb.show() == mb.pick_yes) {
     a_controller->eraseEstimates(estimateNames);
-    for(auto it = estimatesPos.rbegin(); it != estimatesPos.rend(); ++it)
-    {
+    for(auto it = estimatesPos.rbegin(); it != estimatesPos.rend(); ++it) {
       l_estimates.erase(l_estimates.at(listbox::index_pair{0u, *it}));
     }
   }

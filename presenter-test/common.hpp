@@ -34,4 +34,6 @@ struct CallRecorder {
   void push(std::string call) { record.push_back(std::move(call)); }
 };
 
+#define ORCA_RECORD_CALL(CALL_RECORDER) CALL_RECORDER.push(__FUNCTION__)
+
 #endif  // ORCA_PRESENTER_TEST_CONFIG_HPP

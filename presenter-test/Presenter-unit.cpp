@@ -54,4 +54,3 @@ TEST_CASE("Presenter throws at present", "[presenter][presenter-class]")
   FormPresenter presenter;
   REQUIRE_THROWS_AS(presenter.execTimeout(1, [](bool) {}), std::logic_error);
 }
-// TODO: Present method should be abstract
