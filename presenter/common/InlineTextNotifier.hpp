@@ -76,9 +76,8 @@ class InlineTextNotifier : public nana::listbox::inline_notifier_interface
     l_cell.caption(newValue);
     auto& host = dynamic_cast<nana::listbox&>(a_indicator->host());
     auto item = host.at(a_pos);
-    if(const ValueChangeCallback* callback = item.value_ptr<const ValueChangeCallback>()) {
-      (*callback)(a_pos);
-    }
+    ValueChangeCallback callback;;
+    callback(a_pos);
   }
 
   void reset()

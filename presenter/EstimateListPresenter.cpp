@@ -8,6 +8,9 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/label.hpp>
 
+#include "EstimateController.hpp"
+#include "EstimateListPresenter.hpp"
+
 using namespace std;
 using namespace nana;
 using namespace orca;
@@ -69,7 +72,11 @@ void orca::EstimateListPresenter::refresh()
     auto cat0 = l_estimates.at(0);
     l_estimates.auto_draw(false);
     for(const EstimateView& view : a_controller->listEstimates()) {
-      cat0.append(view);
+      const ValueChangeCallback callback = [this](auto&& pos) {
+        unique_ptr<EstimateController> c = a_controller->selectEstimate("ddd");
+        c->setName("eee");
+      };
+      cat0.append(view).value(callback);
     }
     l_estimates.auto_draw(true);
   }
