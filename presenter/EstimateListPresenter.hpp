@@ -32,6 +32,11 @@ class EstimateListPresenter : public Presenter
    * @brief Remove the given estimates
    */
   void deleteSelectedEstimates();
+  
+  /**
+   * @brief Edit the selected estimate
+   */
+  void editSelectedEstimate();
 
  private:
   void refresh();

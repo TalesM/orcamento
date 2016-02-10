@@ -1,5 +1,6 @@
 
 add_library(presenter
+  EstimateDetailPresenter
   EstimateListPresenter
   FormPresenter
   MainPresenter

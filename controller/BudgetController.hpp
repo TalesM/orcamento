@@ -16,10 +16,23 @@ class EstimateController;
  * @brief Control budget level operations.
  */
 struct BudgetController {
+  /**
+   * @brief Returns a instantaneous view of all estimates of present budget.
+   */
   virtual std::vector<EstimateView> listEstimates() const = 0;
-  virtual void insertEstimate(const EstimateView &) = 0;
+  /**
+   * @brief Create a new estimate. The actual creating can be deferred.
+   */
+  virtual EstimateView insertEstimate() = 0;
+  /**
+   * @brief Erase all the given estimates
+   */
   virtual void eraseEstimates(const std::unordered_set<std::string> &) = 0;
-  virtual std::unique_ptr<EstimateController> selectEstimate(const std::string &) = 0;
+  /**
+   * @brief Get estimate by name
+   * @param name
+   */
+  virtual EstimateView getEstimateByName(const std::string &name) = 0;
 };
 } /* orca */
 

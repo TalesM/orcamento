@@ -104,6 +104,8 @@
     <File Name="presenter/Presenter.hpp"/>
     <File Name="presenter/EstimateListPresenter.cpp"/>
     <File Name="presenter/EstimateListPresenter.hpp"/>
+    <File Name="presenter/EstimateDetailPresenter.hpp"/>
+    <File Name="presenter/EstimateDetailPresenter.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter-test">
     <File Name="presenter-test/CMakeLists.txt"/>
@@ -115,7 +117,9 @@
     <File Name="presenter-test/EstimateListPresenter-unit.cpp"/>
     <VirtualDirectory Name="stubs">
       <File Name="presenter-test/stubs/BudgetControllerStub.hpp"/>
+      <File Name="presenter-test/stubs/EstimateControllerStub.hpp"/>
     </VirtualDirectory>
+    <File Name="presenter-test/EstimateDetailPresenter-unit.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="standalone">
     <File Name="standalone/CMakeLists.txt"/>

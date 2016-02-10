@@ -3,6 +3,7 @@
 #######################
 add_executable(presenter-test
 #Unit tests
+  EstimateDetailPresenter-unit
   EstimateListPresenter-unit
   MainPresenter-unit
   Presenter-unit

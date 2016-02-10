@@ -5,8 +5,7 @@
 #include <set>
 
 #include <nana/gui.hpp>
-#include <nana/gui/widgets/textbox.hpp>
-#include <nana/gui/widgets/label.hpp>
+#include "EstimateDetailPresenter.hpp"
 
 using namespace std;
 using namespace nana;
@@ -39,14 +38,17 @@ orca::EstimateListPresenter::EstimateListPresenter(nana::window wd, std::unique_
   l_estimates.events().key_press([this](const arg_keyboard& arg) {
     switch(arg.key) {
     case keyboard::os_insert:  // INSERT
-      if(arg.ctrl == true and arg.shift == false) {
+      if(arg.ctrl == false and arg.shift == false) {
         this->newEstimate();
       }
       break;
     case keyboard::os_del:  // REMOVE
-      if(arg.ctrl == true and arg.shift == false) {
+      if(arg.ctrl == false and arg.shift == false) {
         this->deleteSelectedEstimates();
       }
+      break;
+    case keyboard::space:  // Edit
+      this->editSelectedEstimate();
       break;
     }
   });
@@ -77,13 +79,11 @@ void orca::EstimateListPresenter::refresh()
 
 void orca::EstimateListPresenter::newEstimate()
 {
-  EstimateView view = {
-    name : "New One",
-    category : "CAT",
-  };
-  a_controller->insertEstimate(view);
+  EstimateView view = a_controller->insertEstimate();
+  EstimateDetailPresenter dialog(view);
+  dialog.present();
   auto cat0 = l_estimates.at(0);
-  cat0.append(view);
+  cat0.append(dialog.get());
 }
 
 void orca::EstimateListPresenter::deleteSelectedEstimates()
@@ -111,5 +111,16 @@ void orca::EstimateListPresenter::deleteSelectedEstimates()
     for(auto it = estimatesPos.rbegin(); it != estimatesPos.rend(); ++it) {
       l_estimates.erase(l_estimates.at(listbox::index_pair{0u, *it}));
     }
+  }
+}
+
+void orca::EstimateListPresenter::editSelectedEstimate()
+{
+  for(auto&& index : l_estimates.selected()) {
+    auto proxy = l_estimates.at(index);
+    EstimateView view = a_controller->getEstimateByName(proxy.text(0));
+    EstimateDetailPresenter dialog(view);
+    dialog.present();
+    proxy.resolve_from(dialog.get());
   }
 }

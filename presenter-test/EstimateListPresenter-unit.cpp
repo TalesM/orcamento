@@ -3,23 +3,7 @@
 
 #include <nana/gui.hpp>
 #include "EstimateController.hpp"
-
-/**
- * @class RecorderEstimateController
- * @author Tales
- * @date 09/02/2016
- * @file EstimateListPresenter-unit.cpp
- * @brief Stub for EstimateController
- */
-struct RecorderEstimateController : public EstimateController {
-  CallRecorder &call_recorder;
-  RecorderEstimateController(CallRecorder &c) : call_recorder{c} {}
-  void setName(const std::string &newName) override
-  {
-    ORCA_RECORD_CALL(call_recorder);
-    cout << "Renamed to: " << newName << endl;
-  }
-};
+#include "stubs/EstimateControllerStub.hpp"
 
 /**
  * @class RecorderBudgetController
@@ -41,15 +25,34 @@ struct RecorderBudgetController : public BudgetController {
         {"Estimate 4", "CATEGORY", Operation::EXPENSE, 80'00, 78'90, 0, true},
     };
   }
-  void insertEstimate(const EstimateView &view) override { call_recorder.push("insertEstimate"); }
+  EstimateView insertEstimate() override
+  {
+    ORCA_RECORD_CALL(call_recorder);
+    return {"New Estimate",
+            "CATEGORY",
+            Operation::INCOME,
+            150'00,
+            150'00,
+            2,
+            false,
+            [this]() -> shared_ptr<EstimateController> { return make_unique<EstimateControllerStub>(call_recorder); }};
+  }
   void eraseEstimates(const std::unordered_set<std::string> &estimatesNames) override
   {
     call_recorder.push("eraseEstimates");
   }
 
-  unique_ptr<EstimateController> selectEstimate(const string &) override
+  EstimateView getEstimateByName(const string &name) override
   {
-    return make_unique<RecorderEstimateController>(call_recorder);
+    ORCA_RECORD_CALL(call_recorder);
+    return {"Editable Estimate",
+            "CATEGORY",
+            Operation::INCOME,
+            150'00,
+            150'00,
+            2,
+            true,
+            [this]() -> shared_ptr<EstimateController> { return make_unique<EstimateControllerStub>(call_recorder); }};
   }
 };
 
@@ -83,19 +86,15 @@ SCENARIO_METHOD(EstimateListPresenterFixture,
 {
   GIVEN("A EstimatePresenter with a budget")
   {
-    WHEN("User press Ctrl-Insert")
+    WHEN("User press Insert")
     {
-      cout << "Please, press Ctrl-Insert and close the program." << endl;
+      cout << "Please, press Insert, give it a name and close the program." << endl;
       THEN("Call EstimateController.insertEstimate()")
       {
         exec(host);
         REQUIRE(call_recorder.has("insertEstimate"));
+        REQUIRE(call_recorder.has("setName"));
       }
-    }
-    WHEN("A external menu is pressed")
-    {
-      estimatePresenter.newEstimate();
-      THEN("Call EstimateController.insertEstimate()") { REQUIRE(call_recorder.has("insertEstimate")); }
     }
   }
 }
@@ -106,9 +105,9 @@ SCENARIO_METHOD(EstimateListPresenterFixture,
 {
   GIVEN("A EstimatePresenter with a budget")
   {
-    WHEN("User press Ctrl-Delete")
+    WHEN("User press Delete")
     {
-      cout << "Please, select a estimate and press Ctrl-Delete and close the program." << endl;
+      cout << "Please, select a estimate and press Delete and close the program." << endl;
       THEN("Call EstimateController.deleteEstimate()")
       {
         exec(host);
@@ -120,18 +119,20 @@ SCENARIO_METHOD(EstimateListPresenterFixture,
 
 SCENARIO_METHOD(EstimateListPresenterFixture,
                 "EstimatePresenter edit an estimate",
-                "[.][estimate-presenter-class][presenter][!mayfail]")
+                "[estimate-list-presenter-class][presenter]")
 {
   GIVEN("A EstimatePresenter with a budget")
   {
-    WHEN("User edits the name")
+    WHEN("User edits an estimate.")
     {
-      cout << "Please, edit an estimate name.";
+      cout << "Please, click in an estimate and press [space], then edit the name and close both windows.";
       THEN("It calls EstimateController.setName()")
       {
+        call_recorder.record.clear();
         exec(host);
         REQUIRE(call_recorder.has("setName"));
       }
     }
   }
 }
+// TODO: Integration with EstimateDetail

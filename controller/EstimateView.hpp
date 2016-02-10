@@ -1,8 +1,14 @@
 #ifndef ORCA_CONTROLLER_ESTIMATEVIEW_HPP
 #define ORCA_CONTROLLER_ESTIMATEVIEW_HPP
 
+#include <functional>
+#include <memory>
 #include <string>
-namespace orca {
+namespace orca
+{
+// forward
+class EstimateController;
+
 /**
  * @brief Define the possible operations you can estimate.
  */
@@ -27,6 +33,7 @@ struct EstimateView {
   unsigned fulfilled;
   short dueDay;
   bool done;
+  const std::function<std::shared_ptr<EstimateController>()> controller;
 };
 }
 
