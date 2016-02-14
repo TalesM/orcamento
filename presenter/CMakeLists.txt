@@ -2,6 +2,7 @@
 add_library(presenter
   EstimateDetailPresenter
   EstimateListPresenter
+  ExecutionListPresenter
   FormPresenter
   MainPresenter
   SplasherPresenter

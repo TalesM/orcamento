@@ -86,6 +86,8 @@
     <File Name="controller/EstimateController.hpp"/>
     <File Name="controller/EstimateView.hpp"/>
     <File Name="controller/BudgetController.hpp"/>
+    <File Name="controller/ExecutionView.hpp"/>
+    <File Name="controller/Operation.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="controller-test">
     <File Name="controller-test/CMakeLists.txt"/>
@@ -106,6 +108,8 @@
     <File Name="presenter/EstimateListPresenter.hpp"/>
     <File Name="presenter/EstimateDetailPresenter.hpp"/>
     <File Name="presenter/EstimateDetailPresenter.cpp"/>
+    <File Name="presenter/ExecutionListPresenter.hpp"/>
+    <File Name="presenter/ExecutionListPresenter.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter-test">
     <File Name="presenter-test/CMakeLists.txt"/>
@@ -120,6 +124,8 @@
       <File Name="presenter-test/stubs/EstimateControllerStub.hpp"/>
     </VirtualDirectory>
     <File Name="presenter-test/EstimateDetailPresenter-unit.cpp"/>
+    <File Name="presenter-test/ExecutionListPresenter-unit.cpp"/>
+    <File Name="presenter-test/UserInputChecker.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="standalone">
     <File Name="standalone/CMakeLists.txt"/>

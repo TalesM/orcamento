@@ -5,6 +5,7 @@
 #include <catch.hpp>
 #include <nana/gui.hpp>
 #include "FormPresenter.hpp"
+#include "UserInputChecker.hpp"
 
 using namespace std;
 using namespace orca;
