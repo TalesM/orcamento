@@ -5,14 +5,14 @@
 #include "Manager.hpp"
 using namespace orca;
 
-struct StubMainController : public MainController {
+struct DumbMainController : public MainController {
   bool stub;
 };
 /// Ugly hack.
 static string result = "";
 static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
   result = p[0];
-  return make_unique<StubMainController>();
+  return make_unique<DumbMainController>();
 };
 
 SCENARIO("PresenterSplasher exit conditions.", "[presenter][splasher-presenter-class]")
@@ -47,7 +47,7 @@ SCENARIO("PresenterSplasher exit conditions.", "[presenter][splasher-presenter-c
         splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
           success = true;
           REQUIRE(p != nullptr);
-          REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
+          REQUIRE_NOTHROW(dynamic_cast<DumbMainController&>(*p));
         });
 
         splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);
@@ -69,7 +69,7 @@ SCENARIO("PresenterSplasher exit conditions.", "[presenter][splasher-presenter-c
         splasher.onSuccess([&success](std::unique_ptr<MainController> p) {
           success = true;
           REQUIRE(p != nullptr);
-          REQUIRE_NOTHROW(dynamic_cast<StubMainController&>(*p));
+          REQUIRE_NOTHROW(dynamic_cast<DumbMainController&>(*p));
         });
 
         splasher.execTimeout(USER_TIMEOUT, checkFinishedOk);

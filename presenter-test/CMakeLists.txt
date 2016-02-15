@@ -3,6 +3,7 @@
 #######################
 add_executable(presenter-test
 #Unit tests
+  BudgetDetailPresenter-unit
   EstimateDetailPresenter-unit
   EstimateListPresenter-unit
   ExecutionListPresenter-unit

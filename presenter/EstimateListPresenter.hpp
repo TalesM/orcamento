@@ -4,10 +4,9 @@
 #include <memory>
 #include <unordered_set>
 #include <nana/gui/widgets/listbox.hpp>
-#include <nana/gui/place.hpp>
 
 #include "BudgetController.hpp"
-#include "Presenter.hpp"  // Base class: Presenter
+#include "ControllerOwnerPresenter.hpp"
 
 namespace orca
 {
@@ -19,8 +18,10 @@ namespace orca
  * @file EstimatePresenter.hpp
  * @brief Presents the estimates view.
  */
-class EstimateListPresenter : public Presenter
+class EstimateListPresenter : public ControllerOwnerPresenter<BudgetController>
 {
+  using BASE = ControllerOwnerPresenter<BudgetController>;
+
  public:
   EstimateListPresenter(nana::window wd, std::unique_ptr<BudgetController> controller);
 
@@ -37,13 +38,17 @@ class EstimateListPresenter : public Presenter
    * @brief Edit the selected estimate
    */
   void editSelectedEstimate();
+  
+  /**
+   * @brief The window
+   * @return 
+   */
+  nana::window window() const { return l_estimates; }
+
 
  private:
   void refresh();
-  std::unique_ptr<BudgetController> a_controller;
-
   nana::listbox l_estimates;
-  nana::place placer;
 };
 }
 

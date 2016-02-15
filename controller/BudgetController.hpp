@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_set>
+#include <vector>
 #include "EstimateView.hpp"
 #include "ExecutionView.hpp"
 

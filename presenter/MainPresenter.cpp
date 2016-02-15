@@ -13,6 +13,8 @@ orca::MainPresenter::~MainPresenter() = default;
 orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_path)
     : a_manager(manager)
     , a_controller((file_path != "") ? a_manager.open(file_path) : nullptr)
+    , a_budgetDetail(f_main, nullptr)
+    , f_main(API::make_center(800, 600))
     , l_budgets(f_main)
     , mb_main(f_main)
     , placer(f_main)
@@ -21,6 +23,11 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   f_main.caption("OrcaMento");
   l_budgets.append_header("Budgets");
   l_budgets.show_header(false);
+  l_budgets.events().selected([this](auto &&arg) {
+    if(arg.selected){
+      a_budgetDetail.receive(a_controller->getBudget(arg.item.text(0)).controller());
+    }//Maybe put an else to devolve?
+  });
 
   // Menu
   menu &fileMenu = mb_main.push_back("&File");
@@ -73,11 +80,19 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
 
   // Layout
   stringstream ss;
-  ss << "<vert <menu weight=" << mb_main.size().height << "> <main>>";
+  ss << "vert <menu weight=" << mb_main.size().height << "> <<budgets weight=20%>|<vertical <weight=20 tabs><body>>>";
   placer.div(ss.str().c_str());
   placer.field("menu") << mb_main;
-  placer.field("main") << l_budgets;
+  placer.field("budgets") << l_budgets;
+  placer.field("tabs") << a_budgetDetail.window();
+  for(auto &&tab : a_budgetDetail.tabs()) {
+    placer.field("body").fasten(tab);
+  }
   placer.collocate();
+
+  if(a_controller) {
+    refreshBudgetList();
+  }
 }
 
 void orca::MainPresenter::present()
@@ -99,8 +114,6 @@ void orca::MainPresenter::present()
       this->refreshBudgetList();
     });
     splasher.present();
-  } else {
-    refreshBudgetList();
   }
 }
 
@@ -113,6 +126,9 @@ void orca::MainPresenter::refreshBudgetList()
     cat.append(budget);
   }
   l_budgets.auto_draw(true);
+  auto last_item = cat.at(cat.size() - 1);
+  last_item.select(true);
+  a_budgetDetail.receive(a_controller->getBudget(last_item.text(0)).controller());
 }
 
 void orca::MainPresenter::close() { f_main.close(); }

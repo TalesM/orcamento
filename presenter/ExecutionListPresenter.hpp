@@ -4,6 +4,7 @@
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/listbox.hpp>
 #include "BudgetController.hpp"
+#include "ControllerOwnerPresenter.hpp"
 
 namespace orca
 {
@@ -14,8 +15,10 @@ namespace orca
  * @file ExecutionListPresenter.hpp
  * @brief Shows the execution list.
  */
-class ExecutionListPresenter
+class ExecutionListPresenter : public ControllerOwnerPresenter<BudgetController>
 {
+  using BASE = ControllerOwnerPresenter<BudgetController>;
+
  public:
   /**
    * @brief Ctor
@@ -28,16 +31,23 @@ class ExecutionListPresenter
    * @brief Insert a new execution.
    */
   void insertExecution();
-  
+
   /**
    * @brief Remove selected executions.
    */
   void deleteSelectedExecutions();
 
+  /**
+   * @brief Get the window
+   * @return
+   */
+  nana::window window() const { return l_executions; }
+  /**
+   * @brief Takes ownership of the controller
+   * @param controller
+   */
  private:
   void refresh();
-  std::unique_ptr<BudgetController> a_controller;
-
   nana::listbox l_executions;
   nana::place placer;
 };

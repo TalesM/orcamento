@@ -24,7 +24,7 @@ listbox::oresolver& operator<<(listbox::oresolver& ores, const ExecutionView& vi
 }
 
 orca::ExecutionListPresenter::ExecutionListPresenter(nana::window wd, std::unique_ptr<BudgetController> controller)
-    : l_executions(wd), placer(wd), a_controller(move(controller))
+    : l_executions(wd), placer(wd), BASE(move(controller))
 {
   // Setting up
   static const char* attributes[] = {"Code", "Date", "Amount", "Operation", "Account", "Estimate", "Category"};
@@ -49,7 +49,9 @@ orca::ExecutionListPresenter::ExecutionListPresenter(nana::window wd, std::uniqu
   placer.field("main") << l_executions;
   placer.collocate();
 
-  refresh();
+  if(a_controller){
+    refresh();
+  }
 }
 
 void orca::ExecutionListPresenter::refresh()

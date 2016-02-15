@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include "BudgetView.hpp"
 
 namespace orca
 {
@@ -49,6 +50,15 @@ class MainController
    *    is active estimates). The reason should be informed in the what() method.
    */
   virtual void popBudget() { throw logic_error("Not implemented"); }
+  /**
+   * @brief Get The controller to the given budget.
+   * @param name  the budget name.
+   * @todo Return a BudgetView instead.
+   */
+  virtual BudgetView getBudget(const std::string &name)
+  {
+    throw std::logic_error("Not implemented");
+  }
 };
 }
 

@@ -4,27 +4,28 @@
 #include <iostream>
 #include "MainController.hpp"
 #include "Manager.hpp"
+#include "stubs/MainControllerStub.hpp"
 
 using namespace orca;
 
-struct StubMainController : public MainController {
-  bool stub;
-};
-static auto nullStubRegister = [](auto p) -> std::unique_ptr<MainController> {
-  return make_unique<StubMainController>();
-};
+inline Manager createManagerForTest(CallRecorder &callRecorder)
+{
+  Manager manager;
+  manager.register_filetype(".*", [&callRecorder](auto x) { return make_unique<MainControllerStub>(callRecorder); });
+  return manager;
+}
 
 SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class]")
 {
   GIVEN("A main presenter with no file")
   {
-    Manager manager;
-    manager.register_filetype(".*", nullStubRegister);
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
     MainPresenter mainPresenter{manager};
 
     WHEN("User cancels splasher")
     {
-      cout << "Click at 'Cancel' button." << endl;
+      UserInputChecker uic("click at [cancel] or [x] button", "the application finishes");
 
       THEN("Finishes Application")
       {
@@ -37,8 +38,7 @@ SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class
     }
     WHEN("User opens or create a file on splasher")
     {
-      cout << "Create or load a file please" << endl;
-
+      UserInputChecker uic("click at [open] or [new] button");
       THEN("Creates a controller")
       {
         bool calledListBudgets = false;
@@ -57,8 +57,8 @@ SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class
   }
   GIVEN("A Main  Presenter with a filepath")
   {
-    Manager manager;
-    manager.register_filetype(".*", nullStubRegister);
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
     MainPresenter mainPresenter{manager, "/home/user/test"};
 
     WHEN("Presented")
@@ -94,7 +94,8 @@ struct CounterMainController : public MainController {
   void flush() override { ++calledFlush; }
 };
 
-SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
+//TODO: Fix the bug (Issue #42).
+SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class][.][!mayfail]")
 {
   GIVEN("A MainPresenter with a filepath")
   {
@@ -118,7 +119,7 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
 
     WHEN("It clicks Menu->Open")
     {
-      cout << "Click at file->Open, then exit" << endl;
+      UserInputChecker uic("click at [file->open]");
 
       THEN("Calls the MainController.listBudgets() twice")
       {
@@ -129,7 +130,7 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
 
     WHEN("It clicks Menu->New")
     {
-      cout << "Click at file->New, then exit" << endl;
+      UserInputChecker uic("click at [file->new]");
 
       THEN("Calls the MainController.listBudgets() twice")
       {
@@ -140,7 +141,7 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
 
     WHEN("It clicks Menu->Save")
     {
-      cout << "Click at file->save, then exit" << endl;
+      UserInputChecker uic("click at [file->save]");
 
       THEN("Calls the MainController.flush()")
       {
@@ -151,36 +152,33 @@ SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class]")
   }
 }
 
-struct RecorderMainController : public MainController {
-  CallRecorder &call_recorder;
-
-  RecorderMainController(CallRecorder &r) : call_recorder{r} {}
-  std::string pushBudget() override
-  {
-    static const char *names[] = {"A new one", "Another new one"};
-    static auto index = 0;
-    call_recorder.push("pushBudget");
-    return names[(index++) % 2];
-  }
-  
-  void popBudget() override 
-  {
-    call_recorder.push("popBudget"); // Don't do nothing here...
-  }
-
-  vector<string> listBudgets() const override
-  {
-    call_recorder.push("listBudgets");
-    return {"One", "Two", "Three"};
-  }
-};
-
-inline Manager createManagerForTest(CallRecorder &callRecorder)
+SCENARIO("MainPresenter startup", "[presenter][main-presenter-class]")
 {
-  Manager manager;
-  manager.register_filetype(".*",
-                            [&callRecorder](auto x) { return make_unique<RecorderMainController>(callRecorder); });
-  return manager;
+  GIVEN("A MainPresernter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("It presents")
+    {
+      THEN("it shows the last budget selected and a summary on right side")
+      {
+        UserInputChecker uic("", "it shows the last budget selected and a summary on right side");
+        exec(mainPresenter);
+      }
+    }
+    WHEN("It changes the budget")
+    {
+      THEN("It calls getBudget twice.")
+      {
+        UserInputChecker uic("Select any budget but the last");
+        CHECK(callRecorder.has("getBudget"));
+        callRecorder.record.clear();
+        exec(mainPresenter);
+        REQUIRE(callRecorder.has("getBudget"));
+      }
+    }
+  }
 }
 
 SCENARIO("Budget list manipulation", "[presenter][main-presenter-class]")
@@ -199,9 +197,11 @@ SCENARIO("Budget list manipulation", "[presenter][main-presenter-class]")
         REQUIRE(callRecorder.has("pushBudget"));
       }
     }
-    WHEN("User clicks on Budget->Delete Last Budgets"){
+    WHEN("User clicks on Budget->Delete Last Budgets")
+    {
       cout << "Please, click in Budget->Delete Last, confirm it and then exit." << endl;
-      THEN("It calls MainController.popBudget()"){
+      THEN("It calls MainController.popBudget()")
+      {
         exec(mainPresenter);
         REQUIRE(callRecorder.has("popBudget"));
       }

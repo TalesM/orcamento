@@ -4,11 +4,14 @@
 #include <experimental/optional>
 #include <functional>
 #include <memory>
+
 #include <nana/gui.hpp>
 #include <nana/gui/place.hpp>
 #include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/menubar.hpp>
-#include "FormPresenter.hpp"  // Base class: orca::Presenter
+
+#include "BudgetDetailPresenter.hpp"
+#include "FormPresenter.hpp"
 
 namespace orca
 {
@@ -33,8 +36,8 @@ class MainPresenter : public FormPresenter
   MainPresenter(const MainPresenter &) = delete;
   MainPresenter(MainPresenter &&) = delete;
   ~MainPresenter();
-  MainPresenter &operator=(const MainPresenter&) = delete;
-  MainPresenter &operator=(MainPresenter&&) = delete;
+  MainPresenter &operator=(const MainPresenter &) = delete;
+  MainPresenter &operator=(MainPresenter &&) = delete;
 
   experimental::optional<reference_wrapper<MainController>> controller() const
   {
@@ -63,20 +66,21 @@ class MainPresenter : public FormPresenter
    * @brief Shows
    */
   void present() override;
-  
+
   void close();
 
  private:
   void refreshBudgetList();
- 
+
   LoadErrorCallback a_load_error_callback;
   LoadSuccessCallback a_load_success_callback;
   Manager &a_manager;
   unique_ptr<MainController> a_controller;
-  
-  //UI
+
+  // UI
   nana::form f_main;
   nana::listbox l_budgets;
+  BudgetDetailPresenter a_budgetDetail;
   nana::menubar mb_main;
   nana::place placer;
 };

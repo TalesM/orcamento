@@ -31,7 +31,7 @@ listbox::oresolver& operator<<(listbox::oresolver& ores, const EstimateView& vie
 }
 
 orca::EstimateListPresenter::EstimateListPresenter(nana::window wd, std::unique_ptr<BudgetController> controller)
-    : l_estimates{wd, "Test"}, a_controller{move(controller)}, placer{wd}
+    : l_estimates{wd, "Test"}, BASE{move(controller)}
 {
   // Defining the list
   l_estimates.move({0, 0, 300, 200});
@@ -56,17 +56,12 @@ orca::EstimateListPresenter::EstimateListPresenter(nana::window wd, std::unique_
   for(auto header : headers) {
     l_estimates.append_header(header);
   }
-
-  // layout
-  placer.div("<main>");
-  placer.field("main") << l_estimates;
-  placer.collocate();
-
   refresh();
 }
 
 void orca::EstimateListPresenter::refresh()
 {
+  l_estimates.clear();
   if(a_controller) {
     auto cat0 = l_estimates.at(0);
     l_estimates.auto_draw(false);
