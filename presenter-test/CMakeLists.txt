@@ -6,6 +6,7 @@ add_executable(presenter-test
   BudgetDetailPresenter-unit
   EstimateDetailPresenter-unit
   EstimateListPresenter-unit
+  ExecutionDetailPresenter-unit
   ExecutionListPresenter-unit
   MainPresenter-unit
   Presenter-unit

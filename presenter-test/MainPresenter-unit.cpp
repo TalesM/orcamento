@@ -94,7 +94,7 @@ struct CounterMainController : public MainController {
   void flush() override { ++calledFlush; }
 };
 
-//TODO: Fix the bug (Issue #42).
+// TODO: Fix the bug (Issue #42).
 SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class][.][!mayfail]")
 {
   GIVEN("A MainPresenter with a filepath")
@@ -204,6 +204,25 @@ SCENARIO("Budget list manipulation", "[presenter][main-presenter-class]")
       {
         exec(mainPresenter);
         REQUIRE(callRecorder.has("popBudget"));
+      }
+    }
+  }
+}
+
+SCENARIO("Exectution List Manipulation", "[presenter][main-presenter-class]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("User clicks on Execution->New")
+    {
+      THEN("The ExecutionDetailPresenter shows up")
+      {
+        UserInputChecker uic("click at the menu Execution->New",
+                             "the execution tab is selected and the dialog to edit an estimate shows up");
+        exec(mainPresenter);
       }
     }
   }

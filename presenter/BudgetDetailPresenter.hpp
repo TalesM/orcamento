@@ -22,6 +22,11 @@ namespace orca
 class BudgetDetailPresenter : public ControllerOwnerPresenter<BudgetController>
 {
   using BASE = ControllerOwnerPresenter<BudgetController>;
+  enum Tabs{
+    SUMMARY,
+    ESTIMATE,
+    EXECUTION
+  };
 
  public:
   /**
@@ -39,14 +44,17 @@ class BudgetDetailPresenter : public ControllerOwnerPresenter<BudgetController>
   BudgetDetailPresenter(nana::window wd, const BudgetView &view) : BudgetDetailPresenter(wd, view.controller()) {}
   nana::window window() const { return t_main; }
   std::vector<nana::window> tabs() const { return {l_summary, a_estimates.window(), a_executions.window()}; }
+  
+  void insertExecution();
  protected:
+  void activate(Tabs tab);
   void refresh() override;
 
  private:
   size_t a_currentControllerOwner = 0;
   EstimateListPresenter a_estimates;
   ExecutionListPresenter a_executions;
-
+  
   nana::tabbar<std::string> t_main;
   nana::listbox l_summary;
 };

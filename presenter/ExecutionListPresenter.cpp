@@ -66,6 +66,8 @@ void orca::ExecutionListPresenter::refresh()
 void orca::ExecutionListPresenter::insertExecution()
 {
   ExecutionView view = a_controller->insertExecution();
+  //Call the handler, to give it the opportunity to edit it. If it does not throw everything should be ok.
+  if(a_editHandler) a_editHandler(view);
   l_executions.at(0).append(view);
 }
 

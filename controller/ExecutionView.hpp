@@ -1,11 +1,15 @@
 #ifndef ORCA_CONTROLLER_EXECUTIONVIEW_HPP
 #define ORCA_CONTROLLER_EXECUTIONVIEW_HPP
 
+#include <functional>
+#include <memory>
 #include <string>
 #include "Operation.hpp"
 
 namespace orca
 {
+// Forward Decl;
+class ExecutionController;
 /**
  * @class ExecutionView
  * @author Tales
@@ -21,6 +25,7 @@ struct ExecutionView {
   std::string account;
   std::string estimate;
   std::string category;
+  std::function<std::unique_ptr<ExecutionController>()> controller;
 };
 }
 

@@ -18,6 +18,7 @@ namespace orca
 class ExecutionListPresenter : public ControllerOwnerPresenter<BudgetController>
 {
   using BASE = ControllerOwnerPresenter<BudgetController>;
+  using EditViewHandler = std::function<void(ExecutionView&)>;
 
  public:
   /**
@@ -46,8 +47,19 @@ class ExecutionListPresenter : public ControllerOwnerPresenter<BudgetController>
    * @brief Takes ownership of the controller
    * @param controller
    */
+
+  ///@name Events
+  ///@{
+
+  /**
+   * @brief sets a handler for editViewHandler.
+   * @param handler
+   */
+  void editViewHandler(EditViewHandler handler) { a_editHandler = handler; }
+  ///@}
  private:
   void refresh();
+  EditViewHandler a_editHandler;
   nana::listbox l_executions;
   nana::place placer;
 };

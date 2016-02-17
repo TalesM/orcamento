@@ -4,6 +4,7 @@
 #include "../common.hpp"
 #include "BudgetController.hpp"
 #include "EstimateControllerStub.hpp"
+#include "ExecutionControllerStub.hpp"
 
 /**
  * @class RecorderBudgetController
@@ -67,7 +68,15 @@ struct BudgetControllerStub : public BudgetController {
   ExecutionView insertExecution() override
   {
     ORCA_RECORD_CALL(call_recorder);
-    return {15, "2006-10-13", 100, Operation::INCOME, "POCKET", "Estatimate 3", "CAT"};
+    return {
+        15,
+        "2006-10-13",
+        100,
+        Operation::INCOME,
+        "POCKET",
+        "Estatimate 3",
+        "CAT",
+        [this]() -> unique_ptr<ExecutionController> { return make_unique<ExecutionControllerStub>(call_recorder); }};
   }
 
   void eraseExecutions(const std::unordered_set<std::string> &estimatesNames) override

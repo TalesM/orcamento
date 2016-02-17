@@ -3,6 +3,7 @@ add_library(presenter
   BudgetDetailPresenter
   EstimateDetailPresenter
   EstimateListPresenter
+  ExecutionDetailPresenter
   ExecutionListPresenter
   FormPresenter
   MainPresenter

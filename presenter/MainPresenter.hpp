@@ -71,6 +71,8 @@ class MainPresenter : public FormPresenter
 
  private:
   void refreshBudgetList();
+  void createMenu();
+  void createLayout();
 
   LoadErrorCallback a_load_error_callback;
   LoadSuccessCallback a_load_success_callback;

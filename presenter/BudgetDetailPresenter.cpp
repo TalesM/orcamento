@@ -1,4 +1,5 @@
 #include "BudgetDetailPresenter.hpp"
+#include "ExecutionDetailPresenter.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -13,7 +14,7 @@ orca::BudgetDetailPresenter::BudgetDetailPresenter(nana::window wd, std::unique_
   t_main.append("Execution", a_executions.window(), "executions");
   t_main.activated(0);
 
-  t_main.events().activated([this](auto& arg) {
+  t_main.events().activated([this](auto&& arg) {
     unique_ptr<BudgetController> controller;
     switch(a_currentControllerOwner) {
     case 0:
@@ -44,10 +45,15 @@ orca::BudgetDetailPresenter::BudgetDetailPresenter(nana::window wd, std::unique_
       throw logic_error("Invalid tab");
     }
   });
+  a_executions.editViewHandler([this](auto&& view) {
+    ExecutionDetailPresenter edp(view);
+    edp.present();
+    view = edp.get();
+  });
   l_summary.show_header(false);
   l_summary.append_header("Name");
   l_summary.append_header("Value");
-  if(a_controller != nullptr){
+  if(a_controller != nullptr) {
     refresh();
   }
 }
@@ -108,4 +114,11 @@ void orca::BudgetDetailPresenter::refresh()
   for(const SummaryItem& si : totals) {
     catTotal.append(si);
   }
+}
+
+void orca::BudgetDetailPresenter::activate(Tabs tab) { t_main.activated(tab); }
+void orca::BudgetDetailPresenter::insertExecution()
+{
+  activate(EXECUTION);
+  a_executions.insertExecution();
 }

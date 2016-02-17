@@ -24,12 +24,18 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   l_budgets.append_header("Budgets");
   l_budgets.show_header(false);
   l_budgets.events().selected([this](auto &&arg) {
-    if(arg.selected){
+    if(arg.selected) {
       a_budgetDetail.receive(a_controller->getBudget(arg.item.text(0)).controller());
-    }//Maybe put an else to devolve?
+    }  // Maybe put an else to devolve?
   });
 
-  // Menu
+  createMenu();
+
+  createLayout();
+}
+
+void orca::MainPresenter::createMenu()
+{
   menu &fileMenu = mb_main.push_back("&File");
   fileMenu.append("&New", [this](auto &&) {
     filebox fb(f_main, false);
@@ -58,6 +64,7 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   fileMenu.append("&Save", [this](auto &&) { a_controller->flush(); });
   fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
+  
   menu &budgetMenu = mb_main.push_back("&Budget");
   budgetMenu.append("&New", [this](auto &&) {
     auto b = this->a_controller->pushBudget();
@@ -77,8 +84,19 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
       l_budgets.erase(last_item);
     }
   });
+  
+  mb_main.push_back("E&stimate");
+  
+  menu &executionMenu = mb_main.push_back("E&xecution");
+  executionMenu.append("&New", [this](auto &&){
+    a_budgetDetail.insertExecution();
+  });
+  executionMenu.append("&Edit Selected");
+  executionMenu.append("&Delete Selected");
+}
 
-  // Layout
+void orca::MainPresenter::createLayout()
+{
   stringstream ss;
   ss << "vert <menu weight=" << mb_main.size().height << "> <<budgets weight=20%>|<vertical <weight=20 tabs><body>>>";
   placer.div(ss.str().c_str());
