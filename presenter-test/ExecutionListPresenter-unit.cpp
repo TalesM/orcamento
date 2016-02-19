@@ -73,3 +73,26 @@ SCENARIO_METHOD(ExecutionListPresenterFixture,
     }
   }
 }
+
+SCENARIO_METHOD(ExecutionListPresenterFixture,
+                "ExecutionListPresenter edits",
+                "[execution-list-presenter-class][presenter]")
+{
+  GIVEN("An ExecutionListPresenter")
+  {
+    WHEN("The user edits")
+    {
+      bool executeViewHandlerCalled = false;
+      executionListPresenter.editViewHandler([&executeViewHandlerCalled](auto &&){
+        executeViewHandlerCalled = true;
+      });
+      UserInputChecker uic("click on an execution, press [space] and confirm", "");
+      THEN("The function editViewHandler() is called")
+      {
+        exec(host);
+        REQUIRE(executeViewHandlerCalled);
+      }
+    }
+  }
+}
+

@@ -37,6 +37,11 @@ class ExecutionListPresenter : public ControllerOwnerPresenter<BudgetController>
    * @brief Remove selected executions.
    */
   void deleteSelectedExecutions();
+  
+  /**
+   * @brief Edit selected executions.
+   */
+  void editSelectedExecutions();
 
   /**
    * @brief Get the window

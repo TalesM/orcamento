@@ -83,5 +83,19 @@ struct BudgetControllerStub : public BudgetController {
   {
     ORCA_RECORD_CALL(call_recorder);
   }
+
+  ExecutionView getExecutionByName(const string &name) override
+  {
+    ORCA_RECORD_CALL(call_recorder);
+    return {
+        15,
+        "2006-10-13",
+        100,
+        Operation::INCOME,
+        "POCKET",
+        "Estatimate 3",
+        "CAT",
+        [this]() -> unique_ptr<ExecutionController> { return make_unique<ExecutionControllerStub>(call_recorder); }};
+  }
 };
 #endif  // ORCA_PRESENTER_TEST_BUDGETCONTROLLER_STUB_HPP

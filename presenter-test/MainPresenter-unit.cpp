@@ -225,5 +225,23 @@ SCENARIO("Exectution List Manipulation", "[presenter][main-presenter-class]")
         exec(mainPresenter);
       }
     }
+    WHEN("User clicks on Execution->Edit")
+    {
+      THEN("The ExecutionDetailPresenter shows up")
+      {
+        UserInputChecker uic("click at the menu Execution->Edit",
+                             "the execution tab is selected and the dialog to edit an estimate shows up");
+        exec(mainPresenter);
+      }
+    }
+    WHEN("User clicks on Execution->Delete")
+    {
+      THEN("The confirmation shows up")
+      {
+        UserInputChecker uic("click at the menu Execution->Delete",
+                             "c confirmation shows up and in yes case it removes the selected line");
+        exec(mainPresenter);
+      }
+    }
   }
 }

@@ -91,8 +91,12 @@ void orca::MainPresenter::createMenu()
   executionMenu.append("&New", [this](auto &&){
     a_budgetDetail.insertExecution();
   });
-  executionMenu.append("&Edit Selected");
-  executionMenu.append("&Delete Selected");
+  executionMenu.append("&Edit Selected", [this](auto &&){
+    a_budgetDetail.editExecution();
+  });
+  executionMenu.append("&Delete Selected", [this](auto &&){
+    a_budgetDetail.deleteExecution();
+  });
 }
 
 void orca::MainPresenter::createLayout()

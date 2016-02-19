@@ -55,6 +55,11 @@ struct BudgetController {
    * @brief Erase all given execution codes
    */
   virtual void eraseExecutions(const std::unordered_set<std::string> &) = 0;
+  /**
+   * @brief Get execution by name
+   * @param name
+   */
+  virtual ExecutionView getExecutionByName(const std::string &name) = 0;
   ///@}
 };
 } /* orca */

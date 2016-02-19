@@ -41,6 +41,8 @@ orca::ExecutionListPresenter::ExecutionListPresenter(nana::window wd, std::uniqu
     case keyboard::os_del:
       this->deleteSelectedExecutions();
       break;
+    case keyboard::space:
+      this->editSelectedExecutions();
     }
   });
 
@@ -49,7 +51,7 @@ orca::ExecutionListPresenter::ExecutionListPresenter(nana::window wd, std::uniqu
   placer.field("main") << l_executions;
   placer.collocate();
 
-  if(a_controller){
+  if(a_controller) {
     refresh();
   }
 }
@@ -66,8 +68,9 @@ void orca::ExecutionListPresenter::refresh()
 void orca::ExecutionListPresenter::insertExecution()
 {
   ExecutionView view = a_controller->insertExecution();
-  //Call the handler, to give it the opportunity to edit it. If it does not throw everything should be ok.
-  if(a_editHandler) a_editHandler(view);
+  // Call the handler, to give it the opportunity to edit it. If it does not throw everything should be ok.
+  if(a_editHandler)
+    a_editHandler(view);
   l_executions.at(0).append(view);
 }
 
@@ -92,4 +95,18 @@ void orca::ExecutionListPresenter::deleteSelectedExecutions()
     l_executions.erase(item);
   }
   a_controller->eraseExecutions(codes);
+}
+
+void orca::ExecutionListPresenter::editSelectedExecutions()
+{
+  auto selected = l_executions.selected();
+  auto size = selected.size();
+  if(size == 0) {
+    return;
+  }
+  if(a_editHandler){
+    auto item = l_executions.at(selected[0]);
+    auto view = a_controller->getExecutionByName(item.text(0));
+    a_editHandler(view);
+  }
 }

@@ -46,6 +46,8 @@ class BudgetDetailPresenter : public ControllerOwnerPresenter<BudgetController>
   std::vector<nana::window> tabs() const { return {l_summary, a_estimates.window(), a_executions.window()}; }
   
   void insertExecution();
+  void editExecution();
+  void deleteExecution();
  protected:
   void activate(Tabs tab);
   void refresh() override;

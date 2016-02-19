@@ -122,3 +122,15 @@ void orca::BudgetDetailPresenter::insertExecution()
   activate(EXECUTION);
   a_executions.insertExecution();
 }
+
+void orca::BudgetDetailPresenter::editExecution()
+{
+  activate(EXECUTION);
+  a_executions.editSelectedExecutions();
+}
+
+void orca::BudgetDetailPresenter::deleteExecution()
+{
+  activate(EXECUTION);
+  a_executions.deleteSelectedExecutions();
+}
