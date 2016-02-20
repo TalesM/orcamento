@@ -55,6 +55,10 @@ SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class
       }
     }
   }
+}
+
+SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class][tabs]")
+{
   GIVEN("A Main  Presenter with a filepath")
   {
     CallRecorder callRecorder;
@@ -63,8 +67,9 @@ SCENARIO("MainPresenter startup with no file", "[presenter][main-presenter-class
 
     WHEN("Presented")
     {
-      cout << "If splasher opens, cancel. It is already wrong." << endl;
-
+      UserInputChecker uic("",
+                           "splasher does not open and the window should have three tabs, Summary, Estimates, "
+                           "Executions, the first one being selected by default");
       THEN("Does not show dialog at presentation")
       {
         bool calledListBudgets = false;
@@ -95,7 +100,7 @@ struct CounterMainController : public MainController {
 };
 
 // TODO: Fix the bug (Issue #42).
-SCENARIO("MainPresenter startup with file", "[presenter][main-presenter-class][.][!mayfail]")
+SCENARIO("MainPresenter startup with file2", "[presenter][main-presenter-class][.][!mayfail]")
 {
   GIVEN("A MainPresenter with a filepath")
   {
@@ -240,6 +245,60 @@ SCENARIO("Exectution List Manipulation", "[presenter][main-presenter-class]")
       {
         UserInputChecker uic("click at the menu Execution->Delete",
                              "c confirmation shows up and in yes case it removes the selected line");
+        exec(mainPresenter);
+      }
+    }
+  }
+}
+
+SCENARIO("MainPresenter tab summary", "[main-presenter-class][presenter][tabs]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("Summary tab is selected")
+    {
+      THEN("Show the summary")
+      {
+        UserInputChecker uic("Click the first tab", "the summary is shown");
+        exec(mainPresenter);
+      }
+    }
+  }
+}
+
+SCENARIO("MainPresenter tab estimates", "[main-presenter-class][presenter][tabs]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("Estimates tab is selected")
+    {
+      THEN("Show the estimates")
+      {
+        UserInputChecker uic("Click the second tab", "the estimates are shown");
+        exec(mainPresenter);
+      }
+    }
+  }
+}
+
+SCENARIO("MainPresenter tab executions", "[main-presenter-class][presenter][tabs]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("Execution tab is selected")
+    {
+      THEN("Show the executions")
+      {
+        UserInputChecker uic("Click the third tab", "the executions are shown");
         exec(mainPresenter);
       }
     }

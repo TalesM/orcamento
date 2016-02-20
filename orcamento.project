@@ -112,11 +112,11 @@
     <File Name="presenter/EstimateDetailPresenter.cpp"/>
     <File Name="presenter/ExecutionListPresenter.hpp"/>
     <File Name="presenter/ExecutionListPresenter.cpp"/>
-    <File Name="presenter/BudgetDetailPresenter.hpp"/>
-    <File Name="presenter/BudgetDetailPresenter.cpp"/>
     <File Name="presenter/ControllerOwnerPresenter.hpp"/>
     <File Name="presenter/ExecutionDetailPresenter.hpp"/>
     <File Name="presenter/ExecutionDetailPresenter.cpp"/>
+    <File Name="presenter/BudgetSummaryPresenter.cpp"/>
+    <File Name="presenter/BudgetSummaryPresenter.hpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="presenter-test">
     <File Name="presenter-test/CMakeLists.txt"/>
@@ -135,8 +135,8 @@
     <File Name="presenter-test/EstimateDetailPresenter-unit.cpp"/>
     <File Name="presenter-test/ExecutionListPresenter-unit.cpp"/>
     <File Name="presenter-test/UserInputChecker.hpp"/>
-    <File Name="presenter-test/BudgetDetailPresenter-unit.cpp"/>
     <File Name="presenter-test/ExecutionDetailPresenter-unit.cpp"/>
+    <File Name="presenter-test/BudgetSummaryPresenter-unit.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="standalone">
     <File Name="standalone/CMakeLists.txt"/>

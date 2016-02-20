@@ -9,13 +9,17 @@
 #include <nana/gui/place.hpp>
 #include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/menubar.hpp>
+#include <nana/gui/widgets/tabbar.hpp>
 
-#include "BudgetDetailPresenter.hpp"
+#include "BudgetSummaryPresenter.hpp"
+#include "EstimateListPresenter.hpp"
+#include "ExecutionListPresenter.hpp"
 #include "FormPresenter.hpp"
 
 namespace orca
 {
 // Forward Declaration
+class BudgetController;
 class MainController;
 class Manager;
 
@@ -30,6 +34,7 @@ class MainPresenter : public FormPresenter
 {
   using LoadErrorCallback = function<void()>;
   using LoadSuccessCallback = function<void(MainController &)>;
+  enum Tab { SUMMARY, ESTIMATE, EXECUTION };
 
  public:
   MainPresenter(Manager &manager, const std::string &file_path = "");
@@ -69,6 +74,14 @@ class MainPresenter : public FormPresenter
 
   void close();
 
+ protected:
+  void activate(Tab tab);
+  std::unique_ptr<BudgetController> popBudgetController(Tab tab);
+  void pushBudgetController(Tab tab, std::unique_ptr<BudgetController>controller);
+  void insertExecution();
+  void editExecution();
+  void deleteExecution();
+
  private:
   void refreshBudgetList();
   void createMenu();
@@ -78,11 +91,16 @@ class MainPresenter : public FormPresenter
   LoadSuccessCallback a_load_success_callback;
   Manager &a_manager;
   unique_ptr<MainController> a_controller;
+  Tab a_currentControllerOwner = SUMMARY;
 
   // UI
   nana::form f_main;
   nana::listbox l_budgets;
-  BudgetDetailPresenter a_budgetDetail;
+
+  nana::tabbar<std::string> t_main;
+  BudgetSummaryPresenter a_budgetDetail;
+  EstimateListPresenter a_estimates;
+  ExecutionListPresenter a_executions;
   nana::menubar mb_main;
   nana::place placer;
 };

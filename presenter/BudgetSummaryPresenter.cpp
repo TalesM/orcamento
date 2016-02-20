@@ -1,55 +1,13 @@
-#include "BudgetDetailPresenter.hpp"
-#include "ExecutionDetailPresenter.hpp"
+#include "BudgetSummaryPresenter.hpp"
 #include <iostream>
 #include <cmath>
 
 using namespace nana;
 using namespace std;
 
-orca::BudgetDetailPresenter::BudgetDetailPresenter(nana::window wd, std::unique_ptr<BudgetController> controller)
-    : BASE(move(controller)), a_estimates(wd, nullptr), a_executions(wd, nullptr), t_main(wd), l_summary(wd)
+orca::BudgetSummaryPresenter::BudgetSummaryPresenter(nana::window wd, std::unique_ptr<BudgetController> controller)
+    : BASE(move(controller)), l_summary(wd)
 {
-  t_main.append("Summary", l_summary, "summary");
-  t_main.append("Estimates", a_estimates.window(), "estimates");
-  t_main.append("Execution", a_executions.window(), "executions");
-  t_main.activated(0);
-
-  t_main.events().activated([this](auto&& arg) {
-    unique_ptr<BudgetController> controller;
-    switch(a_currentControllerOwner) {
-    case 0:
-      controller = move(a_controller);
-      break;
-    case 1:
-      controller = a_estimates.devolve();
-      break;
-    case 2:
-      controller = a_executions.devolve();
-      break;
-    default:
-      throw logic_error("Invalid tab");
-    }
-    a_currentControllerOwner = t_main.activated();
-    switch(a_currentControllerOwner) {
-    case 0:
-      a_controller = move(controller);
-      this->refresh();
-      break;
-    case 1:
-      a_estimates.receive(move(controller));
-      break;
-    case 2:
-      a_executions.receive(move(controller));
-      break;
-    default:
-      throw logic_error("Invalid tab");
-    }
-  });
-  a_executions.editViewHandler([this](auto&& view) {
-    ExecutionDetailPresenter edp(view);
-    edp.present();
-    view = edp.get();
-  });
   l_summary.show_header(false);
   l_summary.append_header("Name");
   l_summary.append_header("Value");
@@ -68,7 +26,7 @@ listbox::oresolver& operator<<(listbox::oresolver& ores, const SummaryItem& item
   return ores << item.name << item.value;
 }
 
-void orca::BudgetDetailPresenter::refresh()
+void orca::BudgetSummaryPresenter::refresh()
 {
   // Data
   enum ItensNumbers {
@@ -114,23 +72,4 @@ void orca::BudgetDetailPresenter::refresh()
   for(const SummaryItem& si : totals) {
     catTotal.append(si);
   }
-}
-
-void orca::BudgetDetailPresenter::activate(Tabs tab) { t_main.activated(tab); }
-void orca::BudgetDetailPresenter::insertExecution()
-{
-  activate(EXECUTION);
-  a_executions.insertExecution();
-}
-
-void orca::BudgetDetailPresenter::editExecution()
-{
-  activate(EXECUTION);
-  a_executions.editSelectedExecutions();
-}
-
-void orca::BudgetDetailPresenter::deleteExecution()
-{
-  activate(EXECUTION);
-  a_executions.deleteSelectedExecutions();
 }

@@ -1,10 +1,12 @@
-#include "MainController.hpp"
+#include "MainPresenter.hpp"
 
 #include <nana/gui/filebox.hpp>
 #include <nana/gui/widgets/menu.hpp>
-#include "MainPresenter.hpp"
+#include "BudgetController.hpp"
+#include "MainController.hpp"
 #include "Manager.hpp"
 #include "SplasherPresenter.hpp"
+#include "ExecutionDetailPresenter.hpp"
 
 using namespace nana;
 
@@ -13,7 +15,10 @@ orca::MainPresenter::~MainPresenter() = default;
 orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_path)
     : a_manager(manager)
     , a_controller((file_path != "") ? a_manager.open(file_path) : nullptr)
+    , t_main(f_main)
     , a_budgetDetail(f_main, nullptr)
+    , a_estimates(f_main, nullptr)
+    , a_executions(f_main, nullptr)
     , f_main(API::make_center(800, 600))
     , l_budgets(f_main)
     , mb_main(f_main)
@@ -27,6 +32,35 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
     if(arg.selected) {
       a_budgetDetail.receive(a_controller->getBudget(arg.item.text(0)).controller());
     }  // Maybe put an else to devolve?
+  });
+
+  // Tabs
+  t_main.append("Summary", a_budgetDetail.window(), "summary");
+  t_main.append("Estimates", a_estimates.window(), "estimates");
+  t_main.append("Execution", a_executions.window(), "executions");
+  t_main.activated(0);
+
+  t_main.events().activated([this](auto &&arg) {
+    unique_ptr<BudgetController> controller = this->popBudgetController(a_currentControllerOwner);
+    a_currentControllerOwner = static_cast<Tab>(t_main.activated());
+    switch(a_currentControllerOwner) {
+    case 0:
+      a_budgetDetail.receive(move(controller));
+      break;
+    case 1:
+      a_estimates.receive(move(controller));
+      break;
+    case 2:
+      a_executions.receive(move(controller));
+      break;
+    default:
+      throw logic_error("Invalid tab");
+    }
+  });
+  a_executions.editViewHandler([this](auto &&view) {
+    ExecutionDetailPresenter edp(view);
+    edp.present();
+    view = edp.get();
   });
 
   createMenu();
@@ -64,7 +98,7 @@ void orca::MainPresenter::createMenu()
   fileMenu.append("&Save", [this](auto &&) { a_controller->flush(); });
   fileMenu.append_splitter();
   fileMenu.append("E&xit", [this](auto &&) { f_main.close(); });
-  
+
   menu &budgetMenu = mb_main.push_back("&Budget");
   budgetMenu.append("&New", [this](auto &&) {
     auto b = this->a_controller->pushBudget();
@@ -84,19 +118,13 @@ void orca::MainPresenter::createMenu()
       l_budgets.erase(last_item);
     }
   });
-  
+
   mb_main.push_back("E&stimate");
-  
+
   menu &executionMenu = mb_main.push_back("E&xecution");
-  executionMenu.append("&New", [this](auto &&){
-    a_budgetDetail.insertExecution();
-  });
-  executionMenu.append("&Edit Selected", [this](auto &&){
-    a_budgetDetail.editExecution();
-  });
-  executionMenu.append("&Delete Selected", [this](auto &&){
-    a_budgetDetail.deleteExecution();
-  });
+  executionMenu.append("&New", [this](auto &&) { this->insertExecution(); });
+  executionMenu.append("&Edit Selected", [this](auto &&) { this->editExecution(); });
+  executionMenu.append("&Delete Selected", [this](auto &&) { this->deleteExecution(); });
 }
 
 void orca::MainPresenter::createLayout()
@@ -106,10 +134,10 @@ void orca::MainPresenter::createLayout()
   placer.div(ss.str().c_str());
   placer.field("menu") << mb_main;
   placer.field("budgets") << l_budgets;
-  placer.field("tabs") << a_budgetDetail.window();
-  for(auto &&tab : a_budgetDetail.tabs()) {
-    placer.field("body").fasten(tab);
-  }
+  placer.field("tabs") << t_main;
+  placer.field("body").fasten(a_budgetDetail.window());
+  placer.field("body").fasten(a_estimates.window());
+  placer.field("body").fasten(a_executions.window());
   placer.collocate();
 
   if(a_controller) {
@@ -154,3 +182,55 @@ void orca::MainPresenter::refreshBudgetList()
 }
 
 void orca::MainPresenter::close() { f_main.close(); }
+void orca::MainPresenter::activate(Tab tab) { t_main.activated(tab); }
+void orca::MainPresenter::insertExecution()
+{
+  activate(EXECUTION);
+  a_executions.insertExecution();
+}
+
+void orca::MainPresenter::editExecution()
+{
+  activate(EXECUTION);
+  a_executions.editSelectedExecutions();
+}
+
+void orca::MainPresenter::deleteExecution()
+{
+  activate(EXECUTION);
+  a_executions.deleteSelectedExecutions();
+}
+
+std::unique_ptr<orca::BudgetController> orca::MainPresenter::popBudgetController(Tab tab)
+{
+  switch(a_currentControllerOwner) {
+  case SUMMARY:
+    return a_budgetDetail.devolve();
+    break;
+  case ESTIMATE:
+    return a_estimates.devolve();
+    break;
+  case EXECUTION:
+    return a_executions.devolve();
+    break;
+  default:
+    throw logic_error("Invalid tab");
+  }
+}
+
+void orca::MainPresenter::pushBudgetController(Tab tab, std::unique_ptr<BudgetController> controller)
+{
+  switch(tab) {
+  case SUMMARY:
+    a_budgetDetail.receive(move(controller));
+    break;
+  case ESTIMATE:
+    a_estimates.receive(move(controller));
+    break;
+  case EXECUTION:
+    a_executions.receive(move(controller));
+    break;
+  default:
+    throw logic_error("Invalid tab");
+  }
+}
