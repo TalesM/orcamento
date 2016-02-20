@@ -83,10 +83,11 @@ SCENARIO_METHOD(ExecutionListPresenterFixture,
     WHEN("The user edits")
     {
       bool executeViewHandlerCalled = false;
-      executionListPresenter.editViewHandler([&executeViewHandlerCalled](auto &&){
+      executionListPresenter.editViewHandler([&executeViewHandlerCalled](auto &&v){
+        v.code *= 2;
         executeViewHandlerCalled = true;
       });
-      UserInputChecker uic("click on an execution, press [space] and confirm", "");
+      UserInputChecker uic("click on an execution, press [space] and confirm", "see if the code field changed");
       THEN("The function editViewHandler() is called")
       {
         exec(host);
@@ -96,3 +97,4 @@ SCENARIO_METHOD(ExecutionListPresenterFixture,
   }
 }
 
+//TODO Integrate with ExecutionDetail

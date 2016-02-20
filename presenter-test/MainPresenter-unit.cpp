@@ -214,43 +214,6 @@ SCENARIO("Budget list manipulation", "[presenter][main-presenter-class]")
   }
 }
 
-SCENARIO("Exectution List Manipulation", "[presenter][main-presenter-class]")
-{
-  GIVEN("A MainPresenter with a file loaded")
-  {
-    CallRecorder callRecorder;
-    Manager manager = createManagerForTest(callRecorder);
-    MainPresenter mainPresenter{manager, "teste"};
-    WHEN("User clicks on Execution->New")
-    {
-      THEN("The ExecutionDetailPresenter shows up")
-      {
-        UserInputChecker uic("click at the menu Execution->New",
-                             "the execution tab is selected and the dialog to edit an estimate shows up");
-        exec(mainPresenter);
-      }
-    }
-    WHEN("User clicks on Execution->Edit")
-    {
-      THEN("The ExecutionDetailPresenter shows up")
-      {
-        UserInputChecker uic("click at the menu Execution->Edit",
-                             "the execution tab is selected and the dialog to edit an estimate shows up");
-        exec(mainPresenter);
-      }
-    }
-    WHEN("User clicks on Execution->Delete")
-    {
-      THEN("The confirmation shows up")
-      {
-        UserInputChecker uic("click at the menu Execution->Delete",
-                             "c confirmation shows up and in yes case it removes the selected line");
-        exec(mainPresenter);
-      }
-    }
-  }
-}
-
 SCENARIO("MainPresenter tab summary", "[main-presenter-class][presenter][tabs]")
 {
   GIVEN("A MainPresenter with a file loaded")
@@ -299,6 +262,43 @@ SCENARIO("MainPresenter tab executions", "[main-presenter-class][presenter][tabs
       THEN("Show the executions")
       {
         UserInputChecker uic("Click the third tab", "the executions are shown");
+        exec(mainPresenter);
+      }
+    }
+  }
+}
+
+SCENARIO("Exectution List Manipulation", "[presenter][main-presenter-class]")
+{
+  GIVEN("A MainPresenter with a file loaded")
+  {
+    CallRecorder callRecorder;
+    Manager manager = createManagerForTest(callRecorder);
+    MainPresenter mainPresenter{manager, "teste"};
+    WHEN("User clicks on Execution->New")
+    {
+      THEN("The ExecutionDetailPresenter shows up")
+      {
+        UserInputChecker uic("click at the menu Execution->New",
+                             "the execution tab is selected and the dialog to edit an estimate shows up");
+        exec(mainPresenter);
+      }
+    }
+    WHEN("User clicks on Execution->Edit")
+    {
+      THEN("The ExecutionDetailPresenter shows up")
+      {
+        UserInputChecker uic("click at executions tab, select an execution and then click at the menu Execution->Edit",
+                             "the execution tab is selected and the dialog to edit an estimate shows up");
+        exec(mainPresenter);
+      }
+    }
+    WHEN("User clicks on Execution->Delete")
+    {
+      THEN("The confirmation shows up")
+      {
+        UserInputChecker uic("click at executions tab, select an execution and then click at menu Execution->Delete",
+                             "confirmation shows up and in yes case it removes the selected line");
         exec(mainPresenter);
       }
     }

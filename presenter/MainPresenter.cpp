@@ -1,7 +1,9 @@
 #include "MainPresenter.hpp"
 
+#include <boost/iterator/transform_iterator.hpp>
 #include <nana/gui/filebox.hpp>
 #include <nana/gui/widgets/menu.hpp>
+
 #include "BudgetController.hpp"
 #include "MainController.hpp"
 #include "Manager.hpp"
@@ -30,8 +32,9 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   l_budgets.show_header(false);
   l_budgets.events().selected([this](auto &&arg) {
     if(arg.selected) {
-      a_budgetDetail.receive(a_controller->getBudget(arg.item.text(0)).controller());
-    }  // Maybe put an else to devolve?
+      this->popBudgetController(a_currentControllerOwner);
+      this->pushBudgetController(a_currentControllerOwner, a_controller->getBudget(arg.item.text(0)).controller());
+    }
   });
 
   // Tabs
@@ -43,24 +46,22 @@ orca::MainPresenter::MainPresenter(Manager &manager, const std::string &file_pat
   t_main.events().activated([this](auto &&arg) {
     unique_ptr<BudgetController> controller = this->popBudgetController(a_currentControllerOwner);
     a_currentControllerOwner = static_cast<Tab>(t_main.activated());
-    switch(a_currentControllerOwner) {
-    case 0:
-      a_budgetDetail.receive(move(controller));
-      break;
-    case 1:
-      a_estimates.receive(move(controller));
-      break;
-    case 2:
-      a_executions.receive(move(controller));
-      break;
-    default:
-      throw logic_error("Invalid tab");
-    }
+    this->pushBudgetController(a_currentControllerOwner, move(controller));
   });
   a_executions.editViewHandler([this](auto &&view) {
+    using namespace boost;
     ExecutionDetailPresenter edp(view);
+    auto accounts = a_controller->listAccounts();
+    edp.accounts(begin(accounts), end(accounts));
+    auto categories = a_controller->listCategories();
+    edp.categories(begin(categories), end(categories));
+    auto budgetController = this->popBudgetController(a_currentControllerOwner);
+    auto estimates = budgetController->listEstimates();
+    auto nameGetter = [](const EstimateView &v) -> std::string { return v.name; };
+    edp.estimates(make_transform_iterator(begin(estimates), nameGetter), make_transform_iterator(end(estimates), nameGetter));
     edp.present();
     view = edp.get();
+    this->pushBudgetController(a_currentControllerOwner, move(budgetController));
   });
 
   createMenu();

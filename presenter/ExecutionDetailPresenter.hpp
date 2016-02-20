@@ -20,11 +20,54 @@ class ExecutionDetailPresenter : public FormPresenter
 {
  public:
   ExecutionDetailPresenter(const ExecutionView &view);
+  ExecutionDetailPresenter(nana::window wd);
 
   void present() override;
 
   void reset(const ExecutionView &view);
   ExecutionView get();
+
+  /**
+   * @brief Update the accounts
+   * @param begin iterator to first member
+   * @param end iterator to first past last member
+   * @tparam INPUT_ITER Any input iterator class whose value is convertible to string.
+   */
+  template <typename INPUT_ITER>
+  void accounts(INPUT_ITER begin, INPUT_ITER end)
+  {
+    while(begin != end) {
+      c_account.push_back(*(begin++));
+    }
+  }
+  
+    /**
+   * @brief Update the categories
+   * @param begin iterator to first member
+   * @param end iterator to first past last member
+   * @tparam INPUT_ITER Any input iterator class whose value is convertible to string.
+   */
+  template <typename INPUT_ITER>
+  void categories(INPUT_ITER begin, INPUT_ITER end)
+  {
+    while(begin != end) {
+      c_category.push_back(*(begin++));
+    }
+  }
+  
+    /**
+   * @brief Update the estimates
+   * @param begin iterator to first member
+   * @param end iterator to first past last member
+   * @tparam INPUT_ITER Any input iterator class whose value is convertible to string.
+   */
+  template <typename INPUT_ITER>
+  void estimates(INPUT_ITER begin, INPUT_ITER end)
+  {
+    while(begin != end) {
+      c_estimate.push_back(*(begin++));
+    }
+  }
 
  private:
   // Controller:

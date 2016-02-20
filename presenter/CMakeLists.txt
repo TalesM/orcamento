@@ -1,4 +1,4 @@
-
+find_package(Boost REQUIRED)
 add_library(presenter
   BudgetSummaryPresenter
   EstimateDetailPresenter
@@ -13,6 +13,7 @@ add_library(presenter
 target_include_directories(presenter
   PUBLIC ../external/nana/include/
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+  PRIVATE ${Boost_INCLUDE_DIR}
 )
 
 target_link_libraries(presenter

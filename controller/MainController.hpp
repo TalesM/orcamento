@@ -55,10 +55,17 @@ class MainController
    * @param name  the budget name.
    * @todo Return a BudgetView instead.
    */
-  virtual BudgetView getBudget(const std::string &name)
-  {
-    throw std::logic_error("Not implemented");
-  }
+  virtual BudgetView getBudget(const std::string &name) { throw std::logic_error("Not implemented"); }
+  /**
+   * @brief List all accounts
+   * @return some iterable container.
+   */
+  virtual std::vector<std::string> listAccounts() const { throw std::logic_error("Not implemented"); }
+  /**
+   * @brief List of all categories
+   * @return some iterable container.
+   */
+  virtual std::vector<std::string> listCategories() const { throw std::logic_error("Not implemented"); }
 };
 }
 

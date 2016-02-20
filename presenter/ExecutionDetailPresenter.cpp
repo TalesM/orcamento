@@ -3,8 +3,13 @@
 using namespace nana;
 using namespace orca;
 
-orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& view)
-    : a_view(view)
+orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& view) : ExecutionDetailPresenter(nullptr)
+{
+  reset(view);
+}
+
+orca::ExecutionDetailPresenter::ExecutionDetailPresenter(nana::window wd)
+    : f_main(wd)
     , l_code(f_main)
     , t_code(f_main)
     , l_date(f_main)
@@ -38,6 +43,9 @@ orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& vi
   c_operation.push_back("INCOME");
   c_operation.push_back("EXPENSE");
   c_operation.push_back("TRANSFERENCE");
+  c_account.editable(false);
+  c_estimate.editable(false);
+  c_category.editable(false);
   // Tab
   API::tabstop(t_code);
   API::eat_tabstop(t_code, false);
@@ -47,7 +55,7 @@ orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& vi
   API::tabstop(t_amount);
   API::eat_tabstop(t_amount, false);
   API::tabstop(c_operation);
-  API::tabstop(c_account);
+  API::tabstop(c_account); 
   API::tabstop(c_estimate);
   API::tabstop(c_category);
 
@@ -74,21 +82,21 @@ orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& vi
     }
   });
   c_account.events().focus([this](auto&& arg) {
-    auto newValue = c_account[c_account.option()].text();
+    auto newValue = c_account.text(c_account.option());
     if(not arg.getting and a_view.account != newValue) {
       a_view.account = newValue;
       a_controller->setAccount(newValue);
     }
   });
   c_estimate.events().focus([this](auto&& arg) {
-    auto newValue = c_estimate[c_estimate.option()].text();
+    auto newValue = c_estimate.text(c_estimate.option());
     if(not arg.getting and a_view.estimate != newValue) {
       a_view.estimate = newValue;
       a_controller->setEstimate(newValue);
     }
   });
   c_category.events().focus([this](auto&& arg) {
-    auto newValue = c_category[c_category.option()].text();
+    auto newValue = c_category.text(c_category.option());
     if(not arg.getting and a_view.category != newValue) {
       a_view.category = newValue;
       a_controller->setCategory(newValue);
@@ -101,13 +109,13 @@ orca::ExecutionDetailPresenter::ExecutionDetailPresenter(const ExecutionView& vi
                        << l_account << c_account << l_estimate << c_estimate << l_category << c_category;
   placer.collocate();
 
-  reset(view);
-  a_controller = view.controller();
 }
 
 void orca::ExecutionDetailPresenter::present() { f_main.modality(); }
 void orca::ExecutionDetailPresenter::reset(const ExecutionView& view)
 {
+  a_view = view;
+  a_controller = view.controller();
   t_code.from(int(view.code));
   t_date.caption(view.date);
   t_amount.from(int(view.amount));
@@ -122,11 +130,11 @@ void orca::ExecutionDetailPresenter::reset(const ExecutionView& view)
     c_operation.option(2);
     break;
   }
-  c_account[0].text(view.account);
+  c_account.push_back(view.account);
   c_account.option(0);
-  c_estimate[0].text(view.estimate);
+  c_estimate.push_back(view.estimate);
   c_estimate.option(0);
-  c_category[0].text(view.category);
+  c_category.push_back(view.category);
   c_category.option(0);
 }
 

@@ -108,5 +108,6 @@ void orca::ExecutionListPresenter::editSelectedExecutions()
     auto item = l_executions.at(selected[0]);
     auto view = a_controller->getExecutionByName(item.text(0));
     a_editHandler(view);
+    item.resolve_from(view);
   }
 }

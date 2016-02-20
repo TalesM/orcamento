@@ -34,4 +34,15 @@ struct MainControllerStub : public MainController {
       controller : [this]() -> unique_ptr<BudgetController> { return make_unique<BudgetControllerStub>(call_recorder); }
     };
   }
+  
+  vector<string> listCategories() const override
+  {
+    ORCA_RECORD_CALL(call_recorder);
+    return {"Cat1", "Cat2", "Cat3"};
+  }
+  vector<string> listAccounts() const override
+  {
+    ORCA_RECORD_CALL(call_recorder);
+    return {"Acc1", "Acc2", "Acc3"};
+  }
 };
