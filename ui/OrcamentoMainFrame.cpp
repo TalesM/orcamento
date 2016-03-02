@@ -405,7 +405,7 @@ void OrcamentoMainFrame::OnMnbudgetexportMenuSelected(wxCommandEvent& event)
     CSVwrite writter(location.ToStdString());
     writter.WriteUTF8BOM();
     writter.WriteRecord({"id", "name", "estimated", "accounted", "remaining", "category", "Obs"});
-    for(int i=0; i < gdEstimates->GetRows();++i){
+    for(int i=0; i < gdEstimates->GetNumberRows();++i){
         writter.WriteRecord({
             (std::string)gdEstimates->GetCellValue(i, EstimateColumn::ID).ToUTF8(),
             (std::string)gdEstimates->GetCellValue(i, EstimateColumn::NAME).ToUTF8(),
@@ -505,10 +505,10 @@ void OrcamentoMainFrame::OnMnhelpaboutMenuSelected(wxCommandEvent& event)
     wxString msg = wxbuildinfo(long_f);
     wxAboutDialogInfo info;
     info.SetName(_("OrcaMento"));
-//    info.SetVersion(_("0.3 Alpha"));
-    info.SetVersion(_("Build ")+isoDate()+_("(")+msg+_(")"));
+    info.SetVersion(_("0.4.1 Alpha"));
+//    info.SetVersion(_("Build ")+isoDate()+_("(")+msg+_(")"));
     info.SetDescription(_("A small program to manage finances. \n"));
-    info.SetCopyright(_("(C) 2014 TalesM (talesm.github.io, tales.miranda88@gmail.com)"));
+    info.SetCopyright(_("(C) 2014-2016 TalesM (talesm.github.io, tales.miranda88@gmail.com)"));
     info.SetWebSite(_("https://github.com/TalesM/orcamento"));
     wxIcon FrameIcon;
     FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("orca_1.ico"))));
