@@ -10,6 +10,7 @@
   "m_firstWindowId": 10000,
   "m_useEnum": true,
   "m_useUnderscoreMacro": true,
+  "m_addHandlers": true,
   "m_templateClasses": []
  },
  "windows": [{
@@ -4487,7 +4488,7 @@
      "m_events": [],
      "m_children": [{
        "m_type": 4522,
-       "proportion": 4,
+       "proportion": 3,
        "border": 5,
        "gbSpan": "",
        "gbPosition": "",
@@ -4594,11 +4595,11 @@
         }, {
          "type": "string",
          "m_label": "# Rows:",
-         "m_value": "3"
+         "m_value": "2"
         }, {
          "type": "string",
          "m_label": "Growable columns:",
-         "m_value": "1"
+         "m_value": "0"
         }, {
          "type": "string",
          "m_label": "Growable rows:",
@@ -4615,12 +4616,12 @@
        "m_events": [],
        "m_children": [{
          "m_type": 4405,
-         "proportion": 1,
+         "proportion": 0,
          "border": 5,
          "gbSpan": "",
          "gbPosition": "",
          "m_styles": [],
-         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
+         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_RIGHT", "wxALIGN_CENTER_VERTICAL"],
          "m_properties": [{
            "type": "winid",
            "m_label": "ID:",
@@ -4690,12 +4691,12 @@
          "m_children": []
         }, {
          "m_type": 4406,
-         "proportion": 1,
+         "proportion": 0,
          "border": 5,
          "gbSpan": "",
          "gbPosition": "",
          "m_styles": [],
-         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
+         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_LEFT", "wxALIGN_CENTER_VERTICAL"],
          "m_properties": [{
            "type": "winid",
            "m_label": "ID:",
@@ -4784,12 +4785,12 @@
          "m_children": []
         }, {
          "m_type": 4405,
-         "proportion": 1,
+         "proportion": 0,
          "border": 5,
          "gbSpan": "",
          "gbPosition": "",
          "m_styles": [],
-         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
+         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_RIGHT", "wxALIGN_CENTER_VERTICAL"],
          "m_properties": [{
            "type": "winid",
            "m_label": "ID:",
@@ -4859,12 +4860,12 @@
          "m_children": []
         }, {
          "m_type": 4406,
-         "proportion": 1,
+         "proportion": 4,
          "border": 5,
          "gbSpan": "",
          "gbPosition": "",
          "m_styles": ["wxTE_MULTILINE"],
-         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
+         "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_LEFT", "wxALIGN_CENTER_VERTICAL"],
          "m_properties": [{
            "type": "winid",
            "m_label": "ID:",
@@ -4959,7 +4960,7 @@
        "gbSpan": "",
        "gbPosition": "",
        "m_styles": [],
-       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxEXPAND", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
+       "m_sizerFlags": ["wxALL", "wxLEFT", "wxRIGHT", "wxTOP", "wxBOTTOM", "wxALIGN_CENTER_HORIZONTAL", "wxALIGN_CENTER_VERTICAL"],
        "m_properties": [{
          "type": "string",
          "m_label": "Minimum Size:",

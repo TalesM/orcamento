@@ -470,38 +470,38 @@ WalletOverviewDialogBase::WalletOverviewDialogBase(wxWindow* parent, wxWindowID 
     wxArrayString lsWalletsArr;
     lsWallets = new wxSimpleHtmlListBox(this, wxID_ANY, wxDefaultPosition, wxSize(-1,-1), lsWalletsArr, wxHLB_DEFAULT_STYLE);
     
-    BoxSizer135->Add(lsWallets, 4, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    BoxSizer135->Add(lsWallets, 3, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
     lsWallets->SetMinSize(wxSize(200,-1));
     
-    wxFlexGridSizer* flexGridSizer2137 = new wxFlexGridSizer(3, 2, 0, 0);
+    wxFlexGridSizer* flexGridSizer2137 = new wxFlexGridSizer(2, 2, 0, 0);
     flexGridSizer2137->SetFlexibleDirection( wxBOTH );
     flexGridSizer2137->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-    flexGridSizer2137->AddGrowableCol(1);
+    flexGridSizer2137->AddGrowableCol(0);
     
     BoxSizer135->Add(flexGridSizer2137, 2, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
     
     lbName = new wxStaticText(this, wxID_ANY, _("Name:"), wxDefaultPosition, wxSize(-1,-1), 0);
     
-    flexGridSizer2137->Add(lbName, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    flexGridSizer2137->Add(lbName, 0, wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
     
     txName = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), 0);
     #if wxVERSION_NUMBER >= 3000
     txName->SetHint(wxT(""));
     #endif
     
-    flexGridSizer2137->Add(txName, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    flexGridSizer2137->Add(txName, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     
     lbObs = new wxStaticText(this, wxID_ANY, _("Obs"), wxDefaultPosition, wxSize(-1,-1), 0);
     
-    flexGridSizer2137->Add(lbObs, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    flexGridSizer2137->Add(lbObs, 0, wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
     
     txObs = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(-1,-1), wxTE_MULTILINE);
     
-    flexGridSizer2137->Add(txObs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+    flexGridSizer2137->Add(txObs, 4, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     
     wxBoxSizer* BoxSizer242 = new wxBoxSizer(wxHORIZONTAL);
     
-    BoxSizer135->Add(BoxSizer242, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+    BoxSizer135->Add(BoxSizer242, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
     
     btEdit = new wxButton(this, wxID_ANY, _("Edit"), wxDefaultPosition, wxSize(-1,-1), 0);
     btEdit->Enable(false);

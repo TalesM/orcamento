@@ -13,9 +13,9 @@
 #include <wx/frame.h>
 #include <wx/iconbndl.h>
 #include <wx/artprov.h>
+#include <wx/sizer.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
-#include <wx/sizer.h>
 #include <wx/gbsizer.h>
 #include <wx/htmllbox.h>
 #include <wx/grid.h>
